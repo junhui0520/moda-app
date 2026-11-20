@@ -1,0 +1,39 @@
+# === 보안 / 환경변수 (절대 커밋 금지) ===
+.env
+.env.*
+**/application-local.yml
+**/application-secret.yml
+
+# === Backend (Spring Boot / Java / Gradle) ===
+backend/.gradle/
+backend/build/
+backend/out/
+*.class
+*.jar
+*.war
+*.log
+
+# === Mobile (React Native / Expo / Node) ===
+mobile/node_modules/
+mobile/.expo/
+mobile/.expo-shared/
+mobile/dist/
+mobile/web-build/
+npm-debug.log*
+yarn-error.log*
+
+# === AI (Python / MediaPipe / Model weights) ===
+ai/.venv/
+ai/venv/
+ai/__pycache__/
+**/__pycache__/
+*.pyc
+ai/results/
+ai/models/*.task
+
+# === IDE & OS ===
+.idea/
+*.iml
+.vscode/
+.DS_Store
+Thumbs.db
