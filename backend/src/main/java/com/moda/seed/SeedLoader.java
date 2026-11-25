@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.SmartInitializingSingleton;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
 /**
@@ -26,12 +27,15 @@ public class SeedLoader implements SmartInitializingSingleton {
     private final SeedReader reader;
     private final SeedValidator validator;
     private final SeedUpsertService upsertService;
+    private final ApplicationEventPublisher eventPublisher;
 
-    public SeedLoader(ModaProperties properties, SeedReader reader, SeedValidator validator, SeedUpsertService upsertService) {
+    public SeedLoader(ModaProperties properties, SeedReader reader, SeedValidator validator, SeedUpsertService upsertService,
+                      ApplicationEventPublisher eventPublisher) {
         this.properties = properties;
         this.reader = reader;
         this.validator = validator;
         this.upsertService = upsertService;
+        this.eventPublisher = eventPublisher;
     }
 
     @Override
@@ -54,6 +58,7 @@ public class SeedLoader implements SmartInitializingSingleton {
             SeedLoadResult result = upsertService.upsert(bundle);
             log.info("[Seed] 시드 적재 완료 (ruleVersion={}, inserted={}, updated={}) {}",
                     result.ruleVersion(), result.totalInserted(), result.totalUpdated(), result.summary());
+            eventPublisher.publishEvent(new SeedLoadedEvent(result));
             return Optional.of(result);
         } catch (SeedValidationException e) {
             log.error("[Seed] {}", e.getMessage());

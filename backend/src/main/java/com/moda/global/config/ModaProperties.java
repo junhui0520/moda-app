@@ -37,7 +37,9 @@ public record ModaProperties(
             @NotBlank @DefaultValue("http://localhost:8000") String baseUrl,
             @NotNull @DefaultValue("3s") Duration connectTimeout,
             @NotNull @DefaultValue("15s") Duration faceReadTimeout,
-            @NotNull @DefaultValue("20s") Duration bodyReadTimeout) {
+            @NotNull @DefaultValue("20s") Duration bodyReadTimeout,
+            /* Mock 모드에서 X-Mock-Delay-Ms 헤더가 없을 때의 응답 지연 (api-spec.md 1.5 기본값 800ms) */
+            @NotNull @DefaultValue("800ms") Duration mockDefaultDelay) {
     }
 
     public record Chat(

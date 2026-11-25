@@ -9,6 +9,8 @@ server:
     encoding:
       charset: UTF-8
       force: true
+  tomcat:
+    max-swallow-size: 20MB     # 12MB 초과 업로드도 끝까지 읽은 뒤 413 IMAGE_TOO_LARGE 응답 (연결 끊김 방지)
 
 spring:
   application:
@@ -42,12 +44,14 @@ spring:
       enabled: true
       max-file-size: 10MB      # api-spec.md 1.2: 사진 최대 10MB
       max-request-size: 12MB   # 요청 전체 12MB
-      file-size-threshold: 0
+      file-size-threshold: 12MB  # 임계값 이하 파일은 디스크 임시 파일 없이 메모리에서만 처리 (R-01)
 
   jackson:
     time-zone: Asia/Seoul      # 날짜·시간: ISO-8601 + KST 오프셋 (예: 2026-11-19T21:30:00+09:00)
     serialization:
       write-dates-as-timestamps: false
+    deserialization:
+      accept-float-as-int: false         # "age": 21.5 → 400 (정수만 허용)
     default-property-inclusion: always   # 값이 없어도 키를 생략하지 않고 null 출력 (api-spec.md 1.3)
 
 springdoc:
@@ -70,6 +74,7 @@ moda:
     connect-timeout: 3s
     face-read-timeout: 15s
     body-read-timeout: 20s
+    mock-default-delay: 800ms               # Mock: X-Mock-Delay-Ms 헤더가 없을 때 지연
   chat:
     mode: ${MODA_CHAT_MODE:mock}            # mock | external (api-spec.md 1.5 챗봇 Mock)
     max-turns: 20                           # 세션당 최대 대화 턴
