@@ -1,0 +1,27 @@
+# 빌드 산출물·캐시 (이미지 안에서 새로 빌드)
+build/
+.gradle/
+out/
+bin/
+*.log
+
+# VCS · IDE · OS
+.git/
+.gitignore
+.gitattributes
+.idea/
+*.iml
+.vscode/
+.DS_Store
+Thumbs.db
+
+# 비밀값 (이미지에 절대 포함하지 않음 — 플랫폼 환경변수로 주입)
+.env
+.env.*
+**/application-local.yml
+**/application-secret.yml
+
+# 이미지 빌드에 불필요 (테스트는 CI·로컬에서 실행, 빌드는 -x test)
+src/test/
+Dockerfile
+.dockerignore
