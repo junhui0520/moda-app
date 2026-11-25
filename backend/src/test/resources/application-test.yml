@@ -9,3 +9,5 @@ spring:
 moda:
   ai:
     mock-default-delay: 0ms    # 테스트에서는 Mock 기본 지연(800ms) 제거
+  chat:
+    mock-default-delay: 0ms

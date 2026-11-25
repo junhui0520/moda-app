@@ -31,3 +31,5 @@ moda:
   chat:
     mode: ${MODA_CHAT_MODE:mock}
     api-key: ${MODA_CHAT_API_KEY:}
+    base-url: ${MODA_CHAT_BASE_URL:https://api.openai.com/v1}
+    model: ${MODA_CHAT_MODEL:gpt-4o-mini}

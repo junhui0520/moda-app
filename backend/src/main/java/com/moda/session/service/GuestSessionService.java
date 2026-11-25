@@ -72,11 +72,14 @@ public class GuestSessionService {
     private final Duration ttl;
     private final int ttlMinutes;
     private final TransactionTemplate tx;
+    private final List<SessionDataPurger> purgers;
 
     public GuestSessionService(GuestSessionRepository repository, StyleRecommendationService recommendationService,
                                AnalysisClient analysisClient, AnalysisImageReader imageReader,
                                AnalysisInProgressRegistry inProgressRegistry, SessionViewMapper mapper, SeedCatalog catalog,
-                               ModaProperties properties, Clock clock, PlatformTransactionManager transactionManager) {
+                               ModaProperties properties, Clock clock, PlatformTransactionManager transactionManager,
+                               List<SessionDataPurger> purgers) {
+        this.purgers = List.copyOf(purgers);
         this.repository = repository;
         this.recommendationService = recommendationService;
         this.analysisClient = analysisClient;
@@ -190,6 +193,15 @@ public class GuestSessionService {
     @Transactional(readOnly = true)
     public ResultData getResult(String sessionId) {
         GuestSession session = requireActive(sessionId);
+        requireResultReady(session);
+        return buildResult(session);
+    }
+
+    /**
+     * 결과 산출 선행 조건 (⑤·⑨·⑩ 공통): 기본 정보 → {@code 409 PROFILE_INPUT_REQUIRED},
+     * 얼굴·체형 미확정 → {@code 409 ANALYSIS_INCOMPLETE} ({@code meta.missing}, {@code meta.nextStep}).
+     */
+    public void requireResultReady(GuestSession session) {
         if (!session.hasProfile()) {
             throw new BusinessException(ErrorCode.PROFILE_INPUT_REQUIRED);
         }
@@ -206,7 +218,6 @@ public class GuestSessionService {
             meta.put("nextStep", mapper.nextStep(session));
             throw BusinessException.withMeta(ErrorCode.ANALYSIS_INCOMPLETE, meta);
         }
-        return buildResult(session);
     }
 
     // ------------------------------------------------------------------ ⑥ 분석 상세보기
@@ -258,6 +269,7 @@ public class GuestSessionService {
         Instant now = now();
         GuestSession session = repository.findById(sessionId).orElse(null);
         boolean alreadyDeleted = session == null || session.isExpired(now);
+        purgers.forEach(p -> p.purgeSession(sessionId));                           // 챗봇 대화 내역 등 하위 데이터 즉시 파기
         if (session != null) {
             repository.delete(session);
         }
@@ -268,7 +280,7 @@ public class GuestSessionService {
     // ------------------------------------------------------------------ helpers
 
     /** 세션 조회: 없으면 404, 만료면 410. */
-    GuestSession requireActive(String sessionId) {
+    public GuestSession requireActive(String sessionId) {
         GuestSession session = repository.findById(sessionId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.SESSION_NOT_FOUND));
         if (session.isExpired(now())) {
@@ -286,7 +298,8 @@ public class GuestSessionService {
         return s.hasProfile() && s.getFaceResult() != null && s.getBodyResult() != null;
     }
 
-    ResultData buildResult(GuestSession s) {
+    /** 현재 세션 값으로 ⑤ ResultData를 산출합니다. 호출 전 {@link #requireResultReady}로 선행 조건을 확인해야 합니다. */
+    public ResultData buildResult(GuestSession s) {
         StyleRecommendation rec = recommendationService.recommend(new RecommendationInput(
                 s.getFaceResult(), s.getBodyResult(), s.getAge(), s.getHeightCm(), s.getWeightKg(),
                 s.getHairThickness(), s.getHairCurl(), s.getHairDensity()));
@@ -303,6 +316,11 @@ public class GuestSessionService {
     /** 쓰기 요청 성공 → 세션 TTL 연장. */
     private void touch(GuestSession session, Instant now) {
         session.renewExpiry(now.plus(ttl));
+    }
+
+    /** 다른 모듈(챗봇 ⑩)의 쓰기 요청 성공 시 TTL 연장. 관리 상태(트랜잭션 안) 엔티티에 호출해야 반영됩니다. */
+    public void extendExpiry(GuestSession session, Instant now) {
+        touch(session, now);
     }
 
     private Instant now() {

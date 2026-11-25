@@ -5,6 +5,8 @@ import com.moda.global.time.KstTime;
 import com.moda.session.repository.GuestSessionRepository;
 import java.time.Clock;
 import java.time.Duration;
+import java.time.Instant;
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -29,9 +31,11 @@ public class SessionCleanupScheduler implements SchedulingConfigurer {
     private final Clock clock;
     private final Duration interval;
     private final TransactionTemplate tx;
+    private final List<SessionDataPurger> purgers;
 
     public SessionCleanupScheduler(GuestSessionRepository repository, Clock clock, ModaProperties properties,
-                                   PlatformTransactionManager transactionManager) {
+                                   PlatformTransactionManager transactionManager, List<SessionDataPurger> purgers) {
+        this.purgers = List.copyOf(purgers);
         this.repository = repository;
         this.clock = clock;
         this.interval = properties.session().cleanupInterval();
@@ -45,7 +49,11 @@ public class SessionCleanupScheduler implements SchedulingConfigurer {
 
     /** @return 삭제한 세션 수 */
     public int cleanupExpiredSessions() {
-        Integer deleted = tx.execute(status -> repository.deleteExpired(KstTime.now(clock)));
+        Integer deleted = tx.execute(status -> {
+            Instant now = KstTime.now(clock);
+            purgers.forEach(p -> p.purgeExpired(now));                                  // chat_message 등 하위 데이터 먼저 삭제
+            return repository.deleteExpired(now);
+        });
         int count = deleted == null ? 0 : deleted;
         if (count > 0) {
             log.info("[Session] 만료 세션 {}건 삭제", count);

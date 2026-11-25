@@ -42,18 +42,30 @@ public record ModaProperties(
             @NotNull @DefaultValue("800ms") Duration mockDefaultDelay) {
     }
 
+    /**
+     * 챗봇 LLM 설정 (api-spec.md 1.5 챗봇 Mock, ⑩).
+     * {@code external}은 OpenAI 호환 Chat Completions API({@code {base-url}/chat/completions})를 호출하므로
+     * {@code base-url}·{@code model}·{@code api-key} 환경변수만 바꾸면 OpenAI·Gemini(OpenAI 호환 엔드포인트) 등에 연결됩니다.
+     */
     public record Chat(
             @NotNull @DefaultValue("mock") ClientMode mode,
             @Min(1) @Max(100) @DefaultValue("20") int maxTurns,
             @NotNull @DefaultValue("3s") Duration connectTimeout,
             @NotNull @DefaultValue("20s") Duration readTimeout,
-            @DefaultValue("") String apiKey) {
+            @DefaultValue("") String apiKey,
+            @NotBlank @DefaultValue("https://api.openai.com/v1") String baseUrl,
+            @NotBlank @DefaultValue("gpt-4o-mini") String model,
+            @DefaultValue("0.7") double temperature,
+            @Min(16) @Max(4096) @DefaultValue("400") int maxTokens,
+            /* Mock 모드에서 X-Mock-Delay-Ms 헤더가 없을 때의 응답 지연 (api-spec.md 1.5 기본값 800ms) */
+            @NotNull @DefaultValue("800ms") Duration mockDefaultDelay) {
 
         /** API 키는 로그·toString에 노출하지 않는다. */
         @Override
         public String toString() {
-            return "Chat[mode=" + mode + ", maxTurns=" + maxTurns + ", connectTimeout=" + connectTimeout
-                    + ", readTimeout=" + readTimeout + ", apiKey=" + (apiKey == null || apiKey.isBlank() ? "(unset)" : "****") + "]";
+            return "Chat[mode=" + mode + ", maxTurns=" + maxTurns + ", baseUrl=" + baseUrl + ", model=" + model
+                    + ", connectTimeout=" + connectTimeout + ", readTimeout=" + readTimeout
+                    + ", apiKey=" + (apiKey == null || apiKey.isBlank() ? "(unset)" : "****") + "]";
         }
     }
 

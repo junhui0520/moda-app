@@ -81,6 +81,13 @@ moda:
     connect-timeout: 3s
     read-timeout: 20s                       # 초과 시 504 CHAT_TIMEOUT
     api-key: ${MODA_CHAT_API_KEY:}          # LLM API 키 — 환경변수로만 주입 (커밋 금지)
+    # OpenAI 호환 Chat Completions: {base-url}/chat/completions
+    #   OpenAI: https://api.openai.com/v1 / Gemini: https://generativelanguage.googleapis.com/v1beta/openai
+    base-url: ${MODA_CHAT_BASE_URL:https://api.openai.com/v1}
+    model: ${MODA_CHAT_MODEL:gpt-4o-mini}
+    temperature: 0.7
+    max-tokens: 400
+    mock-default-delay: 800ms               # Mock: X-Mock-Delay-Ms 헤더가 없을 때 지연
   session:
     ttl-minutes: 30                         # 쓰기 요청 성공 시마다 30분 연장 (api-spec.md 1.4)
     cleanup-interval: 5m                    # 만료 세션 정리 스케줄러 주기
