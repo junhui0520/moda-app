@@ -1,0 +1,318 @@
+{
+  "ruleVersion": "v1.1-draft",
+  "headlineTemplate": "당신은 {typeName} 유형입니다",
+  "types": [
+    {
+      "typeCode": "TYPE-01",
+      "bodyType": "standard",
+      "faceShape": "diamond",
+      "typeName": "밸런스 샤프",
+      "nameConfirmed": false,
+      "description": "균형 잡힌 체형과 입체적인 광대 라인이 어우러져, 캐주얼·미니멀처럼 기본에 충실한 스타일이 잘 어울리는 유형입니다.",
+      "stylePoints": [
+        "레귤러 핏 기본 아이템과 모노톤 컬러로 균형 잡힌 비율 살리기",
+        "옆 볼륨이 있는 가르마 헤어로 관자놀이 라인 채우기"
+      ],
+      "sortOrder": 1
+    },
+    {
+      "typeCode": "TYPE-02",
+      "bodyType": "standard",
+      "faceShape": "heart",
+      "typeName": "밸런스 프레시",
+      "nameConfirmed": false,
+      "description": "균형 잡힌 체형과 시원한 이마에서 갸름하게 모이는 턱선이 어우러져, 캐주얼·미니멀처럼 기본에 충실한 스타일이 잘 어울리는 유형입니다.",
+      "stylePoints": [
+        "레귤러 핏 기본 아이템과 모노톤 컬러로 균형 잡힌 비율 살리기",
+        "가르마나 내린 앞머리로 이마 라인을 자연스럽게 정돈하기"
+      ],
+      "sortOrder": 2
+    },
+    {
+      "typeCode": "TYPE-03",
+      "bodyType": "standard",
+      "faceShape": "oval",
+      "typeName": "밸런스 내추럴",
+      "nameConfirmed": false,
+      "description": "균형 잡힌 체형과 고른 얼굴 비율이 어우러져, 캐주얼·미니멀처럼 기본에 충실한 스타일이 잘 어울리는 유형입니다.",
+      "stylePoints": [
+        "레귤러 핏 기본 아이템과 모노톤 컬러로 균형 잡힌 비율 살리기",
+        "깐머리·가르마처럼 이마를 드러내는 헤어로 고른 비율 살리기"
+      ],
+      "sortOrder": 3
+    },
+    {
+      "typeCode": "TYPE-04",
+      "bodyType": "standard",
+      "faceShape": "rectangle",
+      "typeName": "밸런스 클리어",
+      "nameConfirmed": false,
+      "description": "균형 잡힌 체형과 선명한 턱선의 시원한 세로 비율이 어우러져, 캐주얼·미니멀처럼 기본에 충실한 스타일이 잘 어울리는 유형입니다.",
+      "stylePoints": [
+        "레귤러 핏 기본 아이템과 모노톤 컬러로 균형 잡힌 비율 살리기",
+        "웨이브를 준 쉐도우 헤어로 또렷한 턱선에 부드러움 더하기"
+      ],
+      "sortOrder": 4
+    },
+    {
+      "typeCode": "TYPE-05",
+      "bodyType": "standard",
+      "faceShape": "round",
+      "typeName": "밸런스 소프트",
+      "nameConfirmed": false,
+      "description": "균형 잡힌 체형과 부드러운 곡선의 얼굴 윤곽이 어우러져, 캐주얼·미니멀처럼 기본에 충실한 스타일이 잘 어울리는 유형입니다.",
+      "stylePoints": [
+        "레귤러 핏 기본 아이템과 모노톤 컬러로 균형 잡힌 비율 살리기",
+        "윗머리 볼륨을 살린 깐머리·크롭 헤어로 세로 흐름 만들기"
+      ],
+      "sortOrder": 5
+    },
+    {
+      "typeCode": "TYPE-06",
+      "bodyType": "standard",
+      "faceShape": "long",
+      "typeName": "밸런스 시크",
+      "nameConfirmed": false,
+      "description": "균형 잡힌 체형과 시원하게 뻗은 세로 라인이 어우러져, 캐주얼·미니멀처럼 기본에 충실한 스타일이 잘 어울리는 유형입니다.",
+      "stylePoints": [
+        "레귤러 핏 기본 아이템과 모노톤 컬러로 균형 잡힌 비율 살리기",
+        "앞머리를 내린 댄디·쉐도우 헤어로 세로 비율 정돈하기"
+      ],
+      "sortOrder": 6
+    },
+    {
+      "typeCode": "TYPE-07",
+      "bodyType": "small_inv_triangle",
+      "faceShape": "diamond",
+      "typeName": "V라인 샤프",
+      "nameConfirmed": false,
+      "description": "또렷한 어깨선의 슬림한 체형과 입체적인 광대 라인이 어우러져, 댄디·스포티처럼 핏이 살아나는 스타일이 잘 어울리는 유형입니다.",
+      "stylePoints": [
+        "테일러드 재킷·트랙 재킷처럼 어깨선이 드러나는 아이템으로 V라인 강조",
+        "옆 볼륨이 있는 가르마 헤어로 관자놀이 라인 채우기"
+      ],
+      "sortOrder": 7
+    },
+    {
+      "typeCode": "TYPE-08",
+      "bodyType": "small_inv_triangle",
+      "faceShape": "heart",
+      "typeName": "V라인 프레시",
+      "nameConfirmed": false,
+      "description": "또렷한 어깨선의 슬림한 체형과 시원한 이마에서 갸름하게 모이는 턱선이 어우러져, 댄디·스포티처럼 핏이 살아나는 스타일이 잘 어울리는 유형입니다.",
+      "stylePoints": [
+        "테일러드 재킷·트랙 재킷처럼 어깨선이 드러나는 아이템으로 V라인 강조",
+        "가르마나 내린 앞머리로 이마 라인을 자연스럽게 정돈하기"
+      ],
+      "sortOrder": 8
+    },
+    {
+      "typeCode": "TYPE-09",
+      "bodyType": "small_inv_triangle",
+      "faceShape": "oval",
+      "typeName": "V라인 내추럴",
+      "nameConfirmed": false,
+      "description": "또렷한 어깨선의 슬림한 체형과 고른 얼굴 비율이 어우러져, 댄디·스포티처럼 핏이 살아나는 스타일이 잘 어울리는 유형입니다.",
+      "stylePoints": [
+        "테일러드 재킷·트랙 재킷처럼 어깨선이 드러나는 아이템으로 V라인 강조",
+        "깐머리·가르마처럼 이마를 드러내는 헤어로 고른 비율 살리기"
+      ],
+      "sortOrder": 9
+    },
+    {
+      "typeCode": "TYPE-10",
+      "bodyType": "small_inv_triangle",
+      "faceShape": "rectangle",
+      "typeName": "V라인 클리어",
+      "nameConfirmed": false,
+      "description": "또렷한 어깨선의 슬림한 체형과 선명한 턱선의 시원한 세로 비율이 어우러져, 댄디·스포티처럼 핏이 살아나는 스타일이 잘 어울리는 유형입니다.",
+      "stylePoints": [
+        "테일러드 재킷·트랙 재킷처럼 어깨선이 드러나는 아이템으로 V라인 강조",
+        "웨이브를 준 쉐도우 헤어로 또렷한 턱선에 부드러움 더하기"
+      ],
+      "sortOrder": 10
+    },
+    {
+      "typeCode": "TYPE-11",
+      "bodyType": "small_inv_triangle",
+      "faceShape": "round",
+      "typeName": "V라인 소프트",
+      "nameConfirmed": false,
+      "description": "또렷한 어깨선의 슬림한 체형과 부드러운 곡선의 얼굴 윤곽이 어우러져, 댄디·스포티처럼 핏이 살아나는 스타일이 잘 어울리는 유형입니다.",
+      "stylePoints": [
+        "테일러드 재킷·트랙 재킷처럼 어깨선이 드러나는 아이템으로 V라인 강조",
+        "윗머리 볼륨을 살린 깐머리·크롭 헤어로 세로 흐름 만들기"
+      ],
+      "sortOrder": 11
+    },
+    {
+      "typeCode": "TYPE-12",
+      "bodyType": "small_inv_triangle",
+      "faceShape": "long",
+      "typeName": "V라인 시크",
+      "nameConfirmed": false,
+      "description": "또렷한 어깨선의 슬림한 체형과 시원하게 뻗은 세로 라인이 어우러져, 댄디·스포티처럼 핏이 살아나는 스타일이 잘 어울리는 유형입니다.",
+      "stylePoints": [
+        "테일러드 재킷·트랙 재킷처럼 어깨선이 드러나는 아이템으로 V라인 강조",
+        "앞머리를 내린 댄디·쉐도우 헤어로 세로 비율 정돈하기"
+      ],
+      "sortOrder": 12
+    },
+    {
+      "typeCode": "TYPE-13",
+      "bodyType": "large_rectangle",
+      "faceShape": "diamond",
+      "typeName": "볼드 샤프",
+      "nameConfirmed": false,
+      "description": "듬직한 프레임과 입체적인 광대 라인이 어우러져, 아메카지·고프코어·스트릿처럼 소재감과 볼륨이 있는 스타일이 잘 어울리는 유형입니다.",
+      "stylePoints": [
+        "워크 재킷·기능성 아우터처럼 직선 실루엣 아이템으로 안정감 있는 핏 연출",
+        "옆 볼륨이 있는 가르마 헤어로 관자놀이 라인 채우기"
+      ],
+      "sortOrder": 13
+    },
+    {
+      "typeCode": "TYPE-14",
+      "bodyType": "large_rectangle",
+      "faceShape": "heart",
+      "typeName": "볼드 프레시",
+      "nameConfirmed": false,
+      "description": "듬직한 프레임과 시원한 이마에서 갸름하게 모이는 턱선이 어우러져, 아메카지·고프코어·스트릿처럼 소재감과 볼륨이 있는 스타일이 잘 어울리는 유형입니다.",
+      "stylePoints": [
+        "워크 재킷·기능성 아우터처럼 직선 실루엣 아이템으로 안정감 있는 핏 연출",
+        "가르마나 내린 앞머리로 이마 라인을 자연스럽게 정돈하기"
+      ],
+      "sortOrder": 14
+    },
+    {
+      "typeCode": "TYPE-15",
+      "bodyType": "large_rectangle",
+      "faceShape": "oval",
+      "typeName": "볼드 내추럴",
+      "nameConfirmed": false,
+      "description": "듬직한 프레임과 고른 얼굴 비율이 어우러져, 아메카지·고프코어·스트릿처럼 소재감과 볼륨이 있는 스타일이 잘 어울리는 유형입니다.",
+      "stylePoints": [
+        "워크 재킷·기능성 아우터처럼 직선 실루엣 아이템으로 안정감 있는 핏 연출",
+        "깐머리·가르마처럼 이마를 드러내는 헤어로 고른 비율 살리기"
+      ],
+      "sortOrder": 15
+    },
+    {
+      "typeCode": "TYPE-16",
+      "bodyType": "large_rectangle",
+      "faceShape": "rectangle",
+      "typeName": "볼드 클리어",
+      "nameConfirmed": false,
+      "description": "듬직한 프레임과 선명한 턱선의 시원한 세로 비율이 어우러져, 아메카지·고프코어·스트릿처럼 소재감과 볼륨이 있는 스타일이 잘 어울리는 유형입니다.",
+      "stylePoints": [
+        "워크 재킷·기능성 아우터처럼 직선 실루엣 아이템으로 안정감 있는 핏 연출",
+        "웨이브를 준 쉐도우 헤어로 또렷한 턱선에 부드러움 더하기"
+      ],
+      "sortOrder": 16
+    },
+    {
+      "typeCode": "TYPE-17",
+      "bodyType": "large_rectangle",
+      "faceShape": "round",
+      "typeName": "볼드 소프트",
+      "nameConfirmed": false,
+      "description": "듬직한 프레임과 부드러운 곡선의 얼굴 윤곽이 어우러져, 아메카지·고프코어·스트릿처럼 소재감과 볼륨이 있는 스타일이 잘 어울리는 유형입니다.",
+      "stylePoints": [
+        "워크 재킷·기능성 아우터처럼 직선 실루엣 아이템으로 안정감 있는 핏 연출",
+        "윗머리 볼륨을 살린 깐머리·크롭 헤어로 세로 흐름 만들기"
+      ],
+      "sortOrder": 17
+    },
+    {
+      "typeCode": "TYPE-18",
+      "bodyType": "large_rectangle",
+      "faceShape": "long",
+      "typeName": "볼드 시크",
+      "nameConfirmed": false,
+      "description": "듬직한 프레임과 시원하게 뻗은 세로 라인이 어우러져, 아메카지·고프코어·스트릿처럼 소재감과 볼륨이 있는 스타일이 잘 어울리는 유형입니다.",
+      "stylePoints": [
+        "워크 재킷·기능성 아우터처럼 직선 실루엣 아이템으로 안정감 있는 핏 연출",
+        "앞머리를 내린 댄디·쉐도우 헤어로 세로 비율 정돈하기"
+      ],
+      "sortOrder": 18
+    },
+    {
+      "typeCode": "TYPE-19",
+      "bodyType": "rectangle",
+      "faceShape": "diamond",
+      "typeName": "스트레이트 샤프",
+      "nameConfirmed": false,
+      "description": "곧게 떨어지는 상체 라인과 입체적인 광대 라인이 어우러져, 시티보이·빈티지처럼 레이어드와 질감이 살아나는 스타일이 잘 어울리는 유형입니다.",
+      "stylePoints": [
+        "오버핏 셔츠 위 니트·베스트 레이어드로 입체감 더하기",
+        "옆 볼륨이 있는 가르마 헤어로 관자놀이 라인 채우기"
+      ],
+      "sortOrder": 19
+    },
+    {
+      "typeCode": "TYPE-20",
+      "bodyType": "rectangle",
+      "faceShape": "heart",
+      "typeName": "스트레이트 프레시",
+      "nameConfirmed": false,
+      "description": "곧게 떨어지는 상체 라인과 시원한 이마에서 갸름하게 모이는 턱선이 어우러져, 시티보이·빈티지처럼 레이어드와 질감이 살아나는 스타일이 잘 어울리는 유형입니다.",
+      "stylePoints": [
+        "오버핏 셔츠 위 니트·베스트 레이어드로 입체감 더하기",
+        "가르마나 내린 앞머리로 이마 라인을 자연스럽게 정돈하기"
+      ],
+      "sortOrder": 20
+    },
+    {
+      "typeCode": "TYPE-21",
+      "bodyType": "rectangle",
+      "faceShape": "oval",
+      "typeName": "스트레이트 내추럴",
+      "nameConfirmed": false,
+      "description": "곧게 떨어지는 상체 라인과 고른 얼굴 비율이 어우러져, 시티보이·빈티지처럼 레이어드와 질감이 살아나는 스타일이 잘 어울리는 유형입니다.",
+      "stylePoints": [
+        "오버핏 셔츠 위 니트·베스트 레이어드로 입체감 더하기",
+        "깐머리·가르마처럼 이마를 드러내는 헤어로 고른 비율 살리기"
+      ],
+      "sortOrder": 21
+    },
+    {
+      "typeCode": "TYPE-22",
+      "bodyType": "rectangle",
+      "faceShape": "rectangle",
+      "typeName": "스트레이트 클리어",
+      "nameConfirmed": false,
+      "description": "곧게 떨어지는 상체 라인과 선명한 턱선의 시원한 세로 비율이 어우러져, 시티보이·빈티지처럼 레이어드와 질감이 살아나는 스타일이 잘 어울리는 유형입니다.",
+      "stylePoints": [
+        "오버핏 셔츠 위 니트·베스트 레이어드로 입체감 더하기",
+        "웨이브를 준 쉐도우 헤어로 또렷한 턱선에 부드러움 더하기"
+      ],
+      "sortOrder": 22
+    },
+    {
+      "typeCode": "TYPE-23",
+      "bodyType": "rectangle",
+      "faceShape": "round",
+      "typeName": "스트레이트 소프트",
+      "nameConfirmed": false,
+      "description": "곧게 떨어지는 상체 라인과 부드러운 곡선의 얼굴 윤곽이 어우러져, 시티보이·빈티지처럼 레이어드와 질감이 살아나는 스타일이 잘 어울리는 유형입니다.",
+      "stylePoints": [
+        "오버핏 셔츠 위 니트·베스트 레이어드로 입체감 더하기",
+        "윗머리 볼륨을 살린 깐머리·크롭 헤어로 세로 흐름 만들기"
+      ],
+      "sortOrder": 23
+    },
+    {
+      "typeCode": "TYPE-24",
+      "bodyType": "rectangle",
+      "faceShape": "long",
+      "typeName": "스트레이트 시크",
+      "nameConfirmed": false,
+      "description": "곧게 떨어지는 상체 라인과 시원하게 뻗은 세로 라인이 어우러져, 시티보이·빈티지처럼 레이어드와 질감이 살아나는 스타일이 잘 어울리는 유형입니다.",
+      "stylePoints": [
+        "오버핏 셔츠 위 니트·베스트 레이어드로 입체감 더하기",
+        "앞머리를 내린 댄디·쉐도우 헤어로 세로 비율 정돈하기"
+      ],
+      "sortOrder": 24
+    }
+  ]
+}

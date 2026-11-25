@@ -1,0 +1,434 @@
+{
+  "ruleVersion": "v1.1-draft",
+  "domain": "HAIR",
+  "baseFactor": "faceShape",
+  "styleOrder": [
+    "UP_STYLE",
+    "PARTED_STYLE",
+    "DANDY_STYLE",
+    "CROP_STYLE",
+    "SHADOW_STYLE"
+  ],
+  "baseScoreRange": {
+    "min": 0,
+    "max": 5
+  },
+  "baseScores": {
+    "diamond": {
+      "UP_STYLE": 3,
+      "PARTED_STYLE": 5,
+      "DANDY_STYLE": 4,
+      "CROP_STYLE": 2,
+      "SHADOW_STYLE": 4
+    },
+    "heart": {
+      "UP_STYLE": 2,
+      "PARTED_STYLE": 5,
+      "DANDY_STYLE": 4,
+      "CROP_STYLE": 3,
+      "SHADOW_STYLE": 4
+    },
+    "oval": {
+      "UP_STYLE": 5,
+      "PARTED_STYLE": 5,
+      "DANDY_STYLE": 4,
+      "CROP_STYLE": 4,
+      "SHADOW_STYLE": 4
+    },
+    "rectangle": {
+      "UP_STYLE": 2,
+      "PARTED_STYLE": 4,
+      "DANDY_STYLE": 4,
+      "CROP_STYLE": 3,
+      "SHADOW_STYLE": 5
+    },
+    "round": {
+      "UP_STYLE": 5,
+      "PARTED_STYLE": 4,
+      "DANDY_STYLE": 2,
+      "CROP_STYLE": 4,
+      "SHADOW_STYLE": 2
+    },
+    "long": {
+      "UP_STYLE": 1,
+      "PARTED_STYLE": 4,
+      "DANDY_STYLE": 5,
+      "CROP_STYLE": 3,
+      "SHADOW_STYLE": 5
+    }
+  },
+  "baseRationale": {
+    "diamond": "관자놀이·이마 쪽에 볼륨을 주는 가르마/쉐도우, 이마를 덮는 댄디가 유리. 옆을 짧게 치는 크롭은 광대가 더 강조되어 낮게 책정",
+    "heart": "이마를 일부 또는 전부 덮는 가르마·댄디·쉐도우가 유리. 이마를 모두 드러내는 깐머리는 낮게 책정",
+    "oval": "대부분 소화. 이마를 드러내는 깐머리·가르마를 최상위로",
+    "rectangle": "옆 볼륨과 곡선감을 더하는 쉐도우 최상위, 세로 길이를 키우는 깐머리는 낮게",
+    "round": "세로 라인을 만드는 깐머리·크롭(옆 짧게, 위 볼륨) 유리. 앞머리를 내리고 옆 볼륨이 큰 댄디·쉐도우는 낮게",
+    "long": "이마를 덮어 세로 비율을 정돈하는 댄디·쉐도우 최상위, 깐머리는 최하위"
+  },
+  "adjustments": [
+    {
+      "factor": "hairThickness",
+      "value": "THIN",
+      "deltas": {
+        "UP_STYLE": -1,
+        "PARTED_STYLE": 0,
+        "DANDY_STYLE": 1,
+        "CROP_STYLE": 1,
+        "SHADOW_STYLE": 1
+      },
+      "note": "가는 모발은 넘긴 형태 유지가 어렵고, 내린 앞머리·짧은 질감·펌 볼륨이 유리"
+    },
+    {
+      "factor": "hairThickness",
+      "value": "MEDIUM",
+      "deltas": {
+        "UP_STYLE": 0,
+        "PARTED_STYLE": 0,
+        "DANDY_STYLE": 0,
+        "CROP_STYLE": 0,
+        "SHADOW_STYLE": 0
+      },
+      "note": "보정 없음"
+    },
+    {
+      "factor": "hairThickness",
+      "value": "THICK",
+      "deltas": {
+        "UP_STYLE": 1,
+        "PARTED_STYLE": 0,
+        "DANDY_STYLE": -1,
+        "CROP_STYLE": 1,
+        "SHADOW_STYLE": -1
+      },
+      "note": "굵은 모발은 넘긴 형태 유지가 쉽고, 내리면 무거워 보이기 쉬움"
+    },
+    {
+      "factor": "hairCurl",
+      "value": "STRAIGHT",
+      "deltas": {
+        "UP_STYLE": 0,
+        "PARTED_STYLE": 0,
+        "DANDY_STYLE": 1,
+        "CROP_STYLE": 0,
+        "SHADOW_STYLE": -1
+      },
+      "note": "직모는 일자 앞머리가 고르게 떨어짐, 쉐도우는 펌 의존도가 큼"
+    },
+    {
+      "factor": "hairCurl",
+      "value": "SEMI_CURLY",
+      "deltas": {
+        "UP_STYLE": 0,
+        "PARTED_STYLE": 1,
+        "DANDY_STYLE": 0,
+        "CROP_STYLE": 0,
+        "SHADOW_STYLE": 1
+      },
+      "note": "자연 웨이브가 가르마 볼륨·쉐도우 컬 연출에 유리"
+    },
+    {
+      "factor": "hairCurl",
+      "value": "CURLY",
+      "deltas": {
+        "UP_STYLE": -1,
+        "PARTED_STYLE": 0,
+        "DANDY_STYLE": -2,
+        "CROP_STYLE": 1,
+        "SHADOW_STYLE": 2
+      },
+      "note": "곱슬은 일자 앞머리 연출이 어렵고, 컬을 살리는 쉐도우·짧은 크롭이 유리"
+    },
+    {
+      "factor": "hairDensity",
+      "value": "LOW",
+      "deltas": {
+        "UP_STYLE": -2,
+        "PARTED_STYLE": -1,
+        "DANDY_STYLE": 1,
+        "CROP_STYLE": 1,
+        "SHADOW_STYLE": 1
+      },
+      "note": "이마·가르마 라인을 드러내는 스타일보다 모발이 고르게 덮이는 스타일이 유리"
+    },
+    {
+      "factor": "hairDensity",
+      "value": "MEDIUM",
+      "deltas": {
+        "UP_STYLE": 0,
+        "PARTED_STYLE": 0,
+        "DANDY_STYLE": 0,
+        "CROP_STYLE": 0,
+        "SHADOW_STYLE": 0
+      },
+      "note": "보정 없음"
+    },
+    {
+      "factor": "hairDensity",
+      "value": "HIGH",
+      "deltas": {
+        "UP_STYLE": 1,
+        "PARTED_STYLE": 1,
+        "DANDY_STYLE": -1,
+        "CROP_STYLE": 0,
+        "SHADOW_STYLE": -1
+      },
+      "note": "풍성한 숱은 넘긴 머리·가르마 볼륨이 잘 살고, 내린 머리·펌은 과한 볼륨이 되기 쉬움"
+    }
+  ],
+  "baseReasons": [
+    {
+      "reasonCode": "FACE_DIAMOND_PARTED_STYLE",
+      "baseKey": "diamond",
+      "styleCode": "PARTED_STYLE",
+      "text": "가르마로 생기는 옆 볼륨이 관자놀이 라인을 채워, 또렷한 광대 라인과 조화로운 균형을 만듭니다."
+    },
+    {
+      "reasonCode": "FACE_DIAMOND_DANDY_STYLE",
+      "baseKey": "diamond",
+      "styleCode": "DANDY_STYLE",
+      "text": "내린 앞머리가 이마 라인을 부드럽게 감싸 시선을 눈매로 모아 줍니다."
+    },
+    {
+      "reasonCode": "FACE_DIAMOND_SHADOW_STYLE",
+      "baseKey": "diamond",
+      "styleCode": "SHADOW_STYLE",
+      "text": "웨이브 볼륨이 이마와 옆머리를 채워 입체적인 얼굴 윤곽을 부드럽게 이어 줍니다."
+    },
+    {
+      "reasonCode": "FACE_HEART_PARTED_STYLE",
+      "baseKey": "heart",
+      "styleCode": "PARTED_STYLE",
+      "text": "가르마로 이마를 사선으로 나눠, 시원한 이마 라인과 갸름한 턱선이 균형 있게 보입니다."
+    },
+    {
+      "reasonCode": "FACE_HEART_DANDY_STYLE",
+      "baseKey": "heart",
+      "styleCode": "DANDY_STYLE",
+      "text": "내린 앞머리가 이마 라인을 정돈해 갸름한 턱선이 더 돋보입니다."
+    },
+    {
+      "reasonCode": "FACE_HEART_SHADOW_STYLE",
+      "baseKey": "heart",
+      "styleCode": "SHADOW_STYLE",
+      "text": "앞머리 웨이브가 이마를 부드럽게 덮고 턱 주변까지 자연스러운 볼륨 흐름을 만들어 줍니다."
+    },
+    {
+      "reasonCode": "FACE_OVAL_UP_STYLE",
+      "baseKey": "oval",
+      "styleCode": "UP_STYLE",
+      "text": "균형 잡힌 얼굴 비율이 그대로 드러나 이목구비가 시원하게 보입니다."
+    },
+    {
+      "reasonCode": "FACE_OVAL_PARTED_STYLE",
+      "baseKey": "oval",
+      "styleCode": "PARTED_STYLE",
+      "text": "어떤 가르마 비율도 잘 소화하는 얼굴형이라 분위기 변화를 주기 좋습니다."
+    },
+    {
+      "reasonCode": "FACE_OVAL_DANDY_STYLE",
+      "baseKey": "oval",
+      "styleCode": "DANDY_STYLE",
+      "text": "부드러운 윤곽과 내린 앞머리가 어우러져 단정하고 부드러운 인상을 줍니다."
+    },
+    {
+      "reasonCode": "FACE_OVAL_CROP_STYLE",
+      "baseKey": "oval",
+      "styleCode": "CROP_STYLE",
+      "text": "짧은 길이에서도 균형 잡힌 얼굴 라인이 살아나 깔끔하고 활동적인 인상을 줍니다."
+    },
+    {
+      "reasonCode": "FACE_OVAL_SHADOW_STYLE",
+      "baseKey": "oval",
+      "styleCode": "SHADOW_STYLE",
+      "text": "자연스러운 웨이브가 부드러운 윤곽과 어울려 트렌디한 무드를 더합니다."
+    },
+    {
+      "reasonCode": "FACE_RECTANGLE_PARTED_STYLE",
+      "baseKey": "rectangle",
+      "styleCode": "PARTED_STYLE",
+      "text": "옆 볼륨이 가로 라인을 더해 시원한 세로 라인과 균형을 이룹니다."
+    },
+    {
+      "reasonCode": "FACE_RECTANGLE_DANDY_STYLE",
+      "baseKey": "rectangle",
+      "styleCode": "DANDY_STYLE",
+      "text": "내린 앞머리가 세로 비율을 정돈해 또렷한 턱선이 안정감 있게 보입니다."
+    },
+    {
+      "reasonCode": "FACE_RECTANGLE_SHADOW_STYLE",
+      "baseKey": "rectangle",
+      "styleCode": "SHADOW_STYLE",
+      "text": "부드러운 웨이브가 또렷한 턱선과 대비되어 세련된 인상을 줍니다."
+    },
+    {
+      "reasonCode": "FACE_ROUND_UP_STYLE",
+      "baseKey": "round",
+      "styleCode": "UP_STYLE",
+      "text": "이마를 드러내 세로 라인이 살아나고, 부드러운 얼굴 윤곽이 더 또렷해 보입니다."
+    },
+    {
+      "reasonCode": "FACE_ROUND_PARTED_STYLE",
+      "baseKey": "round",
+      "styleCode": "PARTED_STYLE",
+      "text": "윗머리 볼륨과 가르마의 사선 라인이 시원한 세로 흐름을 만들어 줍니다."
+    },
+    {
+      "reasonCode": "FACE_ROUND_CROP_STYLE",
+      "baseKey": "round",
+      "styleCode": "CROP_STYLE",
+      "text": "옆을 짧게 정리하고 윗머리에 질감을 주면 위로 향하는 산뜻한 실루엣이 완성됩니다."
+    },
+    {
+      "reasonCode": "FACE_LONG_PARTED_STYLE",
+      "baseKey": "long",
+      "styleCode": "PARTED_STYLE",
+      "text": "가르마로 이마를 사선으로 나누고 옆 볼륨을 살리면 얼굴 비율이 안정적으로 보입니다."
+    },
+    {
+      "reasonCode": "FACE_LONG_DANDY_STYLE",
+      "baseKey": "long",
+      "styleCode": "DANDY_STYLE",
+      "text": "내린 앞머리가 이마 라인을 정돈해 시원한 세로 비율이 부드럽게 정리됩니다."
+    },
+    {
+      "reasonCode": "FACE_LONG_SHADOW_STYLE",
+      "baseKey": "long",
+      "styleCode": "SHADOW_STYLE",
+      "text": "앞머리와 옆머리의 웨이브 볼륨이 가로 라인을 더해 균형 잡힌 실루엣을 만듭니다."
+    }
+  ],
+  "genericReasons": [
+    {
+      "reasonCode": "HAIR_GENERIC_UP_STYLE",
+      "styleCode": "UP_STYLE",
+      "text": "이마를 시원하게 드러내 깔끔하고 자신감 있는 인상을 줍니다."
+    },
+    {
+      "reasonCode": "HAIR_GENERIC_PARTED_STYLE",
+      "styleCode": "PARTED_STYLE",
+      "text": "가르마 비율을 조절해 분위기를 쉽게 바꿀 수 있는 스타일입니다."
+    },
+    {
+      "reasonCode": "HAIR_GENERIC_DANDY_STYLE",
+      "styleCode": "DANDY_STYLE",
+      "text": "앞머리를 단정하게 내려 부드럽고 깔끔한 인상을 줍니다."
+    },
+    {
+      "reasonCode": "HAIR_GENERIC_CROP_STYLE",
+      "styleCode": "CROP_STYLE",
+      "text": "짧고 정돈된 길이로 관리가 쉽고 활동적인 인상을 줍니다."
+    },
+    {
+      "reasonCode": "HAIR_GENERIC_SHADOW_STYLE",
+      "styleCode": "SHADOW_STYLE",
+      "text": "자연스러운 웨이브로 부드럽고 트렌디한 무드를 더합니다."
+    }
+  ],
+  "adjustmentReasons": [
+    {
+      "reasonCode": "ADJ_THICKNESS_THIN_DANDY_STYLE",
+      "factor": "hairThickness",
+      "value": "THIN",
+      "styleCode": "DANDY_STYLE",
+      "text": "가는 모발은 앞머리를 내렸을 때 차분하게 정돈되어 깔끔한 인상을 줍니다."
+    },
+    {
+      "reasonCode": "ADJ_THICKNESS_THIN_CROP_STYLE",
+      "factor": "hairThickness",
+      "value": "THIN",
+      "styleCode": "CROP_STYLE",
+      "text": "짧은 길이에 질감을 살리는 크롭은 가는 모발도 볼륨 있어 보이게 합니다."
+    },
+    {
+      "reasonCode": "ADJ_THICKNESS_THIN_SHADOW_STYLE",
+      "factor": "hairThickness",
+      "value": "THIN",
+      "styleCode": "SHADOW_STYLE",
+      "text": "펌의 컬이 가는 모발에 자연스러운 볼륨을 더해 줍니다."
+    },
+    {
+      "reasonCode": "ADJ_THICKNESS_THICK_UP_STYLE",
+      "factor": "hairThickness",
+      "value": "THICK",
+      "styleCode": "UP_STYLE",
+      "text": "굵은 모발은 힘이 좋아 넘긴 형태가 오래 유지됩니다."
+    },
+    {
+      "reasonCode": "ADJ_THICKNESS_THICK_CROP_STYLE",
+      "factor": "hairThickness",
+      "value": "THICK",
+      "styleCode": "CROP_STYLE",
+      "text": "짧게 정리하는 크롭은 굵은 모발의 풍성함을 단정하게 살려 줍니다."
+    },
+    {
+      "reasonCode": "ADJ_CURL_STRAIGHT_DANDY_STYLE",
+      "factor": "hairCurl",
+      "value": "STRAIGHT",
+      "styleCode": "DANDY_STYLE",
+      "text": "직모는 내린 앞머리가 고르게 떨어져 단정한 댄디 무드에 잘 맞습니다."
+    },
+    {
+      "reasonCode": "ADJ_CURL_SEMI_CURLY_PARTED_STYLE",
+      "factor": "hairCurl",
+      "value": "SEMI_CURLY",
+      "styleCode": "PARTED_STYLE",
+      "text": "자연스러운 웨이브가 가르마 라인에 입체감을 더해 줍니다."
+    },
+    {
+      "reasonCode": "ADJ_CURL_SEMI_CURLY_SHADOW_STYLE",
+      "factor": "hairCurl",
+      "value": "SEMI_CURLY",
+      "styleCode": "SHADOW_STYLE",
+      "text": "반곱슬의 결을 살리면 쉐도우 스타일의 컬을 자연스럽게 연출하기 쉽습니다."
+    },
+    {
+      "reasonCode": "ADJ_CURL_CURLY_CROP_STYLE",
+      "factor": "hairCurl",
+      "value": "CURLY",
+      "styleCode": "CROP_STYLE",
+      "text": "짧은 크롭은 곱슬의 질감을 개성 있는 텍스처로 살려 줍니다."
+    },
+    {
+      "reasonCode": "ADJ_CURL_CURLY_SHADOW_STYLE",
+      "factor": "hairCurl",
+      "value": "CURLY",
+      "styleCode": "SHADOW_STYLE",
+      "text": "타고난 컬이 쉐도우 스타일의 부드러운 웨이브와 잘 어울립니다."
+    },
+    {
+      "reasonCode": "ADJ_DENSITY_LOW_DANDY_STYLE",
+      "factor": "hairDensity",
+      "value": "LOW",
+      "styleCode": "DANDY_STYLE",
+      "text": "앞머리를 자연스럽게 내리는 댄디 스타일은 모발이 고르게 덮여 안정감 있는 실루엣을 만듭니다."
+    },
+    {
+      "reasonCode": "ADJ_DENSITY_LOW_CROP_STYLE",
+      "factor": "hairDensity",
+      "value": "LOW",
+      "styleCode": "CROP_STYLE",
+      "text": "짧고 질감 있는 크롭은 모발 밀도와 관계없이 균일한 실루엣을 만들어 줍니다."
+    },
+    {
+      "reasonCode": "ADJ_DENSITY_LOW_SHADOW_STYLE",
+      "factor": "hairDensity",
+      "value": "LOW",
+      "styleCode": "SHADOW_STYLE",
+      "text": "컬이 볼륨을 채워 주어 풍성한 실루엣이 완성됩니다."
+    },
+    {
+      "reasonCode": "ADJ_DENSITY_HIGH_UP_STYLE",
+      "factor": "hairDensity",
+      "value": "HIGH",
+      "styleCode": "UP_STYLE",
+      "text": "풍성한 숱 덕분에 넘긴 머리의 볼륨과 형태가 또렷하게 살아납니다."
+    },
+    {
+      "reasonCode": "ADJ_DENSITY_HIGH_PARTED_STYLE",
+      "factor": "hairDensity",
+      "value": "HIGH",
+      "styleCode": "PARTED_STYLE",
+      "text": "풍성한 숱이 가르마 양쪽에 자연스러운 볼륨을 만들어 줍니다."
+    }
+  ]
+}
