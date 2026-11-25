@@ -1,0 +1,35 @@
+# =====================================================================
+# MySQL 프로파일 — 실행: SPRING_PROFILES_ACTIVE=mysql ./gradlew bootRun
+# 접속 정보·비밀번호·API 키는 환경변수로만 주입합니다 (이 파일에 실제 값 기입 금지).
+#   MODA_DB_HOST, MODA_DB_PORT, MODA_DB_NAME, MODA_DB_USERNAME, MODA_DB_PASSWORD
+#   MODA_AI_MODE, MODA_AI_BASE_URL, MODA_CHAT_MODE, MODA_CHAT_API_KEY
+# DB 생성 예: CREATE DATABASE moda DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+# =====================================================================
+spring:
+  datasource:
+    url: jdbc:mysql://${MODA_DB_HOST:localhost}:${MODA_DB_PORT:3306}/${MODA_DB_NAME:moda}?serverTimezone=Asia/Seoul&characterEncoding=UTF-8&useUnicode=true&connectionTimeZone=Asia/Seoul
+    username: ${MODA_DB_USERNAME:moda}
+    password: ${MODA_DB_PASSWORD:}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      maximum-pool-size: ${MODA_DB_POOL_SIZE:10}
+
+  h2:
+    console:
+      enabled: false
+
+  jpa:
+    hibernate:
+      ddl-auto: ${MODA_JPA_DDL_AUTO:update}   # 시드는 코드 기준 upsert라 재기동해도 중복되지 않음
+
+moda:
+  seed:
+    mode: ${MODA_SEED_MODE:upsert}
+  ai:
+    mode: ${MODA_AI_MODE:mock}
+    base-url: ${MODA_AI_BASE_URL:http://localhost:8000}
+  chat:
+    mode: ${MODA_CHAT_MODE:mock}
+    api-key: ${MODA_CHAT_API_KEY:}
+    base-url: ${MODA_CHAT_BASE_URL:https://api.openai.com/v1}
+    model: ${MODA_CHAT_MODEL:gpt-4o-mini}

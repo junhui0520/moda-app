@@ -1,0 +1,217 @@
+{
+  "ruleVersion": "v1.1-draft",
+  "features": [
+    {
+      "key": "length_ratio",
+      "label": "얼굴 길이 비율",
+      "unit": "ratio",
+      "description": "얼굴 길이 ÷ 광대 폭",
+      "target": "FACE",
+      "aiValueMultiplier": 1,
+      "note": null
+    },
+    {
+      "key": "forehead_ratio",
+      "label": "이마 너비 비율",
+      "unit": "ratio",
+      "description": "이마 폭 ÷ 광대 폭",
+      "target": "FACE",
+      "aiValueMultiplier": 1,
+      "note": null
+    },
+    {
+      "key": "jaw_ratio",
+      "label": "턱 너비 비율",
+      "unit": "ratio",
+      "description": "턱 폭 ÷ 광대 폭",
+      "target": "FACE",
+      "aiValueMultiplier": 1,
+      "note": null
+    },
+    {
+      "key": "chin_ratio",
+      "label": "턱끝 너비 비율",
+      "unit": "ratio",
+      "description": "턱끝 폭 ÷ 광대 폭",
+      "target": "FACE",
+      "aiValueMultiplier": 1,
+      "note": null
+    },
+    {
+      "key": "jaw_angle_deg",
+      "label": "턱 각도",
+      "unit": "deg",
+      "description": "턱 윤곽선이 이루는 각도",
+      "target": "FACE",
+      "aiValueMultiplier": 1,
+      "note": null
+    },
+    {
+      "key": "shoulder_dev",
+      "label": "어깨 편차",
+      "unit": "percent",
+      "description": "키 대비 어깨 너비의 평균 대비 차이",
+      "target": "BODY",
+      "aiValueMultiplier": 100,
+      "note": "AI는 비율(0.040) → 백엔드가 ×100"
+    },
+    {
+      "key": "trunk_dev",
+      "label": "몸통 편차",
+      "unit": "percent",
+      "description": "키 대비 허리·엉덩이 너비의 평균 대비 차이",
+      "target": "BODY",
+      "aiValueMultiplier": 100,
+      "note": "AI는 비율(0.040) → 백엔드가 ×100"
+    },
+    {
+      "key": "shoulder_minus_trunk",
+      "label": "어깨-몸통 편차 차이",
+      "unit": "percent",
+      "description": "어깨 편차 − 몸통 편차",
+      "target": "BODY",
+      "aiValueMultiplier": 100,
+      "note": "AI는 비율(0.040) → 백엔드가 ×100"
+    }
+  ],
+  "sizeKorea": {
+    "reference": "SIZE_KOREA_20S_MALE",
+    "referenceLabel": "Size Korea 20대 남성 평균",
+    "items": [
+      {
+        "key": "bideltoid_width",
+        "sizeKoreaItem": "(318) 위팔사이너비",
+        "label": "어깨 너비"
+      },
+      {
+        "key": "waist_width",
+        "sizeKoreaItem": "(118) 허리너비",
+        "label": "허리 너비"
+      },
+      {
+        "key": "hip_width",
+        "sizeKoreaItem": "(120) 엉덩이너비",
+        "label": "엉덩이 너비"
+      },
+      {
+        "key": "shoulder_height",
+        "sizeKoreaItem": "(105) 어깨높이",
+        "label": "어깨 높이"
+      },
+      {
+        "key": "crotch_height",
+        "sizeKoreaItem": "(110) 샅높이",
+        "label": "다리 길이(샅높이)"
+      },
+      {
+        "key": "arm_length",
+        "sizeKoreaItem": "(236) 팔길이",
+        "label": "팔 길이"
+      }
+    ]
+  },
+  "warnings": [
+    {
+      "code": "FACE_NOT_DETECTED",
+      "target": "FACE",
+      "severity": "RETAKE",
+      "criteria": "얼굴 미검출",
+      "message": "얼굴이 인식되지 않았어요. 화면 가이드 안에 얼굴을 맞춰 주세요."
+    },
+    {
+      "code": "MULTIPLE_FACES",
+      "target": "FACE",
+      "severity": "RETAKE",
+      "criteria": "2명 이상 검출",
+      "message": "한 명만 화면에 나오도록 촬영해 주세요."
+    },
+    {
+      "code": "FACE_YAW_EXCEEDED",
+      "target": "FACE",
+      "severity": "RETAKE",
+      "criteria": "좌우 회전 > FACE_MAX_YAW_DEG(10°)",
+      "message": "고개를 좌우로 돌리지 말고 정면을 바라봐 주세요."
+    },
+    {
+      "code": "FACE_PITCH_EXCEEDED",
+      "target": "FACE",
+      "severity": "RETAKE",
+      "criteria": "상하 각도 > FACE_MAX_PITCH_DEG(15°)",
+      "message": "고개를 숙이거나 들지 말고 정면을 바라봐 주세요."
+    },
+    {
+      "code": "FACE_TOO_SMALL",
+      "target": "FACE",
+      "severity": "RETAKE",
+      "criteria": "얼굴 폭 < FACE_MIN_WIDTH_PX(200px)",
+      "message": "카메라에 조금 더 가까이 다가와 주세요."
+    },
+    {
+      "code": "MOUTH_OPEN",
+      "target": "FACE",
+      "severity": "RETAKE",
+      "criteria": "입 벌림 > FACE_MAX_JAW_OPEN(0.15)",
+      "message": "입을 다문 자연스러운 표정으로 촬영해 주세요."
+    },
+    {
+      "code": "SMILING",
+      "target": "FACE",
+      "severity": "RETAKE",
+      "criteria": "웃음 > FACE_MAX_SMILE(0.35)",
+      "message": "무표정에 가까운 편안한 표정으로 촬영해 주세요."
+    },
+    {
+      "code": "FACE_BORDERLINE",
+      "target": "FACE",
+      "severity": "INFO",
+      "criteria": "borderline=true (백엔드가 자동 추가 가능)",
+      "message": "여러 얼굴형의 특징이 함께 보여요. [분석 상세보기]에서 결과를 확인하고 수정할 수 있어요."
+    },
+    {
+      "code": "BODY_NOT_DETECTED",
+      "target": "BODY",
+      "severity": "RETAKE",
+      "criteria": "사람 미검출",
+      "message": "전신이 인식되지 않았어요. 머리부터 발끝까지 화면에 들어오게 촬영해 주세요."
+    },
+    {
+      "code": "MULTIPLE_PEOPLE",
+      "target": "BODY",
+      "severity": "RETAKE",
+      "criteria": "2명 이상 검출",
+      "message": "한 명만 나오도록 촬영해 주세요."
+    },
+    {
+      "code": "BODY_LOW_VISIBILITY",
+      "target": "BODY",
+      "severity": "RETAKE",
+      "criteria": "어깨·골반·무릎·발목 신뢰도 < BODY_MIN_VISIBILITY(0.6)",
+      "message": "어깨·골반·무릎·발목이 잘 보이도록 촬영해 주세요."
+    },
+    {
+      "code": "SHOULDER_TILT",
+      "target": "BODY",
+      "severity": "RETAKE",
+      "criteria": "어깨 기울기 > BODY_MAX_SHOULDER_TILT_DEG(6°)",
+      "message": "어깨가 수평이 되도록 똑바로 서 주세요."
+    },
+    {
+      "code": "BODY_BORDERLINE",
+      "target": "BODY",
+      "severity": "INFO",
+      "criteria": "borderline=true (백엔드가 자동 추가 가능)",
+      "message": "두 체형의 경계에 가까워요. [분석 상세보기]에서 확인하고 수정할 수 있어요."
+    },
+    {
+      "code": "ANALYSIS_UNUSABLE",
+      "target": "COMMON",
+      "severity": "RETAKE",
+      "criteria": "usable=false인데 RETAKE 코드가 하나도 없을 때 백엔드가 자동 추가",
+      "message": "사진을 분석할 수 없어요. 가이드에 맞춰 다시 촬영해 주세요."
+    }
+  ],
+  "undefinedWarning": {
+    "severity": "INFO",
+    "message": "촬영 상태를 한 번 더 확인해 주세요."
+  }
+}

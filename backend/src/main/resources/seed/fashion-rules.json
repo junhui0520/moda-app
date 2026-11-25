@@ -1,0 +1,530 @@
+{
+  "ruleVersion": "v1.1-draft",
+  "domain": "FASHION",
+  "baseFactor": "bodyType",
+  "styleOrder": [
+    "CASUAL",
+    "DANDY",
+    "MINIMAL",
+    "CITY_BOY",
+    "AMEKAJI",
+    "STREET",
+    "SPORTY",
+    "GORPCORE",
+    "VINTAGE"
+  ],
+  "baseScoreRange": {
+    "min": 0,
+    "max": 5
+  },
+  "baseScores": {
+    "standard": {
+      "CASUAL": 5,
+      "DANDY": 4,
+      "MINIMAL": 5,
+      "CITY_BOY": 4,
+      "AMEKAJI": 3,
+      "STREET": 3,
+      "SPORTY": 3,
+      "GORPCORE": 3,
+      "VINTAGE": 3
+    },
+    "small_inv_triangle": {
+      "CASUAL": 4,
+      "DANDY": 5,
+      "MINIMAL": 4,
+      "CITY_BOY": 3,
+      "AMEKAJI": 3,
+      "STREET": 3,
+      "SPORTY": 5,
+      "GORPCORE": 2,
+      "VINTAGE": 3
+    },
+    "large_rectangle": {
+      "CASUAL": 3,
+      "DANDY": 3,
+      "MINIMAL": 2,
+      "CITY_BOY": 4,
+      "AMEKAJI": 5,
+      "STREET": 5,
+      "SPORTY": 3,
+      "GORPCORE": 5,
+      "VINTAGE": 3
+    },
+    "rectangle": {
+      "CASUAL": 3,
+      "DANDY": 3,
+      "MINIMAL": 3,
+      "CITY_BOY": 5,
+      "AMEKAJI": 4,
+      "STREET": 4,
+      "SPORTY": 3,
+      "GORPCORE": 3,
+      "VINTAGE": 5
+    }
+  },
+  "baseRationale": {
+    "standard": "비율이 평균 범위라 기본 아이템 중심의 캐주얼·미니멀이 가장 안정적, 댄디·시티보이도 무리 없이 소화",
+    "small_inv_triangle": "슬림한 몸통과 또렷한 어깨선을 드러내는 테일러드(댄디)·기능성 핏(스포티)이 최상위. 부피가 큰 고프코어 아우터는 프레임 대비 과해 보이기 쉬워 최하위",
+    "large_rectangle": "탄탄한 소재와 직선 실루엣의 아메카지·고프코어, 볼륨 있는 스트릿이 최상위. 슬림 핏 중심의 미니멀은 최하위",
+    "rectangle": "레이어드로 입체감을 주는 시티보이·빈티지 최상위, 아메카지·스트릿 차상위"
+  },
+  "adjustments": [
+    {
+      "factor": "bmi",
+      "value": "BMI_LOW",
+      "deltas": {
+        "CASUAL": 0,
+        "DANDY": 0,
+        "MINIMAL": 0,
+        "CITY_BOY": 1,
+        "AMEKAJI": 1,
+        "STREET": 0,
+        "SPORTY": 0,
+        "GORPCORE": 0,
+        "VINTAGE": 1
+      },
+      "note": "< 18.5"
+    },
+    {
+      "factor": "bmi",
+      "value": "BMI_MID",
+      "deltas": {
+        "CASUAL": 0,
+        "DANDY": 0,
+        "MINIMAL": 0,
+        "CITY_BOY": 0,
+        "AMEKAJI": 0,
+        "STREET": 0,
+        "SPORTY": 0,
+        "GORPCORE": 0,
+        "VINTAGE": 0
+      },
+      "note": "18.5~22.9"
+    },
+    {
+      "factor": "bmi",
+      "value": "BMI_HIGH",
+      "deltas": {
+        "CASUAL": 0,
+        "DANDY": 1,
+        "MINIMAL": 0,
+        "CITY_BOY": 0,
+        "AMEKAJI": 0,
+        "STREET": 0,
+        "SPORTY": 0,
+        "GORPCORE": 1,
+        "VINTAGE": 0
+      },
+      "note": "23.0~24.9"
+    },
+    {
+      "factor": "bmi",
+      "value": "BMI_VERY_HIGH",
+      "deltas": {
+        "CASUAL": 0,
+        "DANDY": 0,
+        "MINIMAL": -1,
+        "CITY_BOY": 1,
+        "AMEKAJI": 1,
+        "STREET": 0,
+        "SPORTY": -1,
+        "GORPCORE": 1,
+        "VINTAGE": 0
+      },
+      "note": "≥ 25.0"
+    },
+    {
+      "factor": "height",
+      "value": "HEIGHT_SHORT",
+      "deltas": {
+        "CASUAL": 0,
+        "DANDY": 1,
+        "MINIMAL": 1,
+        "CITY_BOY": 0,
+        "AMEKAJI": 0,
+        "STREET": 0,
+        "SPORTY": 0,
+        "GORPCORE": -1,
+        "VINTAGE": 0
+      },
+      "note": "< 170"
+    },
+    {
+      "factor": "height",
+      "value": "HEIGHT_MID",
+      "deltas": {
+        "CASUAL": 0,
+        "DANDY": 0,
+        "MINIMAL": 0,
+        "CITY_BOY": 0,
+        "AMEKAJI": 0,
+        "STREET": 0,
+        "SPORTY": 0,
+        "GORPCORE": 0,
+        "VINTAGE": 0
+      },
+      "note": "170~181"
+    },
+    {
+      "factor": "height",
+      "value": "HEIGHT_TALL",
+      "deltas": {
+        "CASUAL": 0,
+        "DANDY": 0,
+        "MINIMAL": 0,
+        "CITY_BOY": 1,
+        "AMEKAJI": 1,
+        "STREET": 0,
+        "SPORTY": 0,
+        "GORPCORE": 0,
+        "VINTAGE": 0
+      },
+      "note": "≥ 182"
+    },
+    {
+      "factor": "age",
+      "value": "AGE_U22",
+      "deltas": {
+        "CASUAL": 0,
+        "DANDY": 0,
+        "MINIMAL": 0,
+        "CITY_BOY": 1,
+        "AMEKAJI": 0,
+        "STREET": 1,
+        "SPORTY": 0,
+        "GORPCORE": 0,
+        "VINTAGE": 0
+      },
+      "note": "≤ 22"
+    },
+    {
+      "factor": "age",
+      "value": "AGE_23_29",
+      "deltas": {
+        "CASUAL": 0,
+        "DANDY": 0,
+        "MINIMAL": 0,
+        "CITY_BOY": 0,
+        "AMEKAJI": 0,
+        "STREET": 0,
+        "SPORTY": 0,
+        "GORPCORE": 0,
+        "VINTAGE": 0
+      },
+      "note": "23~29"
+    },
+    {
+      "factor": "age",
+      "value": "AGE_30S",
+      "deltas": {
+        "CASUAL": 0,
+        "DANDY": 1,
+        "MINIMAL": 1,
+        "CITY_BOY": 0,
+        "AMEKAJI": 0,
+        "STREET": -1,
+        "SPORTY": 0,
+        "GORPCORE": 0,
+        "VINTAGE": 0
+      },
+      "note": "30~39"
+    },
+    {
+      "factor": "age",
+      "value": "AGE_40P",
+      "deltas": {
+        "CASUAL": 1,
+        "DANDY": 1,
+        "MINIMAL": 1,
+        "CITY_BOY": 0,
+        "AMEKAJI": 0,
+        "STREET": -1,
+        "SPORTY": 0,
+        "GORPCORE": 0,
+        "VINTAGE": 0
+      },
+      "note": "≥ 40"
+    }
+  ],
+  "baseReasons": [
+    {
+      "reasonCode": "BODY_STANDARD_CASUAL",
+      "baseKey": "standard",
+      "styleCode": "CASUAL",
+      "text": "어깨·몸통 비율이 고르게 균형 잡혀 기본 아이템만으로도 핏이 깔끔하게 떨어집니다."
+    },
+    {
+      "reasonCode": "BODY_STANDARD_DANDY",
+      "baseKey": "standard",
+      "styleCode": "DANDY",
+      "text": "균형 잡힌 상체 라인이 블레이저와 셔츠의 구조감을 자연스럽게 살려 줍니다."
+    },
+    {
+      "reasonCode": "BODY_STANDARD_MINIMAL",
+      "baseKey": "standard",
+      "styleCode": "MINIMAL",
+      "text": "균형 잡힌 비율 덕분에 장식 없는 실루엣만으로도 세련된 인상을 줍니다."
+    },
+    {
+      "reasonCode": "BODY_STANDARD_CITY_BOY",
+      "baseKey": "standard",
+      "styleCode": "CITY_BOY",
+      "text": "어떤 핏도 무리 없이 소화하는 비율이라 오버핏 레이어드도 정돈되어 보입니다."
+    },
+    {
+      "reasonCode": "BODY_SMALL_INV_TRIANGLE_CASUAL",
+      "baseKey": "small_inv_triangle",
+      "styleCode": "CASUAL",
+      "text": "슬림한 몸통과 또렷한 어깨선 덕분에 기본 셔츠·니트도 핏이 잘 삽니다."
+    },
+    {
+      "reasonCode": "BODY_SMALL_INV_TRIANGLE_DANDY",
+      "baseKey": "small_inv_triangle",
+      "styleCode": "DANDY",
+      "text": "또렷한 어깨선과 슬림한 허리 라인이 테일러드 재킷의 실루엣을 돋보이게 합니다."
+    },
+    {
+      "reasonCode": "BODY_SMALL_INV_TRIANGLE_MINIMAL",
+      "baseKey": "small_inv_triangle",
+      "styleCode": "MINIMAL",
+      "text": "어깨에서 허리로 이어지는 V라인이 단순한 디자인에서도 선명하게 드러납니다."
+    },
+    {
+      "reasonCode": "BODY_SMALL_INV_TRIANGLE_SPORTY",
+      "baseKey": "small_inv_triangle",
+      "styleCode": "SPORTY",
+      "text": "탄탄한 어깨 라인이 트랙 재킷과 기능성 웨어의 활동적인 핏을 살려 줍니다."
+    },
+    {
+      "reasonCode": "BODY_LARGE_RECTANGLE_CITY_BOY",
+      "baseKey": "large_rectangle",
+      "styleCode": "CITY_BOY",
+      "text": "여유 있는 오버핏이 듬직한 프레임과 어우러져 편안하고 자연스러운 실루엣을 만듭니다."
+    },
+    {
+      "reasonCode": "BODY_LARGE_RECTANGLE_AMEKAJI",
+      "baseKey": "large_rectangle",
+      "styleCode": "AMEKAJI",
+      "text": "듬직한 프레임이 워크 재킷과 데님의 탄탄한 소재감을 멋스럽게 소화합니다."
+    },
+    {
+      "reasonCode": "BODY_LARGE_RECTANGLE_STREET",
+      "baseKey": "large_rectangle",
+      "styleCode": "STREET",
+      "text": "볼륨 있는 후디와 카고 팬츠가 당당한 체격과 어울려 존재감 있는 스타일을 완성합니다."
+    },
+    {
+      "reasonCode": "BODY_LARGE_RECTANGLE_GORPCORE",
+      "baseKey": "large_rectangle",
+      "styleCode": "GORPCORE",
+      "text": "기능성 아우터의 직선 실루엣이 듬직한 체격을 안정감 있게 정리해 줍니다."
+    },
+    {
+      "reasonCode": "BODY_RECTANGLE_CITY_BOY",
+      "baseKey": "rectangle",
+      "styleCode": "CITY_BOY",
+      "text": "곧은 상체 라인에 오버핏 레이어드를 더하면 자연스러운 입체감이 생깁니다."
+    },
+    {
+      "reasonCode": "BODY_RECTANGLE_AMEKAJI",
+      "baseKey": "rectangle",
+      "styleCode": "AMEKAJI",
+      "text": "셔츠·베스트·재킷을 겹쳐 입는 레이어드가 직선적인 실루엣에 깊이감을 더합니다."
+    },
+    {
+      "reasonCode": "BODY_RECTANGLE_STREET",
+      "baseKey": "rectangle",
+      "styleCode": "STREET",
+      "text": "곧은 체형이 박시한 상의와 와이드 팬츠의 볼륨을 균형 있게 받쳐 줍니다."
+    },
+    {
+      "reasonCode": "BODY_RECTANGLE_VINTAGE",
+      "baseKey": "rectangle",
+      "styleCode": "VINTAGE",
+      "text": "코듀로이·니트 베스트 등 질감 있는 소재가 곧은 라인에 따뜻한 포인트를 줍니다."
+    }
+  ],
+  "genericReasons": [
+    {
+      "reasonCode": "FASHION_GENERIC_CASUAL",
+      "styleCode": "CASUAL",
+      "text": "편안하면서도 깔끔한 기본 아이템 위주로 일상에서 활용도가 높습니다."
+    },
+    {
+      "reasonCode": "FASHION_GENERIC_DANDY",
+      "styleCode": "DANDY",
+      "text": "셔츠와 슬랙스 중심의 단정한 스타일로 깔끔한 인상을 줍니다."
+    },
+    {
+      "reasonCode": "FASHION_GENERIC_MINIMAL",
+      "styleCode": "MINIMAL",
+      "text": "장식을 덜어낸 모노톤 실루엣으로 세련된 분위기를 연출합니다."
+    },
+    {
+      "reasonCode": "FASHION_GENERIC_CITY_BOY",
+      "styleCode": "CITY_BOY",
+      "text": "여유 있는 핏과 레이어드로 편안한 도시 무드를 완성합니다."
+    },
+    {
+      "reasonCode": "FASHION_GENERIC_AMEKAJI",
+      "styleCode": "AMEKAJI",
+      "text": "워크웨어 소재와 레이어드로 클래식하고 멋스러운 무드를 줍니다."
+    },
+    {
+      "reasonCode": "FASHION_GENERIC_STREET",
+      "styleCode": "STREET",
+      "text": "볼륨 있는 실루엣과 그래픽 포인트로 개성 있는 스타일을 완성합니다."
+    },
+    {
+      "reasonCode": "FASHION_GENERIC_SPORTY",
+      "styleCode": "SPORTY",
+      "text": "활동성 좋은 기능성 아이템으로 경쾌한 인상을 줍니다."
+    },
+    {
+      "reasonCode": "FASHION_GENERIC_GORPCORE",
+      "styleCode": "GORPCORE",
+      "text": "아웃도어 기능성 아이템을 일상복으로 활용해 실용적인 무드를 연출합니다."
+    },
+    {
+      "reasonCode": "FASHION_GENERIC_VINTAGE",
+      "styleCode": "VINTAGE",
+      "text": "질감 있는 소재와 레트로 컬러로 따뜻하고 개성 있는 분위기를 줍니다."
+    }
+  ],
+  "adjustmentReasons": [
+    {
+      "reasonCode": "ADJ_BMI_LOW_CITY_BOY",
+      "factor": "bmi",
+      "value": "BMI_LOW",
+      "styleCode": "CITY_BOY",
+      "text": "여유 있는 오버핏 레이어드가 자연스러운 볼륨감을 더해 줍니다."
+    },
+    {
+      "reasonCode": "ADJ_BMI_LOW_AMEKAJI",
+      "factor": "bmi",
+      "value": "BMI_LOW",
+      "styleCode": "AMEKAJI",
+      "text": "셔츠·베스트·재킷 레이어드가 실루엣에 입체감을 더해 줍니다."
+    },
+    {
+      "reasonCode": "ADJ_BMI_LOW_VINTAGE",
+      "factor": "bmi",
+      "value": "BMI_LOW",
+      "styleCode": "VINTAGE",
+      "text": "코듀로이·니트 등 도톰한 소재가 따뜻하고 풍성한 실루엣을 만들어 줍니다."
+    },
+    {
+      "reasonCode": "ADJ_BMI_HIGH_DANDY",
+      "factor": "bmi",
+      "value": "BMI_HIGH",
+      "styleCode": "DANDY",
+      "text": "구조감 있는 재킷과 세로 라인이 단정한 실루엣을 만듭니다."
+    },
+    {
+      "reasonCode": "ADJ_BMI_HIGH_GORPCORE",
+      "factor": "bmi",
+      "value": "BMI_HIGH",
+      "styleCode": "GORPCORE",
+      "text": "직선적인 기능성 아우터가 안정감 있는 핏을 만들어 줍니다."
+    },
+    {
+      "reasonCode": "ADJ_BMI_VERY_HIGH_CITY_BOY",
+      "factor": "bmi",
+      "value": "BMI_VERY_HIGH",
+      "styleCode": "CITY_BOY",
+      "text": "여유 있는 스트레이트 핏이 편안하면서도 정돈된 실루엣을 만듭니다."
+    },
+    {
+      "reasonCode": "ADJ_BMI_VERY_HIGH_AMEKAJI",
+      "factor": "bmi",
+      "value": "BMI_VERY_HIGH",
+      "styleCode": "AMEKAJI",
+      "text": "탄탄한 소재의 워크웨어가 체격과 어우러져 멋스러운 실루엣을 완성합니다."
+    },
+    {
+      "reasonCode": "ADJ_BMI_VERY_HIGH_GORPCORE",
+      "factor": "bmi",
+      "value": "BMI_VERY_HIGH",
+      "styleCode": "GORPCORE",
+      "text": "직선 실루엣의 아우터가 상체 라인을 깔끔하게 정리해 줍니다."
+    },
+    {
+      "reasonCode": "ADJ_HEIGHT_SHORT_DANDY",
+      "factor": "height",
+      "value": "HEIGHT_SHORT",
+      "styleCode": "DANDY",
+      "text": "셔츠부터 슬랙스까지 이어지는 정돈된 라인이 비율을 깔끔하게 살려 줍니다."
+    },
+    {
+      "reasonCode": "ADJ_HEIGHT_SHORT_MINIMAL",
+      "factor": "height",
+      "value": "HEIGHT_SHORT",
+      "styleCode": "MINIMAL",
+      "text": "톤온톤 컬러로 세로 라인이 이어져 전체 비율이 길어 보입니다."
+    },
+    {
+      "reasonCode": "ADJ_HEIGHT_TALL_CITY_BOY",
+      "factor": "height",
+      "value": "HEIGHT_TALL",
+      "styleCode": "CITY_BOY",
+      "text": "큰 키가 오버핏 실루엣을 여유 있게 소화합니다."
+    },
+    {
+      "reasonCode": "ADJ_HEIGHT_TALL_AMEKAJI",
+      "factor": "height",
+      "value": "HEIGHT_TALL",
+      "styleCode": "AMEKAJI",
+      "text": "큰 키가 여러 겹의 레이어드를 답답하지 않게 소화합니다."
+    },
+    {
+      "reasonCode": "ADJ_AGE_U22_CITY_BOY",
+      "factor": "age",
+      "value": "AGE_U22",
+      "styleCode": "CITY_BOY",
+      "text": "캠퍼스와 일상 어디서나 편하게 입기 좋은 트렌디한 스타일입니다."
+    },
+    {
+      "reasonCode": "ADJ_AGE_U22_STREET",
+      "factor": "age",
+      "value": "AGE_U22",
+      "styleCode": "STREET",
+      "text": "또래 사이에서 인기 있는 트렌디한 무드를 자연스럽게 소화할 수 있습니다."
+    },
+    {
+      "reasonCode": "ADJ_AGE_30S_DANDY",
+      "factor": "age",
+      "value": "AGE_30S",
+      "styleCode": "DANDY",
+      "text": "차분하고 성숙한 무드가 일상과 출근룩 모두에 잘 어울립니다."
+    },
+    {
+      "reasonCode": "ADJ_AGE_30S_MINIMAL",
+      "factor": "age",
+      "value": "AGE_30S",
+      "styleCode": "MINIMAL",
+      "text": "절제된 디자인이 깔끔하고 세련된 인상을 오래 유지해 줍니다."
+    },
+    {
+      "reasonCode": "ADJ_AGE_40P_CASUAL",
+      "factor": "age",
+      "value": "AGE_40P",
+      "styleCode": "CASUAL",
+      "text": "편안함과 단정함을 함께 갖춰 일상에서 활용도가 높습니다."
+    },
+    {
+      "reasonCode": "ADJ_AGE_40P_DANDY",
+      "factor": "age",
+      "value": "AGE_40P",
+      "styleCode": "DANDY",
+      "text": "단정한 셔츠·재킷 조합이 다양한 자리에서 신뢰감 있는 인상을 줍니다."
+    },
+    {
+      "reasonCode": "ADJ_AGE_40P_MINIMAL",
+      "factor": "age",
+      "value": "AGE_40P",
+      "styleCode": "MINIMAL",
+      "text": "군더더기 없는 실루엣이 편안하면서도 품위 있는 무드를 줍니다."
+    }
+  ]
+}

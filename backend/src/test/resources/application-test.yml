@@ -1,0 +1,13 @@
+# 테스트 전용: Spring 컨텍스트마다 별도 H2 인메모리 DB를 사용해 캐시된 컨텍스트 간 스키마 충돌을 막습니다.
+spring:
+  datasource:
+    url: jdbc:h2:mem:moda-test-${random.uuid};MODE=MySQL;DATABASE_TO_LOWER=TRUE;DB_CLOSE_DELAY=-1
+  h2:
+    console:
+      enabled: false
+
+moda:
+  ai:
+    mock-default-delay: 0ms    # 테스트에서는 Mock 기본 지연(800ms) 제거
+  chat:
+    mock-default-delay: 0ms

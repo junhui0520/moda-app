@@ -1,0 +1,240 @@
+{
+  "ruleVersion": "v1.1-draft",
+  "faceShapes": [
+    {
+      "key": "diamond",
+      "label": "다이아몬드형",
+      "faceIndex": 0,
+      "description": "광대 라인이 또렷하고 이마와 턱이 갸름해 입체감이 돋보이는 얼굴형입니다."
+    },
+    {
+      "key": "heart",
+      "label": "하트형",
+      "faceIndex": 1,
+      "description": "이마 라인이 시원하고 턱선이 갸름하게 모여 산뜻한 인상을 주는 얼굴형입니다."
+    },
+    {
+      "key": "oval",
+      "label": "계란형",
+      "faceIndex": 2,
+      "description": "이마·광대·턱의 비율이 고르게 이어져 다양한 스타일을 소화하기 좋은 얼굴형입니다."
+    },
+    {
+      "key": "rectangle",
+      "label": "직사각형",
+      "faceIndex": 3,
+      "description": "세로 비율이 시원하고 턱선이 또렷해 선명하고 신뢰감 있는 인상을 주는 얼굴형입니다."
+    },
+    {
+      "key": "round",
+      "label": "둥근형",
+      "faceIndex": 4,
+      "description": "곡선이 부드럽게 이어져 친근하고 편안한 인상을 주는 얼굴형입니다."
+    },
+    {
+      "key": "long",
+      "label": "긴형",
+      "faceIndex": 5,
+      "description": "세로 라인이 시원하게 뻗어 차분하고 세련된 인상을 주는 얼굴형입니다."
+    }
+  ],
+  "bodyTypes": [
+    {
+      "key": "standard",
+      "label": "표준유형",
+      "bodyIndex": 0,
+      "description": "어깨·허리·엉덩이 비율이 키 대비 평균 범위 안에 고르게 있어 다양한 핏을 소화하기 좋은 체형입니다.",
+      "aiInternalLabel": "표준체형",
+      "ruleSummary": "어깨·몸통 편차가 모두 ±5% 이내"
+    },
+    {
+      "key": "small_inv_triangle",
+      "label": "작은 역삼각형",
+      "bodyIndex": 1,
+      "description": "몸통이 슬림하고 어깨선이 상대적으로 또렷해 V라인 실루엣이 살아나는 체형입니다.",
+      "aiInternalLabel": "작은 역삼각체형",
+      "ruleSummary": "몸통 편차 ≤ 0% 이고 (어깨 편차 − 몸통 편차) ≥ +6%"
+    },
+    {
+      "key": "large_rectangle",
+      "label": "큰 사각 체형",
+      "bodyIndex": 2,
+      "description": "어깨부터 허리까지 몸통이 탄탄하게 이어져 듬직한 실루엣을 가진 체형입니다.",
+      "aiInternalLabel": "큰 사각체형",
+      "ruleSummary": "몸통 굵기 편차 ≥ +8%"
+    },
+    {
+      "key": "rectangle",
+      "label": "사각 체형",
+      "bodyIndex": 3,
+      "description": "어깨·허리·엉덩이 너비가 고르게 이어져 곧고 안정적인 실루엣을 가진 체형입니다.",
+      "aiInternalLabel": "사각체형",
+      "ruleSummary": "위 3종에 해당하지 않음 (몸통 굵기가 고르고 어깨 보통)"
+    }
+  ],
+  "hairStyles": [
+    {
+      "code": "UP_STYLE",
+      "name": "깐머리 스타일",
+      "description": "앞머리를 위나 뒤로 넘겨 이마를 드러내는 스타일 (포마드·리젠트·애즈 업 등)",
+      "imageKey": "hair_up_style",
+      "sortOrder": 1
+    },
+    {
+      "code": "PARTED_STYLE",
+      "name": "가르마 스타일",
+      "description": "2:8~5:5 가르마로 이마를 일부 드러내고 옆 볼륨을 살린 스타일 (가르마펌 등)",
+      "imageKey": "hair_parted_style",
+      "sortOrder": 2
+    },
+    {
+      "code": "DANDY_STYLE",
+      "name": "댄디 스타일",
+      "description": "앞머리를 자연스럽게 내려 이마를 덮는 단정한 스타일 (댄디컷 등)",
+      "imageKey": "hair_dandy_style",
+      "sortOrder": 3
+    },
+    {
+      "code": "CROP_STYLE",
+      "name": "크롭 스타일",
+      "description": "옆·뒷머리를 짧게 정리하고 짧은 앞머리에 질감을 준 스타일 (크롭컷·페이드 등)",
+      "imageKey": "hair_crop_style",
+      "sortOrder": 4
+    },
+    {
+      "code": "SHADOW_STYLE",
+      "name": "쉐도우 스타일",
+      "description": "앞머리를 내리고 C컬·S컬 웨이브로 볼륨을 준 스타일 (쉐도우펌 등)",
+      "imageKey": "hair_shadow_style",
+      "sortOrder": 5
+    }
+  ],
+  "fashionStyles": [
+    {
+      "code": "CASUAL",
+      "name": "캐주얼",
+      "description": "셔츠·맨투맨·데님 등 기본 아이템 중심의 편안한 스타일",
+      "itemKeywords": [
+        "옥스퍼드 셔츠",
+        "맨투맨",
+        "치노 팬츠",
+        "데님 팬츠",
+        "스니커즈"
+      ],
+      "imageKey": "fashion_casual",
+      "sortOrder": 1
+    },
+    {
+      "code": "DANDY",
+      "name": "댄디",
+      "description": "블레이저·셔츠·슬랙스 중심의 단정한 스타일",
+      "itemKeywords": [
+        "블레이저",
+        "셔츠",
+        "니트 폴로",
+        "슬랙스",
+        "로퍼"
+      ],
+      "imageKey": "fashion_dandy",
+      "sortOrder": 2
+    },
+    {
+      "code": "MINIMAL",
+      "name": "미니멀",
+      "description": "장식을 덜어낸 모노톤·뉴트럴 컬러 중심의 스타일",
+      "itemKeywords": [
+        "무지 니트",
+        "모노톤 티셔츠",
+        "와이드 슬랙스",
+        "싱글 코트",
+        "더비 슈즈"
+      ],
+      "imageKey": "fashion_minimal",
+      "sortOrder": 3
+    },
+    {
+      "code": "CITY_BOY",
+      "name": "시티보이",
+      "description": "여유 있는 오버핏과 레이어드 중심의 도시적인 스타일",
+      "itemKeywords": [
+        "오버핏 셔츠",
+        "와이드 치노 팬츠",
+        "볼캡",
+        "토트백",
+        "레트로 러닝화"
+      ],
+      "imageKey": "fashion_city_boy",
+      "sortOrder": 4
+    },
+    {
+      "code": "AMEKAJI",
+      "name": "아메카지",
+      "description": "워크웨어·데님·플란넬 등 미국 캐주얼을 재해석한 스타일",
+      "itemKeywords": [
+        "워크 재킷",
+        "플란넬 셔츠",
+        "셀비지 데님",
+        "니트 베스트",
+        "워커 부츠"
+      ],
+      "imageKey": "fashion_amekaji",
+      "sortOrder": 5
+    },
+    {
+      "code": "STREET",
+      "name": "스트릿",
+      "description": "박시한 실루엣과 그래픽 포인트 중심의 스타일",
+      "itemKeywords": [
+        "오버핏 후디",
+        "그래픽 티셔츠",
+        "카고 팬츠",
+        "하이탑 스니커즈",
+        "비니"
+      ],
+      "imageKey": "fashion_street",
+      "sortOrder": 6
+    },
+    {
+      "code": "SPORTY",
+      "name": "스포티",
+      "description": "트랙·기능성 소재 중심의 활동적인 스타일",
+      "itemKeywords": [
+        "트랙 재킷",
+        "기능성 티셔츠",
+        "조거 팬츠",
+        "러닝화",
+        "볼캡"
+      ],
+      "imageKey": "fashion_sporty",
+      "sortOrder": 7
+    },
+    {
+      "code": "GORPCORE",
+      "name": "고프코어",
+      "description": "아웃도어 기능성 아이템을 일상복으로 입는 스타일",
+      "itemKeywords": [
+        "셸 재킷",
+        "플리스",
+        "나일론 카고 팬츠",
+        "트레일 러닝화",
+        "크로스백"
+      ],
+      "imageKey": "fashion_gorpcore",
+      "sortOrder": 8
+    },
+    {
+      "code": "VINTAGE",
+      "name": "빈티지",
+      "description": "질감 있는 소재와 레트로 컬러 중심의 스타일",
+      "itemKeywords": [
+        "코듀로이 재킷",
+        "워싱 데님",
+        "레트로 스웨트셔츠",
+        "체크 셔츠",
+        "캔버스 스니커즈"
+      ],
+      "imageKey": "fashion_vintage",
+      "sortOrder": 9
+    }
+  ]
+}
