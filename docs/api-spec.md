@@ -29,7 +29,7 @@
 | 로컬 (PC 브라우저·iOS 시뮬레이터) | `http://localhost:8080` | |
 | 로컬 (Android 에뮬레이터) | `http://10.0.2.2:8080` | 에뮬레이터에서 PC localhost 접근 주소 |
 | 로컬 (실기기 Expo Go) | `http://{PC의 LAN IP}:8080` | PC와 휴대폰이 같은 Wi-Fi |
-| Mock 배포 서버 | Step 3에서 확정 후 이 표에 기입 | `moda.ai.mode=mock` |
+| Mock 배포 서버 | `https://moda-app-production.up.railway.app` | `moda.ai.mode=mock`, `moda.chat.mode=mock` (Railway). 헬스체크 `GET /api/v1/health` |
 | 대회 서버 | Step 4에서 확정 후 이 표에 기입 | `moda.ai.mode=external` |
 
 - 모든 API 경로 앞에 `/api/v1`이 붙습니다.
