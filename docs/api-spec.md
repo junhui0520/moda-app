@@ -2,11 +2,11 @@
 
 | 항목 | 내용 |
 |---|---|
-| 문서 버전 | v1.1 (API `v1`, 추천 규칙 `ruleVersion: "v1.1-draft"`) |
+| 문서 버전 | v1.2 (API `v1`, 추천 규칙 `ruleVersion: "v1.1-draft"`, AI 얼굴 분석 `v8` 대응) |
 | 작성 | 백엔드 박준희 |
 | 대상 | 프론트엔드 이상현(Expo), AI 김민건·최기완 |
 | 관련 문서 | `docs/style-rules.md` (Enum·규칙·문구 정의), `docs/recommendation-dataset.csv` |
-| 범위 | 대회 MVP — 비로그인 게스트 세션 기반 API 8종 + 부록(백엔드↔AI 내부 연동 스펙, TypeScript 타입) |
+| 범위 | 대회 MVP — 비로그인 게스트 세션 기반 API 10종(분석·결과 8종 + 챗봇 2종) + 부록(백엔드↔AI 내부 연동 스펙, TypeScript 타입) |
 
 ---
 
@@ -16,6 +16,7 @@
 |---|---|---|
 | v1.0 | 2026-11-19 | 최초 작성 (API 8종, 공통 에러 포맷, 화면 매핑, Mock 헤더, AI 연동 스펙) |
 | v1.1 | 2026-11-20 | 맞춤 유형 24종(`TYPE-01`~`TYPE-24`) 반영 및 얼굴형 그룹 필드 삭제(`basis`, TS 타입), 유형명 확정 여부 필드명을 `nameConfirmed`로 통일, 분석 불가 사진은 재촬영만 허용(“직접 선택하기”는 AI 장애 503/504 시에만), 체형 AI 응답의 부가 필드 선택화(`null`/`[]` 허용), `X-Mock-Body-Minimal` 헤더 추가, 사진 메모리 처리 원칙 명시 |
+| v1.2 | 2026-11-25 | 결과 화면 이후 **[챗봇 이용하기]** 기능 반영: 챗봇 API 2종(⑨ 대화 진입 조회, ⑩ 메시지 전송) 추가, 에러 코드 3종(`CHAT_TURN_LIMIT_EXCEEDED`, `CHAT_SERVER_UNAVAILABLE`, `CHAT_TIMEOUT`) 추가, 세션 삭제·만료 시 챗봇 대화 내역(`chat_message`) 즉시 삭제, `moda.chat.mode` Mock 설정 추가, 화면↔API 매핑 갱신. AI `v8` 대응: 얼굴 분석 응답 `reason`(선택) 필드 및 `FaceDetail.aiReason` 추가. 기존 API ①~⑧의 요청·응답 구조는 변경 없음(`FaceDetail`에 `aiReason` 필드 추가만 해당) |
 
 ---
 
@@ -76,16 +77,17 @@
 
 | 항목 | 정책 |
 |---|---|
-| 세션 TTL | 30분, **쓰기 요청(POST/PATCH) 성공 시마다 30분 연장** (응답의 `expiresAt` 갱신) |
-| 만료 세션 | 만료 후 접근 시 `410 SESSION_EXPIRED`. 5분 주기 스케줄러가 만료 세션과 관련 데이터를 삭제 |
+| 세션 TTL | 30분, **쓰기 요청(POST/PATCH) 성공 시마다 30분 연장** (응답의 `expiresAt` 갱신). ⑩ 챗봇 메시지 전송도 성공 시 연장되며, ⑨ 대화 조회(GET)는 연장하지 않음 |
+| 만료 세션 | 만료 후 접근 시 `410 SESSION_EXPIRED`. 5분 주기 스케줄러가 만료 세션과 관련 데이터(입력값·분석 결과·**챗봇 대화 내역 `chat_message`**)를 삭제 |
+| 챗봇 대화 보관 | 대화 내역(`chat_message`)은 **세션 수명 동안만** DB에 보관합니다. 세션 삭제(⑧)·만료 시 해당 세션의 대화 내역을 **즉시 함께 삭제**합니다(세션 FK, `ON DELETE CASCADE`). 사진·이미지는 LLM에 전달하지 않으며, 텍스트 데이터만 사용합니다. |
 | 사진 보관 | 업로드 사진은 **디스크에 저장하지 않고 메모리(`byte[]`)에서 바로 AI 서버로 전달하는 방식을 우선** 적용합니다. 구현상 임시 파일이 불가피한 경우에도 분석이 끝나는 즉시(성공·실패·예외 모두, `finally` 블록) 삭제합니다. DB에 사진·경로·랜드마크 좌표를 저장하지 않습니다. (R-01) |
 | 사진 반환 | 서버는 사진을 다시 내려주지 않습니다. 결과 화면에 사진을 보여주려면 앱의 로컬 URI를 사용합니다. |
-| 세션 초기화 | `DELETE /api/v1/sessions/{sessionId}` 호출 시 세션·입력값·분석 결과·잔여 임시 사진을 즉시 파기 |
+| 세션 초기화 | `DELETE /api/v1/sessions/{sessionId}` 호출 시 세션·입력값·분석 결과·챗봇 대화 내역·잔여 임시 사진을 즉시 파기 |
 | 회원 확장 | 세션 엔티티에 `userId`(nullable) 컬럼이 예약되어 있으며, 2차 목표에서 로그인 시 세션을 사용자에게 귀속합니다. MVP 응답에는 노출하지 않습니다. |
 
 ### 1.5 Mock 모드 테스트 헤더 (프론트엔드 테스트용)
 
-서버가 `moda.ai.mode=mock`일 때만 동작하고, `external` 모드에서는 무시됩니다. `POST .../analyze/face`, `POST .../analyze/body`에 붙입니다.
+서버가 `moda.ai.mode=mock`일 때만 동작하고, `external` 모드에서는 무시됩니다. `POST .../analyze/face`, `POST .../analyze/body`에 붙입니다. (단, `X-Mock-Delay-Ms`는 `moda.chat.mode=mock`일 때 ⑩ 챗봇 메시지 전송에도 적용 — 아래 챗봇 Mock 참고)
 
 | 헤더 | 값 | 효과 | 기본값(헤더 없음) |
 |---|---|---|---|
@@ -94,7 +96,24 @@
 | `X-Mock-Unusable` | `true` | `usable=false` + 재촬영 경고 반환 (얼굴: `FACE_YAW_EXCEEDED`, 전신: `BODY_LOW_VISIBILITY`) | `false` |
 | `X-Mock-Borderline` | `true` | `borderline=true`, `confidence=0.52` + `*_BORDERLINE` 안내 경고 | `false` |
 | `X-Mock-Body-Minimal` | `true` | 체형 응답을 **필수 필드만** 있는 형태로 반환 (`confidence`·`borderline`=`null`, `candidates`·`features`=`[]`, `compareToSizeKorea`=`null`). 유료 API 미확정 대비 화면 테스트용 | `false` |
-| `X-Mock-Delay-Ms` | 0 ~ 10000 | 응답 지연(로딩 UI 테스트) | `800` |
+| `X-Mock-Delay-Ms` | 0 ~ 10000 | 응답 지연(로딩 UI 테스트). **⑩ 챗봇 메시지 전송에도 적용** (아래 챗봇 Mock 참고) | `800` |
+
+- Mock 얼굴 분석은 얼굴형별 고정 `reason` 문장을 함께 반환합니다(⑥ `face.aiReason`에 반영, 부록 A.2).
+
+**챗봇 Mock 모드 (`moda.chat.mode`)**
+
+챗봇 LLM 호출은 AI 분석과 **별도 설정**으로 전환합니다. 두 설정은 서로 독립이며, 예를 들어 `moda.ai.mode=external` + `moda.chat.mode=mock` 조합도 가능합니다.
+
+| 설정 (`application.yml`) | 값 | 동작 |
+|---|---|---|
+| `moda.chat.mode` | `mock` | LLM을 호출하지 않고, 질문 키워드·세션 결과(유형·얼굴형·체형·추천 스타일)를 조합한 **고정 템플릿 답변**을 반환. API 키 없이 챗봇 화면 테스트 가능 |
+| | `external` | Spring AI `ChatClient`로 실제 LLM 호출 (대회 서버) |
+| `moda.chat.max-turns` | `20` | 세션당 최대 대화 턴 수 |
+| `moda.chat.timeout` | 연결 3초 / 응답 20초 | 초과 시 `504 CHAT_TIMEOUT` |
+
+- `moda.chat.mode=mock`일 때 `X-Mock-Delay-Ms`를 ⑩ `POST .../chat/messages`에 붙이면 답변 지연(“입력 중…” 말풍선 UI) 테스트가 가능합니다. 헤더가 없으면 기본 `800`ms 지연입니다. `external` 모드에서는 무시됩니다.
+- ⑨ `GET .../chat/messages`는 LLM을 호출하지 않으므로(첫 인사·추천 질문은 서버 템플릿) 모드와 관계없이 즉시 응답합니다.
+- Mock 모드에서도 턴 수 차감, DB 저장, 세션 TTL 연장, `429 CHAT_TURN_LIMIT_EXCEEDED`는 실제와 동일하게 동작합니다.
 
 ---
 
@@ -116,6 +135,7 @@
 | `AnalysisStatus` (응답 전용) | `ANALYZED`(AI 결과 사용 중), `CORRECTED`(AI 결과를 사용자가 수정), `MANUAL`(AI 결과 없이 사용자가 직접 선택), `NOT_ANALYZED`(미분석) |
 | `WarningSeverity` (응답 전용) | `RETAKE`(재촬영 필요 원인), `INFO`(참고 안내) |
 | `SizeKoreaDirection` (응답 전용) | `ABOVE`(평균보다 큼), `BELOW`(평균보다 작음), `SIMILAR`(평균과 비슷, \|deviation\| < 0.02) |
+| `ChatRole` (응답 전용) | `USER`(사용자 메시지), `ASSISTANT`(챗봇 답변) |
 
 `nextStep` 결정 규칙 (모든 세션 응답 공통): `profileInput`이 false → `PROFILE_INPUT` / 그다음 `faceAnalysis`가 false → `FACE_ANALYSIS` / 그다음 `bodyAnalysis`가 false → `BODY_ANALYSIS` / 모두 true → `RESULT_READY`
 
@@ -310,20 +330,24 @@
 | 400 | `INVALID_REQUEST` | 전체 | 입력값을 확인해 주세요. | `details[].field` 옆에 `reason` 표시 |
 | 400 | `PHOTO_CONSENT_REQUIRED` | ① guest | 사진 분석 동의가 필요해요. | 동의 체크 유도 |
 | 400 | `IMAGE_REQUIRED` | ③ face, ④ body | 사진을 첨부해 주세요. | 촬영 화면 유지 |
-| 404 | `SESSION_NOT_FOUND` | ②~⑦ | 체험 세션을 찾을 수 없어요. 처음부터 다시 시작해 주세요. | 로컬 `sessionId` 삭제 → 시작 화면 |
-| 409 | `PROFILE_INPUT_REQUIRED` | ④ body, ⑦ patch(모질 수정 시) | 기본 정보를 먼저 입력해 주세요. | 기본 정보 화면으로 이동 |
-| 409 | `ANALYSIS_INCOMPLETE` | ⑤ result | 얼굴과 전신 분석이 모두 필요해요. | `meta.nextStep` 화면으로 이동 |
+| 404 | `SESSION_NOT_FOUND` | ②~⑦, ⑨·⑩ chat | 체험 세션을 찾을 수 없어요. 처음부터 다시 시작해 주세요. | 로컬 `sessionId` 삭제 → 시작 화면 |
+| 409 | `PROFILE_INPUT_REQUIRED` | ④ body, ⑦ patch(모질 수정 시), ⑨·⑩ chat | 기본 정보를 먼저 입력해 주세요. | 기본 정보 화면으로 이동 |
+| 409 | `ANALYSIS_INCOMPLETE` | ⑤ result, ⑨·⑩ chat | 얼굴과 전신 분석이 모두 필요해요. | `meta.nextStep` 화면으로 이동 |
 | 409 | `ANALYSIS_IN_PROGRESS` | ③ face, ④ body | 분석이 진행 중이에요. 잠시만 기다려 주세요. | 버튼 연타 방지, 무시 |
-| 410 | `SESSION_EXPIRED` | ②~⑦ | 체험 시간이 지나 세션이 종료되었어요. 처음부터 다시 시작해 주세요. | 로컬 `sessionId` 삭제 → 시작 화면 |
+| 410 | `SESSION_EXPIRED` | ②~⑦, ⑨·⑩ chat | 체험 시간이 지나 세션이 종료되었어요. 처음부터 다시 시작해 주세요. | 로컬 `sessionId` 삭제 → 시작 화면 |
 | 413 | `IMAGE_TOO_LARGE` | ③ face, ④ body | 사진 용량은 10MB 이하만 가능해요. | 압축 후 재전송 (`quality: 0.7` 권장) |
 | 415 | `UNSUPPORTED_IMAGE_TYPE` | ③ face, ④ body | JPG 또는 PNG 사진만 분석할 수 있어요. | 카메라 포맷 `jpeg` 지정 |
+| 429 | `CHAT_TURN_LIMIT_EXCEEDED` | ⑩ chat | 이번 체험에서 대화할 수 있는 횟수(20회)를 모두 사용했어요. | 입력창·추천 질문 칩 비활성화 + 안내 문구 표시 (`meta.maxTurns`, `meta.usedTurns`) |
 | 500 | `INTERNAL_ERROR` | 전체 | 일시적인 오류가 발생했어요. 잠시 후 다시 시도해 주세요. | 재시도 버튼 |
 | 502 | `AI_BAD_RESPONSE` | ③ face, ④ body | 분석 결과를 처리하지 못했어요. 다시 촬영해 주세요. | 재촬영 |
 | 503 | `AI_SERVER_UNAVAILABLE` | ③ face, ④ body | 분석 서버에 연결할 수 없어요. 잠시 후 다시 시도해 주세요. | 재시도 + “직접 선택하기” 노출 |
+| 503 | `CHAT_SERVER_UNAVAILABLE` | ⑩ chat | 챗봇 서버에 연결할 수 없어요. 잠시 후 다시 시도해 주세요. | 입력한 문장 유지 + [다시 보내기] (턴 차감 없음) |
 | 504 | `AI_TIMEOUT` | ③ face, ④ body | 분석 시간이 초과되었어요. 다시 시도해 주세요. | 재시도 + “직접 선택하기” 노출 |
+| 504 | `CHAT_TIMEOUT` | ⑩ chat | 답변 생성 시간이 초과되었어요. 다시 시도해 주세요. | 입력한 문장 유지 + [다시 보내기] (턴 차감 없음) |
 
 > 사진이 분석 불가(얼굴 미검출, 고개 돌림 등)인 경우는 **에러가 아닙니다.** HTTP 200 + `usable: false` + `warnings`로 응답합니다(API ③·④ 참고).
 > 404와 410은 프론트에서 같은 처리(처음부터 다시 시작)를 하면 됩니다.
+> 챗봇 `503`·`504`는 분석 API의 `503`·`504`와 달리 “직접 선택하기”를 노출하지 않습니다. 실패한 메시지는 저장되지 않고 남은 턴도 줄지 않습니다.
 
 ---
 
@@ -339,6 +363,8 @@
 | ⑥ | `GET` | `/api/v1/sessions/{sessionId}/analysis-detail` | [분석 상세보기] 팝업: 얼굴형·체형 상세 |
 | ⑦ | `PATCH` | `/api/v1/sessions/{sessionId}/profile` | 얼굴형·체형·모질 수동 보정 + 결과 재산출 |
 | ⑧ | `DELETE` | `/api/v1/sessions/{sessionId}` | 세션·임시 사진 즉시 초기화 (부스 시연용) |
+| ⑨ | `GET` | `/api/v1/sessions/{sessionId}/chat/messages` | 챗봇 화면 진입: 대화 내역 + 맞춤 첫 인사 + 추천 질문 + 남은 턴 |
+| ⑩ | `POST` | `/api/v1/sessions/{sessionId}/chat/messages` | 챗봇 메시지 전송: 세션 분석 결과 기반 LLM 답변 생성 |
 
 아래 예시는 모두 같은 체험자 기준입니다: `age=21, heightCm=174, weightKg=63, hairThickness=THIN, hairCurl=SEMI_CURLY, hairDensity=MEDIUM`, 얼굴형 `heart`(faceIndex 1), 체형 `small_inv_triangle`(bodyIndex 1) → `1 × 6 + 1 + 1 = 8` → `TYPE-08` (`recommendation-dataset.csv`의 S006과 동일).
 
@@ -810,6 +836,7 @@
       "result": { "key": "heart", "label": "하트형" },
       "aiResult": { "key": "heart", "label": "하트형" },
       "description": "이마 라인이 시원하고 턱선이 갸름하게 모여 산뜻한 인상을 주는 얼굴형입니다.",
+      "aiReason": "평균 대비 이마 너비 비율이 높고 턱끝 너비 비율이 낮아, 이마에서 턱끝으로 갸름하게 모이는 하트형 특징이 보입니다.",
       "confidence": 0.64,
       "borderline": false,
       "candidates": [
@@ -915,6 +942,7 @@
 | `result` | `CodeLabel` | 가능 | 현재 적용 중인 얼굴형 (추천 계산에 쓰이는 값) |
 | `aiResult` | `CodeLabel` | 가능 | AI 원본 판정. AI 분석 이력이 없으면 `null` |
 | `description` | string | 가능 | `result` 기준 얼굴형 설명 (`style-rules.md` 6.1) |
+| `aiReason` | string | 가능 | **(v1.2, AI `v8`)** AI가 제공한 평균 대비 특징 요약 문장(부록 A.2 `reason`). AI 이력이 없거나 AI가 제공하지 않으면 `null`. `aiResult` 기준 문장이므로 `status=CORRECTED`이면 현재 `result`와 다를 수 있어, 화면에는 `status=ANALYZED`일 때만 표시 권장 |
 | `confidence` | number | 가능 | AI 1위 확률. AI 이력이 없거나 AI가 제공하지 않으면 `null` |
 | `borderline` | boolean | 가능 | AI 이력이 없거나 AI가 제공하지 않으면 `null` |
 | `candidates` | `Candidate[]` | 불가 | AI 후보, 확률 내림차순. AI 이력이 없거나 AI가 제공하지 않으면 `[]` |
@@ -922,14 +950,14 @@
 | `features` | `Feature[]` | 불가 | AI 측정값. AI 이력이 없거나 AI가 제공하지 않으면 `[]` |
 | `analyzedAt` | string | 가능 | 마지막 AI 분석 성공 시각 |
 
-**`BodyDetail`** = `FaceDetail`의 모든 필드(`description`은 6.2 체형 설명) + 아래 필드
+**`BodyDetail`** = `FaceDetail`의 모든 필드(`description`은 6.2 체형 설명, **`aiReason` 제외** — 얼굴 전용) + 아래 필드
 
 | 필드 | 타입 | null | 설명 |
 |---|---|---|---|
 | `heightCmUsed` | int | 가능 | AI 분석에 사용한 키, AI 이력이 없으면 `null` |
 | `compareToSizeKorea` | `SizeKoreaCompare` | 가능 | AI 이력이 없거나 AI가 제공하지 않으면 `null` |
 
-> 얼굴 쪽에는 `compareToSizeKorea`가 없습니다(체형 전용).
+> 얼굴 쪽에는 `compareToSizeKorea`가 없습니다(체형 전용). 반대로 `aiReason`은 얼굴 전용입니다.
 
 **체형 부가 정보 선택 규칙 (유료 API 미확정 대응)**
 
@@ -1170,7 +1198,7 @@
 
 `DELETE /api/v1/sessions/{sessionId}`
 
-- 세션, 기본 정보, 분석 결과, 서버에 남아 있을 수 있는 임시 사진 파일을 **즉시 파기**합니다. (R-01)
+- 세션, 기본 정보, 분석 결과, **챗봇 대화 내역(`chat_message`)**, 서버에 남아 있을 수 있는 임시 사진 파일을 **즉시 파기**합니다. (R-01) 응답 구조는 변경 없습니다.
 - **멱등(idempotent)**: 이미 삭제·만료되었거나 존재하지 않는 세션이어도 `200`을 반환합니다(`alreadyDeleted: true`). 프론트는 응답과 관계없이 로컬 상태를 지우고 시작 화면으로 이동하면 됩니다.
 
 **Request**: Body 없음
@@ -1202,6 +1230,208 @@
 
 ---
 
+### 챗봇 공통 규칙 (⑨·⑩)
+
+| 항목 | 규칙 |
+|---|---|
+| 선행 조건 | ⑤ `GET /result`와 동일: 기본 정보(②) 입력 + 얼굴형·체형 모두 확정(`progress.faceAnalysis && progress.bodyAnalysis`). 미완료 시 `409 PROFILE_INPUT_REQUIRED` / `409 ANALYSIS_INCOMPLETE` (`meta.missing`, `meta.nextStep`은 ⑤와 동일) |
+| 턴 정의 | **1턴 = 사용자 메시지 1개 + 챗봇 답변 1개가 모두 저장된 성공 쌍**. 세션당 최대 20턴(`moda.chat.max-turns`) |
+| 남은 턴 | `remainingTurns = maxTurns − 저장된 턴 수` (0 ~ 20). LLM 호출 실패(`503`·`504`) 시 사용자 메시지도 저장하지 않으며 턴이 차감되지 않습니다 |
+| 컨텍스트 | 매 호출마다 **현재 세션 상태**(`profileInput` + `faceDetail` + `bodyDetail` + `resultData`)로 시스템 프롬프트를 새로 구성합니다. ⑦ `PATCH /profile`로 결과를 수정하면 이후 첫 인사·답변에 자동 반영됩니다 |
+| 표현 가이드 | 시스템 프롬프트에 `style-rules.md` 7장 표현 가이드(R-11)를 포함합니다. **몸무게·BMI 수치와 구간명은 답변에 노출하지 않도록** 지시하며, 패션 보정 근거로만 내부 참고합니다 |
+| 개인정보 | 사진·이미지·랜드마크 좌표는 LLM에 전달하지 않습니다. 대화 내역은 세션 수명 동안만 보관 후 삭제(1.4) |
+| 메시지 형식 | `content`는 일반 텍스트(줄바꿈 `\n` 포함 가능). 마크다운은 사용하지 않도록 시스템 프롬프트로 지시합니다 |
+| 동시 전송 | 프론트는 ⑩ 응답 대기 중 전송 버튼·추천 질문 칩을 비활성화합니다. 서버는 세션 단위로 순차 처리하며 턴 한도를 원자적으로 검사합니다 |
+
+`ChatMessage`
+
+| 필드 | 타입 | null | 설명 |
+|---|---|---|---|
+| `messageId` | string (UUID) | 불가 | 메시지 식별자 |
+| `role` | `ChatRole` | 불가 | `USER` 또는 `ASSISTANT` |
+| `content` | string | 불가 | 메시지 본문 |
+| `createdAt` | string | 불가 | 저장 시각 |
+
+---
+
+### ⑨ 챗봇 대화 조회 (화면 진입)
+
+`GET /api/v1/sessions/{sessionId}/chat/messages`
+
+- 결과 화면의 **[챗봇 이용하기]** → 챗봇 화면 진입 시 1회 호출합니다. 화면 재진입 시에도 호출해 이전 대화를 복원합니다.
+- `welcomeMessage`는 세션의 맞춤 유형(`typeName`)·얼굴형·체형·추천 스타일을 바탕으로 **서버 템플릿으로 생성**합니다(LLM 호출 없음). DB에 저장하지 않으며 `messages[]`에 포함되지 않고 턴으로 세지 않습니다. 화면에는 항상 대화 목록 맨 위 첫 말풍선으로 표시합니다.
+- 조회 API이므로 세션 TTL을 연장하지 않습니다.
+
+**Request**: Body 없음
+
+**Response `200 OK`** — 첫 진입(대화 없음) 예, ④ 직후 `TYPE-08` 기준
+
+```json
+{
+  "success": true,
+  "data": {
+    "sessionId": "3f6c1e2a-8b4d-4c1f-9a7e-2d5b6c8e9f01",
+    "welcomeMessage": "안녕하세요! Moda 스타일 챗봇이에요. 분석 결과 'V라인 프레시' 유형(하트형 · 작은 역삼각형)으로 나왔어요. 추천받은 가르마 스타일이나 댄디 룩 연출법, 상황별 코디가 궁금하면 편하게 물어보세요.",
+    "messages": [],
+    "suggestedPrompts": [
+      "가르마 스타일은 어떻게 연출하면 좋을까요?",
+      "댄디 룩 기본 아이템 조합을 알려 줘",
+      "하트형 얼굴에 어울리는 안경테는?",
+      "소개팅 코디를 추천해 줘"
+    ],
+    "remainingTurns": 20,
+    "maxTurns": 20,
+    "expiresAt": "2026-11-19T22:03:40+09:00"
+  }
+}
+```
+
+재진입(대화 1턴 진행 후) 시 `messages` 예:
+
+```json
+"messages": [
+  { "messageId": "b1d2c3e4-0000-4a1b-9c2d-111111111111", "role": "USER", "content": "가르마 스타일은 어떻게 연출하면 좋을까요?", "createdAt": "2026-11-19T21:34:20+09:00" },
+  { "messageId": "b1d2c3e4-0000-4a1b-9c2d-222222222222", "role": "ASSISTANT", "content": "하트형 얼굴은 이마 라인이 시원하고 턱선이 갸름하게 모여서, 6:4 정도의 자연스러운 가르마가 잘 어울려요. ...", "createdAt": "2026-11-19T21:34:23+09:00" }
+],
+"remainingTurns": 19
+```
+
+| 필드 | 타입 | null | 설명 |
+|---|---|---|---|
+| `sessionId` | string | 불가 | |
+| `welcomeMessage` | string | 불가 | 세션 유형·얼굴형·체형 기반 맞춤 첫 인사 (저장·턴 차감 없음) |
+| `messages` | `ChatMessage[]` | 불가 | 저장된 대화 내역, `createdAt` 오름차순(오래된 것 → 최신). 없으면 `[]`. 최대 40개(20턴) |
+| `suggestedPrompts` | string[] | 불가 | 추천 질문 칩 3~4개. 첫 진입은 결과 기반, 대화가 있으면 마지막 답변 기준 후속 질문. `remainingTurns = 0`이면 `[]` |
+| `remainingTurns` | int | 불가 | 남은 대화 턴 수 (0 ~ 20) |
+| `maxTurns` | int | 불가 | 세션당 최대 턴 수 (20) |
+| `expiresAt` | string | 불가 | 현재 세션 만료 예정 시각 (연장되지 않음) |
+
+**에러**: `409 PROFILE_INPUT_REQUIRED`, `409 ANALYSIS_INCOMPLETE`, `404 SESSION_NOT_FOUND`, `410 SESSION_EXPIRED`
+
+---
+
+### ⑩ 챗봇 메시지 전송
+
+`POST /api/v1/sessions/{sessionId}/chat/messages`
+
+- 사용자가 입력창에 직접 입력하거나 추천 질문 칩을 탭하면 호출합니다(칩 탭 시 칩 문구를 `message`로 그대로 전송).
+- 권장 클라이언트 타임아웃: 30초.
+
+**Request Body** (`application/json`)
+
+| 필드 | 타입 | 필수 | 검증 |
+|---|---|---|---|
+| `message` | string | 필수 | 앞뒤 공백 제거(trim) 후 **1 ~ 500자**. 공백·줄바꿈만으로 된 문자열 불가. 서버는 trim한 값을 저장 |
+
+```json
+{
+  "message": "가르마 스타일은 어떻게 연출하면 좋을까요?"
+}
+```
+
+**서버 처리 순서**
+
+1. 요청 검증 → `400 INVALID_REQUEST`
+2. 세션 확인 → `404 SESSION_NOT_FOUND` / `410 SESSION_EXPIRED`
+3. 선행 조건 확인 → `409 PROFILE_INPUT_REQUIRED` / `409 ANALYSIS_INCOMPLETE`
+4. 턴 한도 확인 (저장된 턴 수 ≥ 20) → `429 CHAT_TURN_LIMIT_EXCEEDED`
+5. 시스템 프롬프트 구성: 세션의 `profileInput` + `faceDetail`(`aiReason` 포함) + `bodyDetail` + `resultData`(맞춤 유형·추천 헤어 2·패션 3·추천 이유)를 **백엔드가 자동 주입** + 표현 가이드(R-11). 이전 대화 내역(최대 19턴)을 함께 전달
+6. LLM 호출 (`moda.chat.mode=external`: Spring AI `ChatClient` / `mock`: 템플릿 답변)
+7. 성공 시 사용자 메시지·챗봇 답변을 **한 트랜잭션으로 `chat_message`에 저장**하고 세션 TTL 30분 연장
+8. 응답 반환 (LLM 실패 시 아무것도 저장하지 않고 TTL도 연장하지 않음)
+
+**Response `200 OK`**
+
+```json
+{
+  "success": true,
+  "data": {
+    "sessionId": "3f6c1e2a-8b4d-4c1f-9a7e-2d5b6c8e9f01",
+    "userMessage": {
+      "messageId": "b1d2c3e4-0000-4a1b-9c2d-111111111111",
+      "role": "USER",
+      "content": "가르마 스타일은 어떻게 연출하면 좋을까요?",
+      "createdAt": "2026-11-19T21:34:20+09:00"
+    },
+    "assistantMessage": {
+      "messageId": "b1d2c3e4-0000-4a1b-9c2d-222222222222",
+      "role": "ASSISTANT",
+      "content": "하트형 얼굴은 이마 라인이 시원하고 턱선이 갸름하게 모여서, 6:4 정도의 자연스러운 가르마가 잘 어울려요. 반곱슬 모발이라 드라이로 뿌리 볼륨만 살려도 옆 라인에 입체감이 생겨요.\n1) 젖은 상태에서 가르마 반대 방향으로 드라이해 뿌리 볼륨 만들기\n2) 가는 모발이므로 가벼운 텍스처 왁스를 소량만 사용하기\n3) 앞머리는 이마를 사선으로 살짝 덮도록 정리하기",
+      "createdAt": "2026-11-19T21:34:23+09:00"
+    },
+    "suggestedPrompts": [
+      "가르마펌을 하면 얼마나 유지되나요?",
+      "가르마 스타일에 어울리는 코디는?",
+      "왁스 대신 쓸 수 있는 제품은?"
+    ],
+    "remainingTurns": 19,
+    "maxTurns": 20,
+    "expiresAt": "2026-11-19T22:04:23+09:00"
+  }
+}
+```
+
+| 필드 | 타입 | null | 설명 |
+|---|---|---|---|
+| `sessionId` | string | 불가 | |
+| `userMessage` | `ChatMessage` | 불가 | 저장된 사용자 메시지 (`role: USER`, trim 적용 값) |
+| `assistantMessage` | `ChatMessage` | 불가 | 저장된 챗봇 답변 (`role: ASSISTANT`) |
+| `suggestedPrompts` | string[] | 불가 | 이번 답변 기준 후속 추천 질문 3~4개. `remainingTurns = 0`이면 `[]` |
+| `remainingTurns` | int | 불가 | 이번 턴 차감 후 남은 턴 수 |
+| `maxTurns` | int | 불가 | 20 |
+| `expiresAt` | string | 불가 | 연장된 만료 시각 |
+
+**에러**
+
+| 상황 | 응답 |
+|---|---|
+| `message` 누락·공백만·500자 초과 | `400 INVALID_REQUEST` (`details[].field = "message"`) |
+| 세션 없음 / 만료 | `404 SESSION_NOT_FOUND` / `410 SESSION_EXPIRED` |
+| 기본 정보 미입력 / 얼굴·전신 미완료 | `409 PROFILE_INPUT_REQUIRED` / `409 ANALYSIS_INCOMPLETE` |
+| 세션당 최대 20턴 초과 | `429 CHAT_TURN_LIMIT_EXCEEDED` |
+| LLM 연결 실패, LLM `5xx`, LLM 제공사 요청 한도·인증 오류, 빈 답변 | `503 CHAT_SERVER_UNAVAILABLE` |
+| LLM 응답 시간 초과 (`moda.chat.timeout` 20초) | `504 CHAT_TIMEOUT` |
+
+> LLM 제공사의 요청 한도 초과(제공사 측 `429`)는 앱에 `429`로 전달하지 않고 `503 CHAT_SERVER_UNAVAILABLE`로 변환합니다. 앱의 `429`는 **세션 턴 한도 초과 전용**입니다.
+
+`429 CHAT_TURN_LIMIT_EXCEEDED` 예:
+
+```json
+{
+  "success": false,
+  "error": {
+    "status": 429,
+    "code": "CHAT_TURN_LIMIT_EXCEEDED",
+    "message": "이번 체험에서 대화할 수 있는 횟수(20회)를 모두 사용했어요.",
+    "details": [],
+    "meta": { "maxTurns": 20, "usedTurns": 20, "remainingTurns": 0 },
+    "path": "/api/v1/sessions/3f6c1e2a-8b4d-4c1f-9a7e-2d5b6c8e9f01/chat/messages",
+    "timestamp": "2026-11-19T21:50:00+09:00"
+  }
+}
+```
+
+검증 실패 예 (`message: "   "`):
+
+```json
+{
+  "success": false,
+  "error": {
+    "status": 400,
+    "code": "INVALID_REQUEST",
+    "message": "입력값을 확인해 주세요.",
+    "details": [
+      { "field": "message", "reason": "공백을 제외하고 1자 이상 500자 이하로 입력해 주세요.", "rejectedValue": "   " }
+    ],
+    "meta": null,
+    "path": "/api/v1/sessions/3f6c1e2a-8b4d-4c1f-9a7e-2d5b6c8e9f01/chat/messages",
+    "timestamp": "2026-11-19T21:34:10+09:00"
+  }
+}
+```
+
+---
+
 ## 6. 화면 ↔ API 1:1 매핑 (프론트엔드용)
 
 | # | 화면 | 사용자 액션 | 호출 API | 성공 시 처리 | 실패·분기 처리 |
@@ -1214,8 +1444,10 @@
 | 6 | 결과 화면 | 화면 진입 | ⑤ `GET /result` | `type.headline`, `type.description`, `type.stylePoints`, `hairStyles[2]`, `fashionStyles[3]`, `disclaimer` 표시 | `ANALYSIS_INCOMPLETE` → `meta.nextStep` 화면으로 |
 | 7 | [분석 상세보기] 팝업 | 버튼 탭 | ⑥ `GET /analysis-detail` | 얼굴형·체형 판정(`result`)과 설명(`description`)은 항상 표시. 확신도(`confidence`), 후보(`candidates`), 경계 여부(`borderline`), 안내(`warnings`), 측정값(`features`), Size Korea 비교(`body.compareToSizeKorea`)는 **값이 있을 때만** 표시 (`null`·`[]`이면 숨김) | — |
 | 8 | 팝업 내 결과 수정 | 얼굴형/체형/모질 선택 후 [적용] | ⑦ `PATCH /profile` | `data.result`로 결과 화면 상태 교체, 팝업 정보 갱신이 필요하면 ⑥ 재호출 | `INVALID_REQUEST` → 선택 안내 |
-| 9 | Moda 메인 화면 | 결과 화면에서 [Moda 시작하기] | 없음 (MVP) | 메인 화면 이동 (2차 기능 진입점) | — |
-| 10 | 부스 초기화 | 메인/결과 화면의 숨김 버튼(예: 로고 3초 길게 누르기) | ⑧ `DELETE /sessions/{sessionId}` | 전역 상태·로컬 사진 URI 삭제 → 시작 화면 | 실패해도 로컬 초기화 후 시작 화면 |
+| 9 | 챗봇 화면 (진입) | 결과 화면에서 [챗봇 이용하기] | ⑨ `GET /chat/messages` | `welcomeMessage`를 첫 말풍선으로 표시 → `messages[]` 순서대로 렌더링 → `suggestedPrompts` 칩 표시 → `remainingTurns` 표시(예: “남은 대화 19회”) | `ANALYSIS_INCOMPLETE`·`PROFILE_INPUT_REQUIRED` → `meta.nextStep` 화면으로 |
+| 10 | 챗봇 화면 (대화) | 메시지 입력 후 [전송] 또는 추천 질문 칩 탭 | ⑩ `POST /chat/messages` | 사용자 말풍선 즉시 표시 + “입력 중…” 표시(응답 대기 중 전송·칩 비활성화) → `assistantMessage` 추가, `suggestedPrompts`·`remainingTurns` 교체 → `remainingTurns = 0`이면 입력창 비활성화 | `INVALID_REQUEST` → 입력 안내 / `CHAT_TURN_LIMIT_EXCEEDED` → 입력창·칩 비활성화 + `error.message` 표시 / `CHAT_SERVER_UNAVAILABLE`·`CHAT_TIMEOUT` → 사용자 말풍선에 실패 표시 + 입력 문장 유지 + [다시 보내기] (턴 차감 없음) |
+| 11 | Moda 메인 화면 | 결과 화면에서 [Moda 시작하기] | 없음 (MVP) | 메인 화면 이동 (2차 기능 진입점) | — |
+| 12 | 부스 초기화 | 메인/결과 화면의 숨김 버튼(예: 로고 3초 길게 누르기) | ⑧ `DELETE /sessions/{sessionId}` | 전역 상태(챗봇 대화 상태 포함)·로컬 사진 URI 삭제 → 시작 화면 | 실패해도 로컬 초기화 후 시작 화면 |
 | 공통 | 모든 화면 | — | — | — | `SESSION_NOT_FOUND`·`SESSION_EXPIRED` → 로컬 초기화 후 시작 화면 |
 
 ### 6.1 권장 호출 순서
@@ -1228,7 +1460,9 @@
 (결과 진입)     GET    /api/v1/sessions/{sessionId}/result
 [분석 상세보기] GET    /api/v1/sessions/{sessionId}/analysis-detail
 [적용]          PATCH  /api/v1/sessions/{sessionId}/profile           → data.result로 화면 갱신
-[초기화]        DELETE /api/v1/sessions/{sessionId}
+[챗봇 이용하기] GET    /api/v1/sessions/{sessionId}/chat/messages     → welcomeMessage + messages + suggestedPrompts
+[전송/칩 탭]    POST   /api/v1/sessions/{sessionId}/chat/messages     → assistantMessage 추가 (최대 20턴)
+[초기화]        DELETE /api/v1/sessions/{sessionId}                   → 챗봇 대화 내역도 함께 삭제
 ```
 
 ### 6.2 프론트엔드 구현 참고
@@ -1246,6 +1480,7 @@
   ```
 - 촬영 시 `quality: 0.7` 정도로 압축하면 10MB 제한과 업로드 시간을 모두 만족합니다.
 - `score`는 화면에 표시하지 않습니다. 순위는 `rank`, 설명은 `reasons`만 사용합니다. (R-11)
+- 챗봇: 대화 내역은 서버가 보관하므로 챗봇 화면을 나갔다 들어오면 ⑨를 다시 호출해 복원합니다. ⑩ 성공 응답의 `userMessage`로 낙관적(optimistic) 표시한 사용자 말풍선을 교체하고, 실패(`503`·`504`) 시에는 입력 문장을 유지해 재전송할 수 있게 합니다.
 
 ---
 
@@ -1267,10 +1502,13 @@
 
 ### A.2 얼굴 분석 응답 (AI → 백엔드, snake_case)
 
+> **v1.2 (AI 최신 코드 `v8`)**: 평균 대비 특징을 요약한 문장 `reason`(string | null, **선택**)이 추가되었습니다. 누락·`null`이어도 정상 처리합니다(A.4).
+
 ```json
 {
   "usable": true,
   "face_shape": "heart",
+  "reason": "평균 대비 이마 너비 비율이 높고 턱끝 너비 비율이 낮아, 이마에서 턱끝으로 갸름하게 모이는 하트형 특징이 보입니다.",
   "confidence": 0.64,
   "borderline": false,
   "candidates": [
@@ -1363,6 +1601,7 @@
 | `usable` | bool | 필수 | 필수 | 판정 가능 여부 | `usable`, `retakeRequired` |
 | `face_shape` / `body_type` | string \| null | 필수 | 필수 | `usable=true`면 **반드시 6종 / 4종 영문 Key 중 하나**, `usable=false`면 `null` 허용. 그 외 값이면 `502 AI_BAD_RESPONSE` | `faceShape` / `bodyType` (`CodeLabel`) |
 | `warnings` | string[] | 필수 | 필수 | A.5의 코드 문자열 배열, 없으면 `[]` | `warnings` (`code`, `severity`, `message`) |
+| `reason` | string \| null | **선택** (`v8`) | — | 평균 대비 특징 요약 문장(한국어 1~2문장). `usable=false`면 `null`. `style-rules.md` 7장 표현 가이드 준수 요청. 백엔드는 가공 없이 그대로 전달 | `FaceDetail.aiReason` (없으면 `null`) |
 | `confidence` | float \| null | 필수 | **선택** | 1위 후보 확률 0~1 | `confidence` (없으면 `null`) |
 | `borderline` | bool \| null | 필수 | **선택** | 얼굴: 1위 확률 < `FACE_MIN_CONFIDENCE`(0.60). 체형: AI 팀 기준 | `borderline` (없으면 `null`) |
 | `candidates` | `[{key, prob}]` \| null | 필수 | **선택** | 확률 합 ≈ 1.0, 내림차순 | `candidates` (`key`, `label`, `probability`, 없으면 `[]`) |
@@ -1377,6 +1616,7 @@
 2. 선택 필드의 **형식이 잘못된 경우**(예: `candidates`에 정의되지 않은 Key, `prob`가 숫자가 아님, `compare_to_size_korea.items` 누락)에도 `502`를 내지 않고 해당 필드만 `null`/`[]`로 처리한 뒤 서버 로그에 경고를 남깁니다.
 3. 체형의 `502 AI_BAD_RESPONSE`는 **필수 3필드**(`usable`, `body_type`, `warnings`)가 누락·형식 오류이거나, `usable=true`인데 `body_type`이 4종 Key가 아닐 때만 발생합니다.
 4. 얼굴 응답은 기존대로 위 표의 ‘필수’ 필드가 모두 있어야 합니다(MediaPipe 자체 분석).
+5. 얼굴 `reason`(`v8`)은 **선택 필드**입니다. 누락·`null`·빈 문자열·문자열이 아닌 값이면 `502`를 내지 않고 `aiReason = null`로 처리합니다(형식 오류 시 서버 로그에 경고). `v8` 이전 AI 서버와도 그대로 호환됩니다.
 
 **features 라벨 (백엔드 `analysis-labels.json`)**
 
@@ -1438,6 +1678,7 @@
 | 읽기 타임아웃 | `504 AI_TIMEOUT` |
 | JSON 파싱 실패, 필수 필드 누락·형식 오류(A.4 기준: 얼굴은 표의 필수 전체, 체형은 `usable`·`body_type`·`warnings`), `usable=true`인데 정의되지 않은 얼굴형·체형 Key | `502 AI_BAD_RESPONSE` |
 | 체형 선택 필드 누락·`null`·형식 오류 | 에러 없음, 해당 필드만 `null`/`[]` (A.4 처리 규칙) |
+| 얼굴 `reason` 누락·`null`·형식 오류 (`v8`) | 에러 없음, `aiReason = null` (A.4 규칙 5) |
 | `200` + `usable=false` | `200` + `usable=false` (에러 아님) |
 
 ---
@@ -1445,7 +1686,7 @@
 ## 부록 B. TypeScript 타입 정의 (Expo 프로젝트에 복사해 사용)
 
 ```ts
-// src/api/types.ts — docs/api-spec.md v1.1 기준
+// src/api/types.ts — docs/api-spec.md v1.2 기준
 
 export type FaceShapeKey = 'diamond' | 'heart' | 'oval' | 'rectangle' | 'round' | 'long';
 export type BodyTypeKey = 'standard' | 'small_inv_triangle' | 'large_rectangle' | 'rectangle';
@@ -1461,13 +1702,15 @@ export type AnalysisSource = 'AI' | 'MANUAL';
 export type AnalysisStatus = 'ANALYZED' | 'CORRECTED' | 'MANUAL' | 'NOT_ANALYZED';
 export type WarningSeverity = 'RETAKE' | 'INFO';
 export type SizeKoreaDirection = 'ABOVE' | 'BELOW' | 'SIMILAR';
+export type ChatRole = 'USER' | 'ASSISTANT';
 
 export type ErrorCode =
   | 'INVALID_REQUEST' | 'PHOTO_CONSENT_REQUIRED' | 'IMAGE_REQUIRED'
   | 'SESSION_NOT_FOUND' | 'PROFILE_INPUT_REQUIRED' | 'ANALYSIS_INCOMPLETE'
   | 'ANALYSIS_IN_PROGRESS' | 'SESSION_EXPIRED' | 'IMAGE_TOO_LARGE'
   | 'UNSUPPORTED_IMAGE_TYPE' | 'INTERNAL_ERROR' | 'AI_BAD_RESPONSE'
-  | 'AI_SERVER_UNAVAILABLE' | 'AI_TIMEOUT';
+  | 'AI_SERVER_UNAVAILABLE' | 'AI_TIMEOUT'
+  | 'CHAT_TURN_LIMIT_EXCEEDED' | 'CHAT_SERVER_UNAVAILABLE' | 'CHAT_TIMEOUT'; // v1.2 챗봇
 
 export interface CodeLabel<K extends string = string> { key: K; label: string; }
 
@@ -1633,6 +1876,7 @@ export interface FaceDetail {
   result: CodeLabel<FaceShapeKey> | null;
   aiResult: CodeLabel<FaceShapeKey> | null;
   description: string | null;
+  aiReason: string | null; // v1.2 (AI v8 `reason`), 얼굴 전용. AI 미제공 시 null
   confidence: number | null;
   borderline: boolean | null;
   candidates: Candidate[];
@@ -1641,7 +1885,7 @@ export interface FaceDetail {
   analyzedAt: string | null;
 }
 // 체형은 status가 ANALYZED여도 confidence/borderline=null, candidates/features=[], compareToSizeKorea=null 가능 → 값이 있을 때만 렌더링
-export interface BodyDetail extends Omit<FaceDetail, 'result' | 'aiResult'> {
+export interface BodyDetail extends Omit<FaceDetail, 'result' | 'aiResult' | 'aiReason'> {
   result: CodeLabel<BodyTypeKey> | null;
   aiResult: CodeLabel<BodyTypeKey> | null;
   heightCmUsed: number | null;
@@ -1682,6 +1926,37 @@ export interface SessionDeleteData {
   alreadyDeleted: boolean;
   deletedPhotoCount: number;
   deletedAt: string;
+}
+
+// ⑨·⑩ 챗봇 공통
+export interface ChatMessage {
+  messageId: string;
+  role: ChatRole;
+  content: string;
+  createdAt: string;
+}
+
+// ⑨ GET /chat/messages
+export interface ChatHistoryData {
+  sessionId: string;
+  welcomeMessage: string;     // 저장·턴 차감 없음, 항상 첫 말풍선으로 표시
+  messages: ChatMessage[];    // createdAt 오름차순, 없으면 []
+  suggestedPrompts: string[]; // 3~4개, remainingTurns=0이면 []
+  remainingTurns: number;     // 0 ~ 20
+  maxTurns: number;           // 20
+  expiresAt: string;
+}
+
+// ⑩ POST /chat/messages
+export interface ChatSendRequest { message: string; } // trim 후 1~500자, 공백만 불가
+export interface ChatSendData {
+  sessionId: string;
+  userMessage: ChatMessage;
+  assistantMessage: ChatMessage;
+  suggestedPrompts: string[];
+  remainingTurns: number;
+  maxTurns: number;
+  expiresAt: string;
 }
 ```
 
@@ -1725,6 +2000,15 @@ curl -s -X PATCH $BASE/sessions/$SID/profile \
   -H "Content-Type: application/json" \
   -d '{"faceShape":"diamond"}'
 
-# ⑧ 초기화
+# ⑨ 챗봇 진입 (대화 내역 + 첫 인사 + 추천 질문)
+curl -s $BASE/sessions/$SID/chat/messages
+
+# ⑩ 챗봇 메시지 전송 (moda.chat.mode=mock: 지연 2초 지정)
+curl -s -X POST $BASE/sessions/$SID/chat/messages \
+  -H "Content-Type: application/json" \
+  -H "X-Mock-Delay-Ms: 2000" \
+  -d '{"message":"가르마 스타일은 어떻게 연출하면 좋을까요?"}'
+
+# ⑧ 초기화 (챗봇 대화 내역도 함께 삭제)
 curl -s -X DELETE $BASE/sessions/$SID
 ```
