@@ -1,0 +1,37 @@
+{
+  "median": {
+    "length_ratio": 1.205875,
+    "forehead_ratio": 0.91635,
+    "jaw_ratio": 0.8189,
+    "chin_ratio": 0.667225,
+    "jaw_angle_deg": 134.078
+  },
+  "spread": {
+    "length_ratio": 0.051549665091550394,
+    "forehead_ratio": 0.014326389826409809,
+    "jaw_ratio": 0.023899499176454893,
+    "chin_ratio": 0.022822387612220323,
+    "jaw_angle_deg": 2.2003305735748633
+  },
+  "oval_radius": 0.95,
+  "n_people": 16,
+  "weights": {
+    "length_ratio": 0.852,
+    "forehead_ratio": 0.856,
+    "jaw_ratio": 0.868,
+    "chin_ratio": 0.866,
+    "jaw_angle_deg": 0.807
+  },
+  "noise": {
+    "length_ratio": 0.0215,
+    "forehead_ratio": 0.0059,
+    "jaw_ratio": 0.0093,
+    "chin_ratio": 0.009,
+    "jaw_angle_deg": 1.0764
+  },
+  "oval_share_target": 0.25,
+  "sources": [
+    "live_measurements.csv"
+  ],
+  "created": "2026-11-26 18:17"
+}

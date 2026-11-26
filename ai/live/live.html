@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+  <title>Moda 실시간 분석</title>
+  <style>
+    :root { --ink: #09090B; --paper: #FFFFFF; --ok: #22C55E; --line: rgba(255, 255, 255, .22); }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; background: var(--ink); color: var(--paper); overflow: hidden;
+      font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Pretendard", "Noto Sans KR", sans-serif;
+      -webkit-user-select: none; user-select: none; -webkit-tap-highlight-color: transparent; }
+    #stage { position: fixed; inset: 0; }
+    video, #overlay { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+    .mirror { transform: scaleX(-1); }
+    .bar { position: absolute; left: 0; right: 0; padding: 14px 20px; background: rgba(9, 9, 11, .72);
+      -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
+    #top { top: 0; padding-top: max(14px, env(safe-area-inset-top)); border-bottom: 1px solid var(--line); }
+    #bottom { bottom: 0; padding-bottom: max(22px, env(safe-area-inset-bottom)); border-top: 1px solid var(--line); }
+    #step { font-size: 12px; letter-spacing: .14em; text-transform: uppercase; opacity: .72; }
+    #progress { margin-top: 10px; height: 3px; background: var(--line); }
+    #progress > i { display: block; height: 100%; width: 0; background: var(--paper); transition: width .2s; }
+    #msg { font-size: 21px; font-weight: 700; line-height: 1.35; word-break: keep-all; }
+    #msg.ok { color: var(--ok); }
+    #sub { margin-top: 6px; font-size: 14px; line-height: 1.45; opacity: .72; word-break: keep-all; min-height: 1.45em; }
+    #count { position: absolute; left: 50%; top: 42%; transform: translate(-50%, -50%); font-size: 112px; font-weight: 800;
+      text-shadow: 0 2px 18px rgba(0, 0, 0, .45); display: none; }
+    #panel { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; align-items: center;
+      gap: 16px; padding: 32px; text-align: center; background: var(--ink); }
+    #panel h1 { font-size: 22px; line-height: 1.4; word-break: keep-all; }
+    #panel p { font-size: 15px; opacity: .72; line-height: 1.5; word-break: keep-all; }
+    #panel pre { max-width: 100%; max-height: 40vh; overflow: auto; text-align: left; font-size: 11px; opacity: .8;
+      border: 1px solid var(--line); padding: 10px; }
+    button { font: inherit; font-size: 15px; font-weight: 700; padding: 13px 22px; border: 1px solid var(--paper);
+      background: var(--paper); color: var(--ink); border-radius: 0; }
+    button.ghost { background: transparent; color: var(--paper); }
+    .spinner { width: 28px; height: 28px; border: 2px solid var(--line); border-top-color: var(--paper); border-radius: 50%;
+      animation: spin .9s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    [hidden] { display: none !important; }
+  </style>
+</head>
+<body>
+  <div id="stage" hidden>
+    <video id="video" playsinline muted autoplay></video>
+    <canvas id="overlay"></canvas>
+    <div id="count"></div>
+    <div class="bar" id="top">
+      <div id="step"></div>
+      <div id="progress"><i></i></div>
+    </div>
+    <div class="bar" id="bottom">
+      <div id="msg"></div>
+      <div id="sub"></div>
+    </div>
+  </div>
+  <div id="panel">
+    <div class="spinner" id="spin"></div>
+    <h1 id="ptitle">카메라와 분석 모델을 준비하고 있어요</h1>
+    <p id="ptext">처음 한 번은 몇 초 걸릴 수 있어요.</p>
+    <pre id="pjson" hidden></pre>
+    <button id="pbtn" hidden>다시 측정하기</button>
+  </div>
+  <script type="module" src="./live_app.js"></script>
+</body>
+</html>
