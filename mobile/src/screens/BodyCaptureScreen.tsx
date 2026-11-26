@@ -18,6 +18,7 @@ import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { isModaApiError } from '../api/client';
 import { modaApi } from '../api/modaApi';
 import type { BodyTypeKey } from '../api/types';
+import { BodySilhouetteGuide } from '../components/BodySilhouetteGuide';
 import { LoadingOverlay } from '../components/LoadingOverlay';
 import { ManualSelectModal } from '../components/ManualSelectModal';
 import type { RootStackParamList } from '../navigation/types';
@@ -278,19 +279,14 @@ export function BodyCaptureScreen({ navigation }: Props) {
           <View style={styles.camera}>
             <CameraView ref={cameraRef} style={StyleSheet.absoluteFill} facing={facing} />
             <View pointerEvents="none" style={styles.overlayWrap}>
-              <View
-                style={[
-                  styles.bodyGuide,
-                  countdown !== null && styles.bodyGuideActive,
-                ]}
-              />
+              <BodySilhouetteGuide active={countdown !== null} />
               {countdown !== null ? (
                 <View style={styles.countdownOverlay}>
                   <Text style={styles.countdownNum}>{countdown}</Text>
-                  <Text style={styles.countdownSub}>머리부터 발끝까지 맞춰주세요</Text>
+                  <Text style={styles.countdownSub}>다리는 모으고 팔은 살짝 벌려주세요</Text>
                 </View>
               ) : (
-                <Text style={styles.guidePill}>머리부터 발끝까지 틀 안에 맞춰주세요</Text>
+                <Text style={styles.guidePill}>다리는 모으고 팔은 살짝 벌려 맞춰주세요</Text>
               )}
             </View>
           </View>
@@ -417,19 +413,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: 'rgba(0,0,0,0.16)',
-  },
-  bodyGuide: {
-    width: '68%',
-    height: '82%',
-    borderRadius: radius.md,
-    borderWidth: 2,
-    borderColor: 'rgba(255,255,255,0.88)',
-    borderStyle: 'dashed',
-  },
-  bodyGuideActive: {
-    borderColor: '#FFFFFF',
-    borderStyle: 'solid',
-    borderWidth: 2.5,
   },
   guidePill: {
     position: 'absolute',
