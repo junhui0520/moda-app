@@ -1,51 +1,54 @@
+// App.tsx — Moda Mobile 루트 네비게이션 (A안 에디토리얼 + 풀스크린 카메라)
+
+import React from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { useEffect, useState } from 'react';
-import { BackHandler, Platform, StyleSheet, View } from 'react-native';
-import type { ResultData } from './src/api/types';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import type { RootStackParamList } from './src/navigation/types';
+import { BodyCaptureScreen } from './src/screens/BodyCaptureScreen';
 import { ChatScreen } from './src/screens/ChatScreen';
+import { FaceCaptureScreen } from './src/screens/FaceCaptureScreen';
+import { ModaMainScreen } from './src/screens/ModaMainScreen';
+import { ProfileInputScreen } from './src/screens/ProfileInputScreen';
 import { ResultScreen } from './src/screens/ResultScreen';
 import { StartScreen } from './src/screens/StartScreen';
-import { colors } from './src/theme';
+import { colors } from './src/theme/theme';
 
-// shortcut: 화면 3개라 상태로 전환. 입력·촬영 화면이 붙어 화면이 늘면 Expo Router로 옮길 것
-type Screen =
-  | { name: 'start' }
-  | { name: 'result'; sessionId: string; result: ResultData }
-  | { name: 'chat'; sessionId: string; result: ResultData };
+const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function App() {
-  const [screen, setScreen] = useState<Screen>({ name: 'start' });
-
-  useEffect(() => {
-    if (screen.name !== 'chat') return;
-    const sub = BackHandler.addEventListener('hardwareBackPress', () => {
-      setScreen({ ...screen, name: 'result' });
-      return true;
-    });
-    return () => sub.remove();
-  }, [screen]);
-
   return (
-    <View style={styles.root}>
-      {screen.name === 'start' && (
-        <StartScreen onDone={(sessionId, result) => setScreen({ name: 'result', sessionId, result })} />
-      )}
-      {screen.name === 'result' && (
-        <ResultScreen
-          result={screen.result}
-          onChat={() => setScreen({ ...screen, name: 'chat' })}
-          onRestart={() => setScreen({ name: 'start' })}
-        />
-      )}
-      {screen.name === 'chat' && (
-        <ChatScreen sessionId={screen.sessionId} onBack={() => setScreen({ ...screen, name: 'result' })} />
-      )}
+    <SafeAreaProvider>
       <StatusBar style="dark" />
-    </View>
+      <NavigationContainer>
+        <Stack.Navigator
+          initialRouteName="Start"
+          screenOptions={{
+            headerShown: false,
+            contentStyle: { backgroundColor: colors.bg },
+            animation: 'slide_from_right',
+          }}
+        >
+          <Stack.Screen name="Start" component={StartScreen} />
+          <Stack.Screen
+            name="ProfileInput"
+            component={ProfileInputScreen}
+            options={{
+              headerShown: true,
+              title: '',
+              headerTintColor: colors.text,
+              headerStyle: { backgroundColor: colors.bg },
+              headerShadowVisible: false,
+            }}
+          />
+          <Stack.Screen name="FaceCapture" component={FaceCaptureScreen} />
+          <Stack.Screen name="BodyCapture" component={BodyCaptureScreen} />
+          <Stack.Screen name="Result" component={ResultScreen} />
+          <Stack.Screen name="Chat" component={ChatScreen} />
+          <Stack.Screen name="ModaMain" component={ModaMainScreen} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </SafeAreaProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  // shortcut: safe-area 라이브러리 대신 고정 여백, 노치 대응이 어긋나면 react-native-safe-area-context 도입
-  root: { flex: 1, backgroundColor: colors.bg, paddingTop: Platform.OS === 'web' ? 0 : 44 },
-});

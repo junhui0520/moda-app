@@ -1,32 +1,143 @@
-import { jsonBody, request } from './client';
-import type { ChatHistoryData, ChatSendData, ProfileInputRequest, ResultData, StyleImages } from './types';
+// src/api/modaApi.ts — docs/api-spec.md v1.2 API 10종 + 헬스체크 호출 함수
 
-/** Expo의 fetch는 FormData에 Blob만 받음 ({uri,name,type} 객체는 Unsupported FormDataPart). 사진 URI는 fetch(uri).blob()으로 변환 */
-export type UploadImage = Blob;
+import { apiRequest, buildMockHeaders, createImageFormData } from './client';
+import type {
+  AnalysisDetailData,
+  BodyAnalysisData,
+  ChatHistoryData,
+  ChatSendData,
+  ChatSendRequest,
+  FaceAnalysisData,
+  GuestSessionData,
+  GuestSessionRequest,
+  MockHeadersConfig,
+  ProfileInputData,
+  ProfileInputRequest,
+  ProfilePatchData,
+  ProfilePatchRequest,
+  ResultData,
+  SessionDeleteData,
+  StyleImages,
+} from './types';
 
-export const createSession = () =>
-  request<{ sessionId: string }>('/sessions/guest', jsonBody('POST', { photoConsent: true }));
+export const modaApi = {
+  // 스타일 이미지 경로 (imageKey → 큰 사진 + 아이템 사진)
+  getStyleImages: (baseUrl?: string) =>
+    apiRequest<Record<string, StyleImages>>('/api/v1/style-images', { method: 'GET', baseUrl, timeoutMs: 10_000 }),
 
-export const submitProfile = (sessionId: string, input: ProfileInputRequest) =>
-  request(`/sessions/${sessionId}/profile-input`, jsonBody('POST', input));
+  // 헬스체크
+  checkHealth: (baseUrl?: string) =>
+    apiRequest<{ status: string; aiMode?: string; chatMode?: string }>('/api/v1/health', {
+      method: 'GET',
+      baseUrl,
+      timeoutMs: 10_000,
+    }),
 
-export function analyze(sessionId: string, kind: 'face' | 'body', image: UploadImage, headers: Record<string, string> = {}) {
-  const form = new FormData();
-  form.append('image', image, 'photo.png');
-  return request(`/sessions/${sessionId}/analyze/${kind}`, { method: 'POST', headers, body: form });
-}
+  // ① 게스트 세션 생성
+  createGuestSession: (req: GuestSessionRequest, baseUrl?: string) =>
+    apiRequest<GuestSessionData>('/api/v1/sessions/guest', {
+      method: 'POST',
+      body: req,
+      baseUrl,
+    }),
 
-export const getResult = (sessionId: string) => request<ResultData>(`/sessions/${sessionId}/result`);
+  // ② 기본 정보 입력
+  submitProfileInput: (sessionId: string, req: ProfileInputRequest, baseUrl?: string) =>
+    apiRequest<ProfileInputData>(`/api/v1/sessions/${sessionId}/profile-input`, {
+      method: 'POST',
+      body: req,
+      baseUrl,
+    }),
 
-export const getChat = (sessionId: string) => request<ChatHistoryData>(`/sessions/${sessionId}/chat/messages`);
+  // ③ 얼굴 사진 분석
+  analyzeFace: async (
+    sessionId: string,
+    photoUri: string,
+    mock?: MockHeadersConfig,
+    baseUrl?: string,
+  ) => {
+    const formData = await createImageFormData(photoUri, 'face.jpg');
+    return apiRequest<FaceAnalysisData>(`/api/v1/sessions/${sessionId}/analyze/face`, {
+      method: 'POST',
+      formData,
+      headers: buildMockHeaders(mock, 'face'),
+      baseUrl,
+      timeoutMs: 30_000,
+      timeoutCode: 'AI_TIMEOUT',
+      networkUnavailableCode: 'AI_SERVER_UNAVAILABLE',
+    });
+  },
 
-export const sendChat = (sessionId: string, message: string) =>
-  request<ChatSendData>(`/sessions/${sessionId}/chat/messages`, jsonBody('POST', { message }));
+  // ④ 전신 사진 분석
+  analyzeBody: async (
+    sessionId: string,
+    photoUri: string,
+    mock?: MockHeadersConfig,
+    baseUrl?: string,
+  ) => {
+    const formData = await createImageFormData(photoUri, 'body.jpg');
+    return apiRequest<BodyAnalysisData>(`/api/v1/sessions/${sessionId}/analyze/body`, {
+      method: 'POST',
+      formData,
+      headers: buildMockHeaders(mock, 'body'),
+      baseUrl,
+      timeoutMs: 30_000,
+      timeoutCode: 'AI_TIMEOUT',
+      networkUnavailableCode: 'AI_SERVER_UNAVAILABLE',
+    });
+  },
 
-// 앱 실행 중 1번만 받음 (실패하면 다음 호출에서 다시 시도)
-let styleImages: Promise<Record<string, StyleImages>> | null = null;
-export const getStyleImages = () =>
-  (styleImages ??= request<Record<string, StyleImages>>('/style-images').catch((e) => {
-    styleImages = null;
-    throw e;
-  }));
+  // ⑤ 결과 조회 (유형 + 헤어 2종 + 패션 3종)
+  getResult: (sessionId: string, baseUrl?: string) =>
+    apiRequest<ResultData>(`/api/v1/sessions/${sessionId}/result`, {
+      method: 'GET',
+      baseUrl,
+    }),
+
+  // ⑥ 분석 상세보기 조회
+  getAnalysisDetail: (sessionId: string, baseUrl?: string) =>
+    apiRequest<AnalysisDetailData>(`/api/v1/sessions/${sessionId}/analysis-detail`, {
+      method: 'GET',
+      baseUrl,
+    }),
+
+  // ⑦ 얼굴형·체형·모질 수동 수정
+  patchProfile: (sessionId: string, req: ProfilePatchRequest, baseUrl?: string) =>
+    apiRequest<ProfilePatchData>(`/api/v1/sessions/${sessionId}/profile`, {
+      method: 'PATCH',
+      body: req,
+      baseUrl,
+    }),
+
+  // ⑧ 세션 초기화 (부스 초기화)
+  deleteSession: (sessionId: string, baseUrl?: string) =>
+    apiRequest<SessionDeleteData>(`/api/v1/sessions/${sessionId}`, {
+      method: 'DELETE',
+      baseUrl,
+      timeoutMs: 10_000,
+    }),
+
+  // ⑨ 챗봇 대화 조회 (화면 진입)
+  getChatMessages: (sessionId: string, baseUrl?: string) =>
+    apiRequest<ChatHistoryData>(`/api/v1/sessions/${sessionId}/chat/messages`, {
+      method: 'GET',
+      baseUrl,
+    }),
+
+  // ⑩ 챗봇 메시지 전송
+  sendChatMessage: (
+    sessionId: string,
+    req: ChatSendRequest,
+    mock?: MockHeadersConfig,
+    baseUrl?: string,
+  ) =>
+    apiRequest<ChatSendData>(`/api/v1/sessions/${sessionId}/chat/messages`, {
+      method: 'POST',
+      body: req,
+      headers: buildMockHeaders(mock, 'chat'),
+      baseUrl,
+      timeoutMs: 30_000,
+      timeoutCode: 'CHAT_TIMEOUT',
+      networkUnavailableCode: 'CHAT_SERVER_UNAVAILABLE',
+    }),
+};

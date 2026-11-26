@@ -6,4 +6,4 @@ command -v npm >/dev/null || { echo "[moda] Node.js가 필요합니다: https://
 
 trap 'trap - INT TERM EXIT; kill 0' INT TERM EXIT
 (cd backend && ./gradlew bootRun) &
-cd mobile && npm install --no-audit --no-fund && npx expo start
+cd mobile && npm install --no-audit --no-fund && EXPO_PUBLIC_USE_LOCAL_API=1 npx expo start

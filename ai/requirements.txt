@@ -1,0 +1,7 @@
+# 로컬 개발용 전체 패키지 — AI 서버 + 실시간 측정(run_live*.py) + 팀 기준 계산(fit_*.py) + 테스트
+-r requirements-server.txt
+opencv-python>=4.8
+pandas
+scikit-learn
+matplotlib
+httpx          # tests/test_api_contract.py (FastAPI TestClient)

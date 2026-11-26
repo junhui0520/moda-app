@@ -1,0 +1,16 @@
+# 개인 측정 데이터·사진·결과 (이미지에 절대 포함하지 않음)
+*.csv
+photos/
+results/
+*_backup*.json
+
+# 로컬 환경·캐시
+.venv/
+venv/
+__pycache__/
+*.pyc
+models/
+tests/
+.env
+.env.*
+live/vendor/

@@ -1,0 +1,9 @@
+*.csv
+!labels_*_example.csv
+!person_labels_example.csv
+photos/
+results/
+*_backup*.json
+
+# MediaPipe 웹 파일 (python download_models.py 가 받음, 15MB)
+live/vendor/

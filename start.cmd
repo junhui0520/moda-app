@@ -16,4 +16,5 @@ echo.
 echo [moda] Backend is starting in the other window (about 30s on first run).
 echo [moda] Press w for browser, or scan the QR with Expo Go on a phone on the same Wi-Fi.
 echo.
+set EXPO_PUBLIC_USE_LOCAL_API=1
 call npx expo start
