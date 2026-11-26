@@ -56,7 +56,7 @@ export interface ResultData {
   disclaimer: string;
 }
 
-/** 챗봇 답변에 붙는 스타일 이미지. 지금은 텍스트로 표시, DB 이미지 연동 시 imageKey로 찾음 */
+/** 챗봇 답변에 붙는 스타일 이미지. imageKey로 StyleImages를 찾아 표시 */
 export interface ChatImage { imageKey: string; label: string; }
 
 export interface ChatMessage {
@@ -83,4 +83,10 @@ export interface ChatSendData {
   suggestedPrompts: string[];
   remainingTurns: number;
   maxTurns: number;
+}
+
+/** GET /style-images 값. url은 서버 기준 경로 (BASE_URL + url). url = 큰 사진, items = 작은 아이템 사진 */
+export interface StyleImages {
+  url: string;
+  items: { label: string; url: string }[];
 }

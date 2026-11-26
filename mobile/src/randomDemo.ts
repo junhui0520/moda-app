@@ -1,5 +1,4 @@
 import { Asset } from 'expo-asset';
-import { Platform } from 'react-native';
 import { analyze, createSession, getResult, submitProfile, type UploadImage } from './api/modaApi';
 import type { BodyTypeKey, FaceShapeKey, ResultData } from './api/types';
 
@@ -15,8 +14,7 @@ const int = (min: number, max: number) => min + Math.floor(Math.random() * (max 
 /** Mock 서버는 사진 내용을 보지 않으므로 앱 아이콘을 사진 대신 보낸다 */
 async function dummyImage(): Promise<UploadImage> {
   const asset = await Asset.fromModule(require('../assets/icon.png')).downloadAsync();
-  if (Platform.OS === 'web') return (await fetch(asset.uri)).blob();
-  return { uri: asset.localUri ?? asset.uri, name: 'photo.png', type: 'image/png' };
+  return (await fetch(asset.uri)).blob();
 }
 
 export async function runRandomDemo(): Promise<{ sessionId: string; result: ResultData }> {

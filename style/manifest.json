@@ -1,0 +1,2077 @@
+[
+  {
+    "set_id": "CASUAL_01",
+    "style": "CASUAL",
+    "full_shot_prompt": "grey zip-up hoodie, white t-shirt, wide light blue jeans, white sneakers, black backpack",
+    "items": [
+      {
+        "display_order": 1,
+        "category": "OUTER",
+        "name": "후드집업",
+        "prompt": "grey zip-up hoodie",
+        "image_path": "CASUAL/CASUAL_01/item_01_outer.png",
+        "exists": true
+      },
+      {
+        "display_order": 2,
+        "category": "TOP",
+        "name": "반팔 티셔츠",
+        "prompt": "white t-shirt",
+        "image_path": "CASUAL/CASUAL_01/item_02_top.png",
+        "exists": true
+      },
+      {
+        "display_order": 3,
+        "category": "BOTTOM",
+        "name": "와이드 데님",
+        "prompt": "wide light blue jeans",
+        "image_path": "CASUAL/CASUAL_01/item_03_bottom.png",
+        "exists": true
+      },
+      {
+        "display_order": 4,
+        "category": "SHOES",
+        "name": "스니커즈",
+        "prompt": "white sneakers",
+        "image_path": "CASUAL/CASUAL_01/item_04_shoes.png",
+        "exists": true
+      },
+      {
+        "display_order": 5,
+        "category": "BAG",
+        "name": "백팩",
+        "prompt": "black backpack",
+        "image_path": "CASUAL/CASUAL_01/item_05_bag.png",
+        "exists": true
+      }
+    ]
+  },
+  {
+    "set_id": "CASUAL_02",
+    "style": "CASUAL",
+    "full_shot_prompt": "navy knit sweater, white shirt, cream wide cotton pants, grey sneakers, beige messenger bag",
+    "items": [
+      {
+        "display_order": 1,
+        "category": "TOP",
+        "name": "니트",
+        "prompt": "navy knit sweater",
+        "image_path": "CASUAL/CASUAL_02/item_01_top.png",
+        "exists": true
+      },
+      {
+        "display_order": 2,
+        "category": "INNER",
+        "name": "셔츠",
+        "prompt": "white shirt",
+        "image_path": "CASUAL/CASUAL_02/item_02_inner.png",
+        "exists": true
+      },
+      {
+        "display_order": 3,
+        "category": "BOTTOM",
+        "name": "코튼팬츠",
+        "prompt": "cream wide cotton pants",
+        "image_path": "CASUAL/CASUAL_02/item_03_bottom.png",
+        "exists": true
+      },
+      {
+        "display_order": 4,
+        "category": "SHOES",
+        "name": "스니커즈",
+        "prompt": "grey sneakers",
+        "image_path": "CASUAL/CASUAL_02/item_04_shoes.png",
+        "exists": true
+      },
+      {
+        "display_order": 5,
+        "category": "BAG",
+        "name": "메신저백",
+        "prompt": "beige messenger bag",
+        "image_path": "CASUAL/CASUAL_02/item_05_bag.png",
+        "exists": true
+      }
+    ]
+  },
+  {
+    "set_id": "CASUAL_03",
+    "style": "CASUAL",
+    "full_shot_prompt": "brown cotton jacket, beige long sleeve t-shirt, blue straight jeans, brown loafers, dark green baseball cap",
+    "items": [
+      {
+        "display_order": 1,
+        "category": "OUTER",
+        "name": "자켓",
+        "prompt": "brown cotton jacket",
+        "image_path": "CASUAL/CASUAL_03/item_01_outer.png",
+        "exists": true
+      },
+      {
+        "display_order": 2,
+        "category": "TOP",
+        "name": "긴팔 티셔츠",
+        "prompt": "beige long sleeve t-shirt",
+        "image_path": "CASUAL/CASUAL_03/item_02_top.png",
+        "exists": true
+      },
+      {
+        "display_order": 3,
+        "category": "BOTTOM",
+        "name": "데님팬츠",
+        "prompt": "blue straight jeans",
+        "image_path": "CASUAL/CASUAL_03/item_03_bottom.png",
+        "exists": true
+      },
+      {
+        "display_order": 4,
+        "category": "SHOES",
+        "name": "로퍼",
+        "prompt": "brown loafers",
+        "image_path": "CASUAL/CASUAL_03/item_04_shoes.png",
+        "exists": true
+      },
+      {
+        "display_order": 5,
+        "category": "ACC",
+        "name": "볼캡",
+        "prompt": "dark green baseball cap",
+        "image_path": "CASUAL/CASUAL_03/item_05_acc.png",
+        "exists": true
+      }
+    ]
+  },
+  {
+    "set_id": "CASUAL_04",
+    "style": "CASUAL",
+    "full_shot_prompt": "light blue shirt worn open, white t-shirt, dark grey wide sweatpants, white sneakers, black shoulder bag",
+    "items": [
+      {
+        "display_order": 1,
+        "category": "OUTER",
+        "name": "셔츠",
+        "prompt": "light blue shirt",
+        "image_path": "CASUAL/CASUAL_04/item_01_outer.png",
+        "exists": true
+      },
+      {
+        "display_order": 2,
+        "category": "TOP",
+        "name": "반팔 티셔츠",
+        "prompt": "white t-shirt",
+        "image_path": "CASUAL/CASUAL_04/item_02_top.png",
+        "exists": true
+      },
+      {
+        "display_order": 3,
+        "category": "BOTTOM",
+        "name": "스웨트팬츠",
+        "prompt": "dark grey wide sweatpants",
+        "image_path": "CASUAL/CASUAL_04/item_03_bottom.png",
+        "exists": true
+      },
+      {
+        "display_order": 4,
+        "category": "SHOES",
+        "name": "스니커즈",
+        "prompt": "white sneakers",
+        "image_path": "CASUAL/CASUAL_04/item_04_shoes.png",
+        "exists": true
+      },
+      {
+        "display_order": 5,
+        "category": "BAG",
+        "name": "숄더백",
+        "prompt": "black shoulder bag",
+        "image_path": "CASUAL/CASUAL_04/item_05_bag.png",
+        "exists": true
+      }
+    ]
+  },
+  {
+    "set_id": "CASUAL_05",
+    "style": "CASUAL",
+    "full_shot_prompt": "khaki padded vest, grey half-zip sweatshirt, wide black jeans, white sneakers, black crossbody bag",
+    "items": [
+      {
+        "display_order": 1,
+        "category": "OUTER",
+        "name": "패딩 베스트",
+        "prompt": "khaki padded vest",
+        "image_path": "CASUAL/CASUAL_05/item_01_outer.png",
+        "exists": true
+      },
+      {
+        "display_order": 2,
+        "category": "TOP",
+        "name": "하프집업",
+        "prompt": "grey half-zip sweatshirt",
+        "image_path": "CASUAL/CASUAL_05/item_02_top.png",
+        "exists": true
+      },
+      {
+        "display_order": 3,
+        "category": "BOTTOM",
+        "name": "와이드 데님",
+        "prompt": "wide black jeans",
+        "image_path": "CASUAL/CASUAL_05/item_03_bottom.png",
+        "exists": true
+      },
+      {
+        "display_order": 4,
+        "category": "SHOES",
+        "name": "스니커즈",
+        "prompt": "white sneakers",
+        "image_path": "CASUAL/CASUAL_05/item_04_shoes.png",
+        "exists": true
+      },
+      {
+        "display_order": 5,
+        "category": "BAG",
+        "name": "크로스백",
+        "prompt": "black crossbody bag",
+        "image_path": "CASUAL/CASUAL_05/item_05_bag.png",
+        "exists": true
+      }
+    ]
+  },
+  {
+    "set_id": "DANDY_01",
+    "style": "DANDY",
+    "full_shot_prompt": "dark grey blazer, ivory knit sweater, dark grey wide slacks, black loafers, black leather tote bag",
+    "items": [
+      {
+        "display_order": 1,
+        "category": "OUTER",
+        "name": "블레이저",
+        "prompt": "dark grey blazer",
+        "image_path": "DANDY/DANDY_01/item_01_outer.png",
+        "exists": true
+      },
+      {
+        "display_order": 2,
+        "category": "TOP",
+        "name": "니트",
+        "prompt": "ivory knit sweater",
+        "image_path": "DANDY/DANDY_01/item_02_top.png",
+        "exists": true
+      },
+      {
+        "display_order": 3,
+        "category": "BOTTOM",
+        "name": "슬랙스",
+        "prompt": "dark grey wide slacks",
+        "image_path": "DANDY/DANDY_01/item_03_bottom.png",
+        "exists": true
+      },
+      {
+        "display_order": 4,
+        "category": "SHOES",
+        "name": "로퍼",
+        "prompt": "black loafers",
+        "image_path": "DANDY/DANDY_01/item_04_shoes.png",
+        "exists": true
+      },
+      {
+        "display_order": 5,
+        "category": "BAG",
+        "name": "토트백",
+        "prompt": "black leather tote bag",
+        "image_path": "DANDY/DANDY_01/item_05_bag.png",
+        "exists": true
+      }
+    ]
+  },
+  {
+    "set_id": "DANDY_02",
+    "style": "DANDY",
+    "full_shot_prompt": "brown suede jacket, white shirt, cream wide slacks, brown dress shoes, brown leather belt",
+    "items": [
+      {
+        "display_order": 1,
+        "category": "OUTER",
+        "name": "스웨이드 자켓",
+        "prompt": "brown suede jacket",
+        "image_path": "DANDY/DANDY_02/item_01_outer.png",
+        "exists": true
+      },
+      {
+        "display_order": 2,
+        "category": "TOP",
+        "name": "셔츠",
+        "prompt": "white shirt",
+        "image_path": "DANDY/DANDY_02/item_02_top.png",
+        "exists": true
+      },
+      {
+        "display_order": 3,
+        "category": "BOTTOM",
+        "name": "슬랙스",
+        "prompt": "cream wide slacks",
+        "image_path": "DANDY/DANDY_02/item_03_bottom.png",
+        "exists": true
+      },
+      {
+        "display_order": 4,
+        "category": "SHOES",
+        "name": "더비슈즈",
+        "prompt": "brown dress shoes",
+        "image_path": "DANDY/DANDY_02/item_04_shoes.png",
+        "exists": true
+      },
+      {
+        "display_order": 5,
+        "category": "ACC",
+        "name": "벨트",
+        "prompt": "brown leather belt",
+        "image_path": "DANDY/DANDY_02/item_05_acc.png",
+        "exists": true
+      }
+    ]
+  },
+  {
+    "set_id": "DANDY_03",
+    "style": "DANDY",
+    "full_shot_prompt": "navy cardigan, light blue shirt, grey wide slacks, black dress shoes, black leather tote bag",
+    "items": [
+      {
+        "display_order": 1,
+        "category": "OUTER",
+        "name": "가디건",
+        "prompt": "navy cardigan",
+        "image_path": "DANDY/DANDY_03/item_01_outer.png",
+        "exists": true
+      },
+      {
+        "display_order": 2,
+        "category": "TOP",
+        "name": "셔츠",
+        "prompt": "light blue shirt",
+        "image_path": "DANDY/DANDY_03/item_02_top.png",
+        "exists": true
+      },
+      {
+        "display_order": 3,
+        "category": "BOTTOM",
+        "name": "슬랙스",
+        "prompt": "grey wide slacks",
+        "image_path": "DANDY/DANDY_03/item_03_bottom.png",
+        "exists": true
+      },
+      {
+        "display_order": 4,
+        "category": "SHOES",
+        "name": "더비슈즈",
+        "prompt": "black dress shoes",
+        "image_path": "DANDY/DANDY_03/item_04_shoes.png",
+        "exists": true
+      },
+      {
+        "display_order": 5,
+        "category": "BAG",
+        "name": "토트백",
+        "prompt": "black leather tote bag",
+        "image_path": "DANDY/DANDY_03/item_05_bag.png",
+        "exists": true
+      }
+    ]
+  },
+  {
+    "set_id": "DANDY_04",
+    "style": "DANDY",
+    "full_shot_prompt": "beige short coat, black knit polo shirt, black wide slacks, black leather boots, black crossbody bag",
+    "items": [
+      {
+        "display_order": 1,
+        "category": "OUTER",
+        "name": "코트",
+        "prompt": "beige short coat",
+        "image_path": "DANDY/DANDY_04/item_01_outer.png",
+        "exists": true
+      },
+      {
+        "display_order": 2,
+        "category": "TOP",
+        "name": "니트 폴로",
+        "prompt": "black knit polo shirt",
+        "image_path": "DANDY/DANDY_04/item_02_top.png",
+        "exists": true
+      },
+      {
+        "display_order": 3,
+        "category": "BOTTOM",
+        "name": "슬랙스",
+        "prompt": "black wide slacks",
+        "image_path": "DANDY/DANDY_04/item_03_bottom.png",
+        "exists": true
+      },
+      {
+        "display_order": 4,
+        "category": "SHOES",
+        "name": "부츠",
+        "prompt": "black leather boots",
+        "image_path": "DANDY/DANDY_04/item_04_shoes.png",
+        "exists": true
+      },
+      {
+        "display_order": 5,
+        "category": "BAG",
+        "name": "크로스백",
+        "prompt": "black crossbody bag",
+        "image_path": "DANDY/DANDY_04/item_05_bag.png",
+        "exists": true
+      }
+    ]
+  },
+  {
+    "set_id": "DANDY_05",
+    "style": "DANDY",
+    "full_shot_prompt": "navy blazer, white t-shirt, navy wide slacks, black leather sneakers, dark grey shoulder bag",
+    "items": [
+      {
+        "display_order": 1,
+        "category": "OUTER",
+        "name": "블레이저",
+        "prompt": "navy blazer",
+        "image_path": "DANDY/DANDY_05/item_01_outer.png",
+        "exists": true
+      },
+      {
+        "display_order": 2,
+        "category": "TOP",
+        "name": "반팔 티셔츠",
+        "prompt": "white t-shirt",
+        "image_path": "DANDY/DANDY_05/item_02_top.png",
+        "exists": true
+      },
+      {
+        "display_order": 3,
+        "category": "BOTTOM",
+        "name": "슬랙스",
+        "prompt": "navy wide slacks",
+        "image_path": "DANDY/DANDY_05/item_03_bottom.png",
+        "exists": true
+      },
+      {
+        "display_order": 4,
+        "category": "SHOES",
+        "name": "스니커즈",
+        "prompt": "black leather sneakers",
+        "image_path": "DANDY/DANDY_05/item_04_shoes.png",
+        "exists": true
+      },
+      {
+        "display_order": 5,
+        "category": "BAG",
+        "name": "숄더백",
+        "prompt": "dark grey shoulder bag",
+        "image_path": "DANDY/DANDY_05/item_05_bag.png",
+        "exists": true
+      }
+    ]
+  },
+  {
+    "set_id": "MINIMAL_01",
+    "style": "MINIMAL",
+    "full_shot_prompt": "black wool blouson jacket, black half-zip knit, black wide slacks, black dress shoes, black leather crossbody bag",
+    "items": [
+      {
+        "display_order": 1,
+        "category": "OUTER",
+        "name": "블루종",
+        "prompt": "black wool blouson jacket",
+        "image_path": "MINIMAL/MINIMAL_01/item_01_outer.png",
+        "exists": true
+      },
+      {
+        "display_order": 2,
+        "category": "TOP",
+        "name": "하프집업",
+        "prompt": "black half-zip knit",
+        "image_path": "MINIMAL/MINIMAL_01/item_02_top.png",
+        "exists": true
+      },
+      {
+        "display_order": 3,
+        "category": "BOTTOM",
+        "name": "슬랙스",
+        "prompt": "black wide slacks",
+        "image_path": "MINIMAL/MINIMAL_01/item_03_bottom.png",
+        "exists": true
+      },
+      {
+        "display_order": 4,
+        "category": "SHOES",
+        "name": "더비슈즈",
+        "prompt": "black dress shoes",
+        "image_path": "MINIMAL/MINIMAL_01/item_04_shoes.png",
+        "exists": true
+      },
+      {
+        "display_order": 5,
+        "category": "BAG",
+        "name": "크로스백",
+        "prompt": "black leather crossbody bag",
+        "image_path": "MINIMAL/MINIMAL_01/item_05_bag.png",
+        "exists": true
+      }
+    ]
+  },
+  {
+    "set_id": "MINIMAL_02",
+    "style": "MINIMAL",
+    "full_shot_prompt": "grey shirt jacket, dark grey knit sweater, dark grey wide pants, black sneakers, black backpack",
+    "items": [
+      {
+        "display_order": 1,
+        "category": "OUTER",
+        "name": "셔츠 자켓",
+        "prompt": "grey shirt jacket",
+        "image_path": "MINIMAL/MINIMAL_02/item_01_outer.png",
+        "exists": true
+      },
+      {
+        "display_order": 2,
+        "category": "TOP",
+        "name": "니트",
+        "prompt": "dark grey knit sweater",
+        "image_path": "MINIMAL/MINIMAL_02/item_02_top.png",
+        "exists": true
+      },
+      {
+        "display_order": 3,
+        "category": "BOTTOM",
+        "name": "와이드 팬츠",
+        "prompt": "dark grey wide pants",
+        "image_path": "MINIMAL/MINIMAL_02/item_03_bottom.png",
+        "exists": true
+      },
+      {
+        "display_order": 4,
+        "category": "SHOES",
+        "name": "스니커즈",
+        "prompt": "black sneakers",
+        "image_path": "MINIMAL/MINIMAL_02/item_04_shoes.png",
+        "exists": true
+      },
+      {
+        "display_order": 5,
+        "category": "BAG",
+        "name": "백팩",
+        "prompt": "black backpack",
+        "image_path": "MINIMAL/MINIMAL_02/item_05_bag.png",
+        "exists": true
+      }
+    ]
+  },
+  {
+    "set_id": "MINIMAL_03",
+    "style": "MINIMAL",
+    "full_shot_prompt": "white oversized long sleeve button-up dress shirt with collar and visible buttons, white t-shirt, beige wide pants, ivory sneakers, beige leather tote bag",
+    "items": [
+      {
+        "display_order": 1,
+        "category": "OUTER",
+        "name": "셔츠",
+        "prompt": "white oversized long sleeve button-up dress shirt with collar and visible buttons",
+        "image_path": "MINIMAL/MINIMAL_03/item_01_outer.png",
+        "exists": true
+      },
+      {
+        "display_order": 2,
+        "category": "TOP",
+        "name": "반팔 티셔츠",
+        "prompt": "white t-shirt",
+        "image_path": "MINIMAL/MINIMAL_03/item_02_top.png",
+        "exists": true
+      },
+      {
+        "display_order": 3,
+        "category": "BOTTOM",
+        "name": "와이드 팬츠",
+        "prompt": "beige wide pants",
+        "image_path": "MINIMAL/MINIMAL_03/item_03_bottom.png",
+        "exists": true
+      },
+      {
+        "display_order": 4,
+        "category": "SHOES",
+        "name": "스니커즈",
+        "prompt": "ivory sneakers",
+        "image_path": "MINIMAL/MINIMAL_03/item_04_shoes.png",
+        "exists": true
+      },
+      {
+        "display_order": 5,
+        "category": "BAG",
+        "name": "토트백",
+        "prompt": "beige leather tote bag",
+        "image_path": "MINIMAL/MINIMAL_03/item_05_bag.png",
+        "exists": true
+      }
+    ]
+  },
+  {
+    "set_id": "MINIMAL_04",
+    "style": "MINIMAL",
+    "full_shot_prompt": "gray minimal single-breasted blazer, white knit sweater, black straight pants, black loafers",
+    "items": [
+      {
+        "display_order": 1,
+        "category": "OUTER",
+        "name": "블레이저",
+        "prompt": "gray minimal single-breasted blazer",
+        "image_path": "MINIMAL/MINIMAL_04/item_01_outer.png",
+        "exists": true
+      },
+      {
+        "display_order": 2,
+        "category": "TOP",
+        "name": "니트",
+        "prompt": "white knit sweater",
+        "image_path": "MINIMAL/MINIMAL_04/item_02_top.png",
+        "exists": true
+      },
+      {
+        "display_order": 3,
+        "category": "BOTTOM",
+        "name": "슬랙스",
+        "prompt": "black straight pants",
+        "image_path": "MINIMAL/MINIMAL_04/item_03_bottom.png",
+        "exists": true
+      },
+      {
+        "display_order": 4,
+        "category": "SHOES",
+        "name": "로퍼",
+        "prompt": "black loafers",
+        "image_path": "MINIMAL/MINIMAL_04/item_04_shoes.png",
+        "exists": true
+      }
+    ]
+  },
+  {
+    "set_id": "MINIMAL_05",
+    "style": "MINIMAL",
+    "full_shot_prompt": "dark grey long coat, black turtleneck knit, black wide pants, black dress shoes, black tote bag",
+    "items": [
+      {
+        "display_order": 1,
+        "category": "OUTER",
+        "name": "롱코트",
+        "prompt": "dark grey long coat",
+        "image_path": "MINIMAL/MINIMAL_05/item_01_outer.png",
+        "exists": true
+      },
+      {
+        "display_order": 2,
+        "category": "TOP",
+        "name": "터틀넥 니트",
+        "prompt": "black turtleneck knit",
+        "image_path": "MINIMAL/MINIMAL_05/item_02_top.png",
+        "exists": true
+      },
+      {
+        "display_order": 3,
+        "category": "BOTTOM",
+        "name": "와이드 팬츠",
+        "prompt": "black wide pants",
+        "image_path": "MINIMAL/MINIMAL_05/item_03_bottom.png",
+        "exists": true
+      },
+      {
+        "display_order": 4,
+        "category": "SHOES",
+        "name": "더비슈즈",
+        "prompt": "black dress shoes",
+        "image_path": "MINIMAL/MINIMAL_05/item_04_shoes.png",
+        "exists": true
+      },
+      {
+        "display_order": 5,
+        "category": "BAG",
+        "name": "토트백",
+        "prompt": "black tote bag",
+        "image_path": "MINIMAL/MINIMAL_05/item_05_bag.png",
+        "exists": true
+      }
+    ]
+  },
+  {
+    "set_id": "CITY_BOY_01",
+    "style": "CITY_BOY",
+    "full_shot_prompt": "brown blouson jacket, blue striped oversized shirt, beige wide chino pants, grey sneakers, ivory canvas tote bag",
+    "items": [
+      {
+        "display_order": 1,
+        "category": "OUTER",
+        "name": "블루종",
+        "prompt": "brown blouson jacket",
+        "image_path": "CITY_BOY/CITY_BOY_01/item_01_outer.png",
+        "exists": true
+      },
+      {
+        "display_order": 2,
+        "category": "TOP",
+        "name": "스트라이프 셔츠",
+        "prompt": "blue striped oversized shirt",
+        "image_path": "CITY_BOY/CITY_BOY_01/item_02_top.png",
+        "exists": true
+      },
+      {
+        "display_order": 3,
+        "category": "BOTTOM",
+        "name": "치노팬츠",
+        "prompt": "beige wide chino pants",
+        "image_path": "CITY_BOY/CITY_BOY_01/item_03_bottom.png",
+        "exists": true
+      },
+      {
+        "display_order": 4,
+        "category": "SHOES",
+        "name": "스니커즈",
+        "prompt": "grey sneakers",
+        "image_path": "CITY_BOY/CITY_BOY_01/item_04_shoes.png",
+        "exists": true
+      },
+      {
+        "display_order": 5,
+        "category": "BAG",
+        "name": "에코백",
+        "prompt": "ivory canvas tote bag",
+        "image_path": "CITY_BOY/CITY_BOY_01/item_05_bag.png",
+        "exists": true
+      }
+    ]
+  },
+  {
+    "set_id": "CITY_BOY_02",
+    "style": "CITY_BOY",
+    "full_shot_prompt": "navy and green striped rugby shirt, white t-shirt, khaki wide cotton pants, navy sneakers, navy baseball cap",
+    "items": [
+      {
+        "display_order": 1,
+        "category": "TOP",
+        "name": "럭비셔츠",
+        "prompt": "navy and green striped rugby shirt",
+        "image_path": "CITY_BOY/CITY_BOY_02/item_01_top.png",
+        "exists": true
+      },
+      {
+        "display_order": 2,
+        "category": "INNER",
+        "name": "반팔 티셔츠",
+        "prompt": "white t-shirt",
+        "image_path": "CITY_BOY/CITY_BOY_02/item_02_inner.png",
+        "exists": true
+      },
+      {
+        "display_order": 3,
+        "category": "BOTTOM",
+        "name": "코튼팬츠",
+        "prompt": "khaki wide cotton pants",
+        "image_path": "CITY_BOY/CITY_BOY_02/item_03_bottom.png",
+        "exists": true
+      },
+      {
+        "display_order": 4,
+        "category": "SHOES",
+        "name": "스니커즈",
+        "prompt": "navy sneakers",
+        "image_path": "CITY_BOY/CITY_BOY_02/item_04_shoes.png",
+        "exists": true
+      },
+      {
+        "display_order": 5,
+        "category": "ACC",
+        "name": "볼캡",
+        "prompt": "navy baseball cap",
+        "image_path": "CITY_BOY/CITY_BOY_02/item_05_acc.png",
+        "exists": true
+      }
+    ]
+  },
+  {
+    "set_id": "CITY_BOY_03",
+    "style": "CITY_BOY",
+    "full_shot_prompt": "olive cotton jacket, beige knit vest, white shirt, dark blue wide jeans, brown suede shoes, canvas shoulder bag",
+    "items": [
+      {
+        "display_order": 1,
+        "category": "OUTER",
+        "name": "자켓",
+        "prompt": "olive cotton jacket",
+        "image_path": "CITY_BOY/CITY_BOY_03/item_01_outer.png",
+        "exists": true
+      },
+      {
+        "display_order": 2,
+        "category": "TOP",
+        "name": "니트 베스트",
+        "prompt": "beige knit vest",
+        "image_path": "CITY_BOY/CITY_BOY_03/item_02_top.png",
+        "exists": true
+      },
+      {
+        "display_order": 3,
+        "category": "INNER",
+        "name": "셔츠",
+        "prompt": "white shirt",
+        "image_path": "CITY_BOY/CITY_BOY_03/item_03_inner.png",
+        "exists": true
+      },
+      {
+        "display_order": 4,
+        "category": "BOTTOM",
+        "name": "와이드 데님",
+        "prompt": "dark blue wide jeans",
+        "image_path": "CITY_BOY/CITY_BOY_03/item_04_bottom.png",
+        "exists": true
+      },
+      {
+        "display_order": 5,
+        "category": "SHOES",
+        "name": "로퍼",
+        "prompt": "brown suede shoes",
+        "image_path": "CITY_BOY/CITY_BOY_03/item_05_shoes.png",
+        "exists": true
+      }
+    ]
+  },
+  {
+    "set_id": "CITY_BOY_04",
+    "style": "CITY_BOY",
+    "full_shot_prompt": "light green coach jacket, white long sleeve t-shirt, light grey wide pants, grey sneakers, black nylon tote bag",
+    "items": [
+      {
+        "display_order": 1,
+        "category": "OUTER",
+        "name": "코치자켓",
+        "prompt": "light green coach jacket",
+        "image_path": "CITY_BOY/CITY_BOY_04/item_01_outer.png",
+        "exists": true
+      },
+      {
+        "display_order": 2,
+        "category": "TOP",
+        "name": "긴팔 티셔츠",
+        "prompt": "white long sleeve t-shirt",
+        "image_path": "CITY_BOY/CITY_BOY_04/item_02_top.png",
+        "exists": true
+      },
+      {
+        "display_order": 3,
+        "category": "BOTTOM",
+        "name": "와이드 팬츠",
+        "prompt": "light grey wide pants",
+        "image_path": "CITY_BOY/CITY_BOY_04/item_03_bottom.png",
+        "exists": true
+      },
+      {
+        "display_order": 4,
+        "category": "SHOES",
+        "name": "스니커즈",
+        "prompt": "grey sneakers",
+        "image_path": "CITY_BOY/CITY_BOY_04/item_04_shoes.png",
+        "exists": true
+      },
+      {
+        "display_order": 5,
+        "category": "BAG",
+        "name": "토트백",
+        "prompt": "black nylon tote bag",
+        "image_path": "CITY_BOY/CITY_BOY_04/item_05_bag.png",
+        "exists": true
+      }
+    ]
+  },
+  {
+    "set_id": "CITY_BOY_05",
+    "style": "CITY_BOY",
+    "full_shot_prompt": "navy oversized sweatshirt, beige wide corduroy pants, brown loafers, white socks",
+    "items": [
+      {
+        "display_order": 1,
+        "category": "TOP",
+        "name": "맨투맨",
+        "prompt": "navy oversized sweatshirt",
+        "image_path": "CITY_BOY/CITY_BOY_05/item_01_top.png",
+        "exists": true
+      },
+      {
+        "display_order": 2,
+        "category": "BOTTOM",
+        "name": "코듀로이 팬츠",
+        "prompt": "beige wide corduroy pants",
+        "image_path": "CITY_BOY/CITY_BOY_05/item_02_bottom.png",
+        "exists": true
+      },
+      {
+        "display_order": 3,
+        "category": "SHOES",
+        "name": "로퍼",
+        "prompt": "brown loafers",
+        "image_path": "CITY_BOY/CITY_BOY_05/item_03_shoes.png",
+        "exists": true
+      }
+    ]
+  },
+  {
+    "set_id": "AMEKAJI_01",
+    "style": "AMEKAJI",
+    "full_shot_prompt": "navy work jacket, beige and brown plaid flannel shirt, khaki brown wide chino pants, brown leather boots, navy baseball cap",
+    "items": [
+      {
+        "display_order": 1,
+        "category": "OUTER",
+        "name": "워크자켓",
+        "prompt": "navy work jacket",
+        "image_path": "AMEKAJI/AMEKAJI_01/item_01_outer.png",
+        "exists": true
+      },
+      {
+        "display_order": 2,
+        "category": "TOP",
+        "name": "체크셔츠",
+        "prompt": "beige and brown plaid flannel shirt",
+        "image_path": "AMEKAJI/AMEKAJI_01/item_02_top.png",
+        "exists": true
+      },
+      {
+        "display_order": 3,
+        "category": "BOTTOM",
+        "name": "치노팬츠",
+        "prompt": "khaki brown wide chino pants",
+        "image_path": "AMEKAJI/AMEKAJI_01/item_03_bottom.png",
+        "exists": true
+      },
+      {
+        "display_order": 4,
+        "category": "SHOES",
+        "name": "워커",
+        "prompt": "brown leather boots",
+        "image_path": "AMEKAJI/AMEKAJI_01/item_04_shoes.png",
+        "exists": true
+      },
+      {
+        "display_order": 5,
+        "category": "ACC",
+        "name": "볼캡",
+        "prompt": "navy baseball cap",
+        "image_path": "AMEKAJI/AMEKAJI_01/item_05_acc.png",
+        "exists": true
+      }
+    ]
+  },
+  {
+    "set_id": "AMEKAJI_02",
+    "style": "AMEKAJI",
+    "full_shot_prompt": "dark blue denim jacket, cream long sleeve t-shirt, dark blue wide jeans, brown leather boots, canvas tote bag",
+    "items": [
+      {
+        "display_order": 1,
+        "category": "OUTER",
+        "name": "데님자켓",
+        "prompt": "dark blue denim jacket",
+        "image_path": "AMEKAJI/AMEKAJI_02/item_01_outer.png",
+        "exists": true
+      },
+      {
+        "display_order": 2,
+        "category": "TOP",
+        "name": "긴팔 티셔츠",
+        "prompt": "cream long sleeve t-shirt",
+        "image_path": "AMEKAJI/AMEKAJI_02/item_02_top.png",
+        "exists": true
+      },
+      {
+        "display_order": 3,
+        "category": "BOTTOM",
+        "name": "와이드 데님",
+        "prompt": "dark blue wide jeans",
+        "image_path": "AMEKAJI/AMEKAJI_02/item_03_bottom.png",
+        "exists": true
+      },
+      {
+        "display_order": 4,
+        "category": "SHOES",
+        "name": "워커",
+        "prompt": "brown leather boots",
+        "image_path": "AMEKAJI/AMEKAJI_02/item_04_shoes.png",
+        "exists": true
+      },
+      {
+        "display_order": 5,
+        "category": "BAG",
+        "name": "토트백",
+        "prompt": "canvas tote bag",
+        "image_path": "AMEKAJI/AMEKAJI_02/item_05_bag.png",
+        "exists": true
+      }
+    ]
+  },
+  {
+    "set_id": "AMEKAJI_03",
+    "style": "AMEKAJI",
+    "full_shot_prompt": "olive field jacket, grey sweatshirt, beige wide work pants, brown suede boots, olive tote bag",
+    "items": [
+      {
+        "display_order": 1,
+        "category": "OUTER",
+        "name": "야상자켓",
+        "prompt": "olive field jacket",
+        "image_path": "AMEKAJI/AMEKAJI_03/item_01_outer.png",
+        "exists": true
+      },
+      {
+        "display_order": 2,
+        "category": "TOP",
+        "name": "맨투맨",
+        "prompt": "grey sweatshirt",
+        "image_path": "AMEKAJI/AMEKAJI_03/item_02_top.png",
+        "exists": true
+      },
+      {
+        "display_order": 3,
+        "category": "BOTTOM",
+        "name": "워크팬츠",
+        "prompt": "beige wide work pants",
+        "image_path": "AMEKAJI/AMEKAJI_03/item_03_bottom.png",
+        "exists": true
+      },
+      {
+        "display_order": 4,
+        "category": "SHOES",
+        "name": "부츠",
+        "prompt": "brown suede boots",
+        "image_path": "AMEKAJI/AMEKAJI_03/item_04_shoes.png",
+        "exists": true
+      },
+      {
+        "display_order": 5,
+        "category": "BAG",
+        "name": "토트백",
+        "prompt": "olive tote bag",
+        "image_path": "AMEKAJI/AMEKAJI_03/item_05_bag.png",
+        "exists": true
+      }
+    ]
+  },
+  {
+    "set_id": "AMEKAJI_04",
+    "style": "AMEKAJI",
+    "full_shot_prompt": "brown corduroy vest, light blue denim shirt, olive wide pants, black leather boots, navy beanie",
+    "items": [
+      {
+        "display_order": 1,
+        "category": "OUTER",
+        "name": "베스트",
+        "prompt": "brown corduroy vest",
+        "image_path": "AMEKAJI/AMEKAJI_04/item_01_outer.png",
+        "exists": true
+      },
+      {
+        "display_order": 2,
+        "category": "TOP",
+        "name": "데님셔츠",
+        "prompt": "light blue denim shirt",
+        "image_path": "AMEKAJI/AMEKAJI_04/item_02_top.png",
+        "exists": true
+      },
+      {
+        "display_order": 3,
+        "category": "BOTTOM",
+        "name": "와이드 팬츠",
+        "prompt": "olive wide pants",
+        "image_path": "AMEKAJI/AMEKAJI_04/item_03_bottom.png",
+        "exists": true
+      },
+      {
+        "display_order": 4,
+        "category": "SHOES",
+        "name": "워커",
+        "prompt": "black leather boots",
+        "image_path": "AMEKAJI/AMEKAJI_04/item_04_shoes.png",
+        "exists": true
+      },
+      {
+        "display_order": 5,
+        "category": "ACC",
+        "name": "비니",
+        "prompt": "navy beanie",
+        "image_path": "AMEKAJI/AMEKAJI_04/item_05_acc.png",
+        "exists": true
+      }
+    ]
+  },
+  {
+    "set_id": "AMEKAJI_05",
+    "style": "AMEKAJI",
+    "full_shot_prompt": "black canvas work jacket, yellow long sleeve t-shirt, blue wide jeans, brown suede shoes, brown leather messenger bag",
+    "items": [
+      {
+        "display_order": 1,
+        "category": "OUTER",
+        "name": "워크자켓",
+        "prompt": "black canvas work jacket",
+        "image_path": "AMEKAJI/AMEKAJI_05/item_01_outer.png",
+        "exists": true
+      },
+      {
+        "display_order": 2,
+        "category": "TOP",
+        "name": "긴팔 티셔츠",
+        "prompt": "yellow long sleeve t-shirt",
+        "image_path": "AMEKAJI/AMEKAJI_05/item_02_top.png",
+        "exists": true
+      },
+      {
+        "display_order": 3,
+        "category": "BOTTOM",
+        "name": "와이드 데님",
+        "prompt": "blue wide jeans",
+        "image_path": "AMEKAJI/AMEKAJI_05/item_03_bottom.png",
+        "exists": true
+      },
+      {
+        "display_order": 4,
+        "category": "SHOES",
+        "name": "로퍼",
+        "prompt": "brown suede shoes",
+        "image_path": "AMEKAJI/AMEKAJI_05/item_04_shoes.png",
+        "exists": true
+      },
+      {
+        "display_order": 5,
+        "category": "BAG",
+        "name": "메신저백",
+        "prompt": "brown leather messenger bag",
+        "image_path": "AMEKAJI/AMEKAJI_05/item_05_bag.png",
+        "exists": true
+      }
+    ]
+  },
+  {
+    "set_id": "STREET_01",
+    "style": "STREET",
+    "full_shot_prompt": "black puffer jacket, grey hoodie, dark grey wide cargo pants, white chunky sneakers, black headphones",
+    "items": [
+      {
+        "display_order": 1,
+        "category": "OUTER",
+        "name": "패딩",
+        "prompt": "black puffer jacket",
+        "image_path": "STREET/STREET_01/item_01_outer.png",
+        "exists": true
+      },
+      {
+        "display_order": 2,
+        "category": "TOP",
+        "name": "후드티",
+        "prompt": "grey hoodie",
+        "image_path": "STREET/STREET_01/item_02_top.png",
+        "exists": true
+      },
+      {
+        "display_order": 3,
+        "category": "BOTTOM",
+        "name": "카고팬츠",
+        "prompt": "dark grey wide cargo pants",
+        "image_path": "STREET/STREET_01/item_03_bottom.png",
+        "exists": true
+      },
+      {
+        "display_order": 4,
+        "category": "SHOES",
+        "name": "스니커즈",
+        "prompt": "white chunky sneakers",
+        "image_path": "STREET/STREET_01/item_04_shoes.png",
+        "exists": true
+      },
+      {
+        "display_order": 5,
+        "category": "ACC",
+        "name": "헤드폰",
+        "prompt": "black headphones",
+        "image_path": "STREET/STREET_01/item_05_acc.png",
+        "exists": true
+      }
+    ]
+  },
+  {
+    "set_id": "STREET_02",
+    "style": "STREET",
+    "full_shot_prompt": "dark grey washed zip-up hoodie, white t-shirt, black baggy jeans, black and silver sneakers, black beanie",
+    "items": [
+      {
+        "display_order": 1,
+        "category": "OUTER",
+        "name": "후드집업",
+        "prompt": "dark grey washed zip-up hoodie",
+        "image_path": "STREET/STREET_02/item_01_outer.png",
+        "exists": true
+      },
+      {
+        "display_order": 2,
+        "category": "TOP",
+        "name": "반팔 티셔츠",
+        "prompt": "white t-shirt",
+        "image_path": "STREET/STREET_02/item_02_top.png",
+        "exists": true
+      },
+      {
+        "display_order": 3,
+        "category": "BOTTOM",
+        "name": "와이드 데님",
+        "prompt": "black baggy jeans",
+        "image_path": "STREET/STREET_02/item_03_bottom.png",
+        "exists": true
+      },
+      {
+        "display_order": 4,
+        "category": "SHOES",
+        "name": "스니커즈",
+        "prompt": "black and silver sneakers",
+        "image_path": "STREET/STREET_02/item_04_shoes.png",
+        "exists": true
+      },
+      {
+        "display_order": 5,
+        "category": "ACC",
+        "name": "비니",
+        "prompt": "black beanie",
+        "image_path": "STREET/STREET_02/item_05_acc.png",
+        "exists": true
+      }
+    ]
+  },
+  {
+    "set_id": "STREET_03",
+    "style": "STREET",
+    "full_shot_prompt": "black leather bomber jacket, striped long sleeve t-shirt, khaki wide parachute pants, black chunky sneakers, black sling bag",
+    "items": [
+      {
+        "display_order": 1,
+        "category": "OUTER",
+        "name": "레더자켓",
+        "prompt": "black leather bomber jacket",
+        "image_path": "STREET/STREET_03/item_01_outer.png",
+        "exists": true
+      },
+      {
+        "display_order": 2,
+        "category": "TOP",
+        "name": "긴팔 티셔츠",
+        "prompt": "striped long sleeve t-shirt",
+        "image_path": "STREET/STREET_03/item_02_top.png",
+        "exists": true
+      },
+      {
+        "display_order": 3,
+        "category": "BOTTOM",
+        "name": "파라슈트 팬츠",
+        "prompt": "khaki wide parachute pants",
+        "image_path": "STREET/STREET_03/item_03_bottom.png",
+        "exists": true
+      },
+      {
+        "display_order": 4,
+        "category": "SHOES",
+        "name": "스니커즈",
+        "prompt": "black chunky sneakers",
+        "image_path": "STREET/STREET_03/item_04_shoes.png",
+        "exists": true
+      },
+      {
+        "display_order": 5,
+        "category": "BAG",
+        "name": "슬링백",
+        "prompt": "black sling bag",
+        "image_path": "STREET/STREET_03/item_05_bag.png",
+        "exists": true
+      }
+    ]
+  },
+  {
+    "set_id": "STREET_04",
+    "style": "STREET",
+    "full_shot_prompt": "olive green oversized coach jacket, white t-shirt, dark blue baggy jeans, black skate sneakers, black backpack",
+    "items": [
+      {
+        "display_order": 1,
+        "category": "OUTER",
+        "name": "코치자켓",
+        "prompt": "olive green oversized coach jacket",
+        "image_path": "STREET/STREET_04/item_01_outer.png",
+        "exists": true
+      },
+      {
+        "display_order": 2,
+        "category": "TOP",
+        "name": "반팔 티셔츠",
+        "prompt": "white t-shirt",
+        "image_path": "STREET/STREET_04/item_02_top.png",
+        "exists": true
+      },
+      {
+        "display_order": 3,
+        "category": "BOTTOM",
+        "name": "와이드 데님",
+        "prompt": "dark blue baggy jeans",
+        "image_path": "STREET/STREET_04/item_03_bottom.png",
+        "exists": true
+      },
+      {
+        "display_order": 4,
+        "category": "SHOES",
+        "name": "스니커즈",
+        "prompt": "black skate sneakers",
+        "image_path": "STREET/STREET_04/item_04_shoes.png",
+        "exists": true
+      },
+      {
+        "display_order": 5,
+        "category": "BAG",
+        "name": "백팩",
+        "prompt": "black backpack",
+        "image_path": "STREET/STREET_04/item_05_bag.png",
+        "exists": true
+      }
+    ]
+  },
+  {
+    "set_id": "STREET_05",
+    "style": "STREET",
+    "full_shot_prompt": "black nylon bomber jacket, dark grey sweatshirt, black wide cargo pants, grey chunky sneakers, black messenger bag",
+    "items": [
+      {
+        "display_order": 1,
+        "category": "OUTER",
+        "name": "항공점퍼",
+        "prompt": "black nylon bomber jacket",
+        "image_path": "STREET/STREET_05/item_01_outer.png",
+        "exists": true
+      },
+      {
+        "display_order": 2,
+        "category": "TOP",
+        "name": "맨투맨",
+        "prompt": "dark grey sweatshirt",
+        "image_path": "STREET/STREET_05/item_02_top.png",
+        "exists": true
+      },
+      {
+        "display_order": 3,
+        "category": "BOTTOM",
+        "name": "카고팬츠",
+        "prompt": "black wide cargo pants",
+        "image_path": "STREET/STREET_05/item_03_bottom.png",
+        "exists": true
+      },
+      {
+        "display_order": 4,
+        "category": "SHOES",
+        "name": "스니커즈",
+        "prompt": "grey chunky sneakers",
+        "image_path": "STREET/STREET_05/item_04_shoes.png",
+        "exists": true
+      },
+      {
+        "display_order": 5,
+        "category": "BAG",
+        "name": "메신저백",
+        "prompt": "black messenger bag",
+        "image_path": "STREET/STREET_05/item_05_bag.png",
+        "exists": true
+      }
+    ]
+  },
+  {
+    "set_id": "SPORTY_01",
+    "style": "SPORTY",
+    "full_shot_prompt": "black track jacket, white t-shirt, black wide track pants, white sports sneakers, black crossbody bag",
+    "items": [
+      {
+        "display_order": 1,
+        "category": "OUTER",
+        "name": "트랙자켓",
+        "prompt": "black track jacket",
+        "image_path": "SPORTY/SPORTY_01/item_01_outer.png",
+        "exists": true
+      },
+      {
+        "display_order": 2,
+        "category": "TOP",
+        "name": "반팔 티셔츠",
+        "prompt": "white t-shirt",
+        "image_path": "SPORTY/SPORTY_01/item_02_top.png",
+        "exists": true
+      },
+      {
+        "display_order": 3,
+        "category": "BOTTOM",
+        "name": "트랙팬츠",
+        "prompt": "black wide track pants",
+        "image_path": "SPORTY/SPORTY_01/item_03_bottom.png",
+        "exists": true
+      },
+      {
+        "display_order": 4,
+        "category": "SHOES",
+        "name": "운동화",
+        "prompt": "white sports sneakers",
+        "image_path": "SPORTY/SPORTY_01/item_04_shoes.png",
+        "exists": true
+      },
+      {
+        "display_order": 5,
+        "category": "BAG",
+        "name": "크로스백",
+        "prompt": "black crossbody bag",
+        "image_path": "SPORTY/SPORTY_01/item_05_bag.png",
+        "exists": true
+      }
+    ]
+  },
+  {
+    "set_id": "SPORTY_02",
+    "style": "SPORTY",
+    "full_shot_prompt": "navy long sleeve football jersey, black track pants with white side stripes, white sneakers, black baseball cap",
+    "items": [
+      {
+        "display_order": 1,
+        "category": "TOP",
+        "name": "유니폼 저지",
+        "prompt": "navy long sleeve football jersey",
+        "image_path": "SPORTY/SPORTY_02/item_01_top.png",
+        "exists": true
+      },
+      {
+        "display_order": 2,
+        "category": "BOTTOM",
+        "name": "트랙 팬츠",
+        "prompt": "black track pants with white side stripes",
+        "image_path": "SPORTY/SPORTY_02/item_02_bottom.png",
+        "exists": true
+      },
+      {
+        "display_order": 3,
+        "category": "SHOES",
+        "name": "운동화",
+        "prompt": "white sneakers",
+        "image_path": "SPORTY/SPORTY_02/item_03_shoes.png",
+        "exists": true
+      },
+      {
+        "display_order": 4,
+        "category": "ACC",
+        "name": "볼캡",
+        "prompt": "black baseball cap",
+        "image_path": "SPORTY/SPORTY_02/item_04_acc.png",
+        "exists": true
+      }
+    ]
+  },
+  {
+    "set_id": "SPORTY_03",
+    "style": "SPORTY",
+    "full_shot_prompt": "grey windbreaker jacket, black half-zip top, black wide nylon pants, white running shoes, black sling bag",
+    "items": [
+      {
+        "display_order": 1,
+        "category": "OUTER",
+        "name": "바람막이",
+        "prompt": "grey windbreaker jacket",
+        "image_path": "SPORTY/SPORTY_03/item_01_outer.png",
+        "exists": true
+      },
+      {
+        "display_order": 2,
+        "category": "TOP",
+        "name": "하프집업",
+        "prompt": "black half-zip top",
+        "image_path": "SPORTY/SPORTY_03/item_02_top.png",
+        "exists": true
+      },
+      {
+        "display_order": 3,
+        "category": "BOTTOM",
+        "name": "나일론 팬츠",
+        "prompt": "black wide nylon pants",
+        "image_path": "SPORTY/SPORTY_03/item_03_bottom.png",
+        "exists": true
+      },
+      {
+        "display_order": 4,
+        "category": "SHOES",
+        "name": "러닝화",
+        "prompt": "white running shoes",
+        "image_path": "SPORTY/SPORTY_03/item_04_shoes.png",
+        "exists": true
+      },
+      {
+        "display_order": 5,
+        "category": "BAG",
+        "name": "슬링백",
+        "prompt": "black sling bag",
+        "image_path": "SPORTY/SPORTY_03/item_05_bag.png",
+        "exists": true
+      }
+    ]
+  },
+  {
+    "set_id": "SPORTY_04",
+    "style": "SPORTY",
+    "full_shot_prompt": "dark green anorak jacket, white t-shirt, light grey wide sweatpants, white sneakers, black drawstring bag",
+    "items": [
+      {
+        "display_order": 1,
+        "category": "OUTER",
+        "name": "아노락",
+        "prompt": "dark green anorak jacket",
+        "image_path": "SPORTY/SPORTY_04/item_01_outer.png",
+        "exists": true
+      },
+      {
+        "display_order": 2,
+        "category": "TOP",
+        "name": "반팔 티셔츠",
+        "prompt": "white t-shirt",
+        "image_path": "SPORTY/SPORTY_04/item_02_top.png",
+        "exists": true
+      },
+      {
+        "display_order": 3,
+        "category": "BOTTOM",
+        "name": "스웨트팬츠",
+        "prompt": "light grey wide sweatpants",
+        "image_path": "SPORTY/SPORTY_04/item_03_bottom.png",
+        "exists": true
+      },
+      {
+        "display_order": 4,
+        "category": "SHOES",
+        "name": "운동화",
+        "prompt": "white sneakers",
+        "image_path": "SPORTY/SPORTY_04/item_04_shoes.png",
+        "exists": true
+      },
+      {
+        "display_order": 5,
+        "category": "BAG",
+        "name": "짐색",
+        "prompt": "black drawstring bag",
+        "image_path": "SPORTY/SPORTY_04/item_05_bag.png",
+        "exists": true
+      }
+    ]
+  },
+  {
+    "set_id": "SPORTY_05",
+    "style": "SPORTY",
+    "full_shot_prompt": "navy zip-up polo shirt, white t-shirt, ivory wide track pants, white sneakers, navy nylon tote bag",
+    "items": [
+      {
+        "display_order": 1,
+        "category": "TOP",
+        "name": "피케셔츠",
+        "prompt": "navy zip-up polo shirt",
+        "image_path": "SPORTY/SPORTY_05/item_01_top.png",
+        "exists": true
+      },
+      {
+        "display_order": 2,
+        "category": "INNER",
+        "name": "반팔 티셔츠",
+        "prompt": "white t-shirt",
+        "image_path": "SPORTY/SPORTY_05/item_02_inner.png",
+        "exists": true
+      },
+      {
+        "display_order": 3,
+        "category": "BOTTOM",
+        "name": "트랙팬츠",
+        "prompt": "ivory wide track pants",
+        "image_path": "SPORTY/SPORTY_05/item_03_bottom.png",
+        "exists": true
+      },
+      {
+        "display_order": 4,
+        "category": "SHOES",
+        "name": "운동화",
+        "prompt": "white sneakers",
+        "image_path": "SPORTY/SPORTY_05/item_04_shoes.png",
+        "exists": true
+      },
+      {
+        "display_order": 5,
+        "category": "BAG",
+        "name": "토트백",
+        "prompt": "navy nylon tote bag",
+        "image_path": "SPORTY/SPORTY_05/item_05_bag.png",
+        "exists": true
+      }
+    ]
+  },
+  {
+    "set_id": "GORPCORE_01",
+    "style": "GORPCORE",
+    "full_shot_prompt": "olive hooded outdoor jacket, dark grey half-zip top, dark grey cargo pants, black hiking sneakers, black outdoor backpack",
+    "items": [
+      {
+        "display_order": 1,
+        "category": "OUTER",
+        "name": "테크자켓",
+        "prompt": "olive hooded outdoor jacket",
+        "image_path": "GORPCORE/GORPCORE_01/item_01_outer.png",
+        "exists": true
+      },
+      {
+        "display_order": 2,
+        "category": "TOP",
+        "name": "하프집업",
+        "prompt": "dark grey half-zip top",
+        "image_path": "GORPCORE/GORPCORE_01/item_02_top.png",
+        "exists": true
+      },
+      {
+        "display_order": 3,
+        "category": "BOTTOM",
+        "name": "카고팬츠",
+        "prompt": "dark grey cargo pants",
+        "image_path": "GORPCORE/GORPCORE_01/item_03_bottom.png",
+        "exists": true
+      },
+      {
+        "display_order": 4,
+        "category": "SHOES",
+        "name": "등산화",
+        "prompt": "black hiking sneakers",
+        "image_path": "GORPCORE/GORPCORE_01/item_04_shoes.png",
+        "exists": true
+      },
+      {
+        "display_order": 5,
+        "category": "BAG",
+        "name": "백팩",
+        "prompt": "black outdoor backpack",
+        "image_path": "GORPCORE/GORPCORE_01/item_05_bag.png",
+        "exists": true
+      }
+    ]
+  },
+  {
+    "set_id": "GORPCORE_02",
+    "style": "GORPCORE",
+    "full_shot_prompt": "black utility vest, grey long sleeve t-shirt, light grey nylon pants, grey hiking sneakers, black crossbody bag",
+    "items": [
+      {
+        "display_order": 1,
+        "category": "OUTER",
+        "name": "테크 베스트",
+        "prompt": "black utility vest",
+        "image_path": "GORPCORE/GORPCORE_02/item_01_outer.png",
+        "exists": true
+      },
+      {
+        "display_order": 2,
+        "category": "TOP",
+        "name": "긴팔 티셔츠",
+        "prompt": "grey long sleeve t-shirt",
+        "image_path": "GORPCORE/GORPCORE_02/item_02_top.png",
+        "exists": true
+      },
+      {
+        "display_order": 3,
+        "category": "BOTTOM",
+        "name": "나일론 팬츠",
+        "prompt": "light grey nylon pants",
+        "image_path": "GORPCORE/GORPCORE_02/item_03_bottom.png",
+        "exists": true
+      },
+      {
+        "display_order": 4,
+        "category": "SHOES",
+        "name": "등산화",
+        "prompt": "grey hiking sneakers",
+        "image_path": "GORPCORE/GORPCORE_02/item_04_shoes.png",
+        "exists": true
+      },
+      {
+        "display_order": 5,
+        "category": "BAG",
+        "name": "크로스백",
+        "prompt": "black crossbody bag",
+        "image_path": "GORPCORE/GORPCORE_02/item_05_bag.png",
+        "exists": true
+      }
+    ]
+  },
+  {
+    "set_id": "GORPCORE_03",
+    "style": "GORPCORE",
+    "full_shot_prompt": "black windbreaker jacket, grey fleece jacket, black cargo pants, black hiking sneakers, black camp cap",
+    "items": [
+      {
+        "display_order": 1,
+        "category": "OUTER",
+        "name": "바람막이",
+        "prompt": "black windbreaker jacket",
+        "image_path": "GORPCORE/GORPCORE_03/item_01_outer.png",
+        "exists": true
+      },
+      {
+        "display_order": 2,
+        "category": "TOP",
+        "name": "플리스 집업",
+        "prompt": "grey fleece jacket",
+        "image_path": "GORPCORE/GORPCORE_03/item_02_top.png",
+        "exists": true
+      },
+      {
+        "display_order": 3,
+        "category": "BOTTOM",
+        "name": "카고팬츠",
+        "prompt": "black cargo pants",
+        "image_path": "GORPCORE/GORPCORE_03/item_03_bottom.png",
+        "exists": true
+      },
+      {
+        "display_order": 4,
+        "category": "SHOES",
+        "name": "등산화",
+        "prompt": "black hiking sneakers",
+        "image_path": "GORPCORE/GORPCORE_03/item_04_shoes.png",
+        "exists": true
+      },
+      {
+        "display_order": 5,
+        "category": "ACC",
+        "name": "캠프캡",
+        "prompt": "black camp cap",
+        "image_path": "GORPCORE/GORPCORE_03/item_05_acc.png",
+        "exists": true
+      }
+    ]
+  },
+  {
+    "set_id": "GORPCORE_04",
+    "style": "GORPCORE",
+    "full_shot_prompt": "beige outdoor anorak jacket, brown long sleeve t-shirt, dark olive nylon pants, brown hiking sneakers, khaki backpack",
+    "items": [
+      {
+        "display_order": 1,
+        "category": "OUTER",
+        "name": "아노락",
+        "prompt": "beige outdoor anorak jacket",
+        "image_path": "GORPCORE/GORPCORE_04/item_01_outer.png",
+        "exists": true
+      },
+      {
+        "display_order": 2,
+        "category": "TOP",
+        "name": "긴팔 티셔츠",
+        "prompt": "brown long sleeve t-shirt",
+        "image_path": "GORPCORE/GORPCORE_04/item_02_top.png",
+        "exists": true
+      },
+      {
+        "display_order": 3,
+        "category": "BOTTOM",
+        "name": "나일론 팬츠",
+        "prompt": "dark olive nylon pants",
+        "image_path": "GORPCORE/GORPCORE_04/item_03_bottom.png",
+        "exists": true
+      },
+      {
+        "display_order": 4,
+        "category": "SHOES",
+        "name": "등산화",
+        "prompt": "brown hiking sneakers",
+        "image_path": "GORPCORE/GORPCORE_04/item_04_shoes.png",
+        "exists": true
+      },
+      {
+        "display_order": 5,
+        "category": "BAG",
+        "name": "백팩",
+        "prompt": "khaki backpack",
+        "image_path": "GORPCORE/GORPCORE_04/item_05_bag.png",
+        "exists": true
+      }
+    ]
+  },
+  {
+    "set_id": "GORPCORE_05",
+    "style": "GORPCORE",
+    "full_shot_prompt": "navy outdoor parka jacket, dark grey sweatshirt, dark grey nylon pants, navy hiking sneakers, black crossbody bag",
+    "items": [
+      {
+        "display_order": 1,
+        "category": "OUTER",
+        "name": "테크자켓",
+        "prompt": "navy outdoor parka jacket",
+        "image_path": "GORPCORE/GORPCORE_05/item_01_outer.png",
+        "exists": true
+      },
+      {
+        "display_order": 2,
+        "category": "TOP",
+        "name": "맨투맨",
+        "prompt": "dark grey sweatshirt",
+        "image_path": "GORPCORE/GORPCORE_05/item_02_top.png",
+        "exists": true
+      },
+      {
+        "display_order": 3,
+        "category": "BOTTOM",
+        "name": "나일론 팬츠",
+        "prompt": "dark grey nylon pants",
+        "image_path": "GORPCORE/GORPCORE_05/item_03_bottom.png",
+        "exists": true
+      },
+      {
+        "display_order": 4,
+        "category": "SHOES",
+        "name": "등산화",
+        "prompt": "navy hiking sneakers",
+        "image_path": "GORPCORE/GORPCORE_05/item_04_shoes.png",
+        "exists": true
+      },
+      {
+        "display_order": 5,
+        "category": "BAG",
+        "name": "크로스백",
+        "prompt": "black crossbody bag",
+        "image_path": "GORPCORE/GORPCORE_05/item_05_bag.png",
+        "exists": true
+      }
+    ]
+  },
+  {
+    "set_id": "VINTAGE_01",
+    "style": "VINTAGE",
+    "full_shot_prompt": "brown vintage leather jacket, dark grey graphic t-shirt, washed wide blue jeans, white canvas sneakers, black leather shoulder bag",
+    "items": [
+      {
+        "display_order": 1,
+        "category": "OUTER",
+        "name": "레더자켓",
+        "prompt": "brown vintage leather jacket",
+        "image_path": "VINTAGE/VINTAGE_01/item_01_outer.png",
+        "exists": true
+      },
+      {
+        "display_order": 2,
+        "category": "TOP",
+        "name": "반팔 티셔츠",
+        "prompt": "dark grey graphic t-shirt",
+        "image_path": "VINTAGE/VINTAGE_01/item_02_top.png",
+        "exists": true
+      },
+      {
+        "display_order": 3,
+        "category": "BOTTOM",
+        "name": "와이드 데님",
+        "prompt": "washed wide blue jeans",
+        "image_path": "VINTAGE/VINTAGE_01/item_03_bottom.png",
+        "exists": true
+      },
+      {
+        "display_order": 4,
+        "category": "SHOES",
+        "name": "캔버스화",
+        "prompt": "white canvas sneakers",
+        "image_path": "VINTAGE/VINTAGE_01/item_04_shoes.png",
+        "exists": true
+      },
+      {
+        "display_order": 5,
+        "category": "BAG",
+        "name": "숄더백",
+        "prompt": "black leather shoulder bag",
+        "image_path": "VINTAGE/VINTAGE_01/item_05_bag.png",
+        "exists": true
+      }
+    ]
+  },
+  {
+    "set_id": "VINTAGE_02",
+    "style": "VINTAGE",
+    "full_shot_prompt": "brown knit cardigan, white t-shirt, washed blue wide jeans, grey sneakers",
+    "items": [
+      {
+        "display_order": 1,
+        "category": "OUTER",
+        "name": "가디건",
+        "prompt": "brown knit cardigan",
+        "image_path": "VINTAGE/VINTAGE_02/item_01_outer.png",
+        "exists": true
+      },
+      {
+        "display_order": 2,
+        "category": "TOP",
+        "name": "반팔 티셔츠",
+        "prompt": "white t-shirt",
+        "image_path": "VINTAGE/VINTAGE_02/item_02_top.png",
+        "exists": true
+      },
+      {
+        "display_order": 3,
+        "category": "BOTTOM",
+        "name": "와이드 데님",
+        "prompt": "washed blue wide jeans",
+        "image_path": "VINTAGE/VINTAGE_02/item_03_bottom.png",
+        "exists": true
+      },
+      {
+        "display_order": 4,
+        "category": "SHOES",
+        "name": "스니커즈",
+        "prompt": "grey sneakers",
+        "image_path": "VINTAGE/VINTAGE_02/item_04_shoes.png",
+        "exists": true
+      }
+    ]
+  },
+  {
+    "set_id": "VINTAGE_03",
+    "style": "VINTAGE",
+    "full_shot_prompt": "tan suede jacket, faded black long sleeve t-shirt, faded black straight jeans, brown leather boots, brown leather belt",
+    "items": [
+      {
+        "display_order": 1,
+        "category": "OUTER",
+        "name": "스웨이드 자켓",
+        "prompt": "tan suede jacket",
+        "image_path": "VINTAGE/VINTAGE_03/item_01_outer.png",
+        "exists": true
+      },
+      {
+        "display_order": 2,
+        "category": "TOP",
+        "name": "긴팔 티셔츠",
+        "prompt": "faded black long sleeve t-shirt",
+        "image_path": "VINTAGE/VINTAGE_03/item_02_top.png",
+        "exists": true
+      },
+      {
+        "display_order": 3,
+        "category": "BOTTOM",
+        "name": "데님팬츠",
+        "prompt": "faded black straight jeans",
+        "image_path": "VINTAGE/VINTAGE_03/item_03_bottom.png",
+        "exists": true
+      },
+      {
+        "display_order": 4,
+        "category": "SHOES",
+        "name": "부츠",
+        "prompt": "brown leather boots",
+        "image_path": "VINTAGE/VINTAGE_03/item_04_shoes.png",
+        "exists": true
+      },
+      {
+        "display_order": 5,
+        "category": "ACC",
+        "name": "벨트",
+        "prompt": "brown leather belt",
+        "image_path": "VINTAGE/VINTAGE_03/item_05_acc.png",
+        "exists": true
+      }
+    ]
+  },
+  {
+    "set_id": "VINTAGE_04",
+    "style": "VINTAGE",
+    "full_shot_prompt": "light blue denim jacket, brown plaid flannel shirt, olive wide cargo pants, cream canvas sneakers, canvas messenger bag",
+    "items": [
+      {
+        "display_order": 1,
+        "category": "OUTER",
+        "name": "데님자켓",
+        "prompt": "light blue denim jacket",
+        "image_path": "VINTAGE/VINTAGE_04/item_01_outer.png",
+        "exists": true
+      },
+      {
+        "display_order": 2,
+        "category": "TOP",
+        "name": "체크셔츠",
+        "prompt": "brown plaid flannel shirt",
+        "image_path": "VINTAGE/VINTAGE_04/item_02_top.png",
+        "exists": true
+      },
+      {
+        "display_order": 3,
+        "category": "BOTTOM",
+        "name": "카고팬츠",
+        "prompt": "olive wide cargo pants",
+        "image_path": "VINTAGE/VINTAGE_04/item_03_bottom.png",
+        "exists": true
+      },
+      {
+        "display_order": 4,
+        "category": "SHOES",
+        "name": "캔버스화",
+        "prompt": "cream canvas sneakers",
+        "image_path": "VINTAGE/VINTAGE_04/item_04_shoes.png",
+        "exists": true
+      },
+      {
+        "display_order": 5,
+        "category": "BAG",
+        "name": "메신저백",
+        "prompt": "canvas messenger bag",
+        "image_path": "VINTAGE/VINTAGE_04/item_05_bag.png",
+        "exists": true
+      }
+    ]
+  },
+  {
+    "set_id": "VINTAGE_05",
+    "style": "VINTAGE",
+    "full_shot_prompt": "dark green varsity jacket, beige sweatshirt, washed blue wide jeans, navy suede sneakers, brown baseball cap",
+    "items": [
+      {
+        "display_order": 1,
+        "category": "OUTER",
+        "name": "바시티 자켓",
+        "prompt": "dark green varsity jacket",
+        "image_path": "VINTAGE/VINTAGE_05/item_01_outer.png",
+        "exists": true
+      },
+      {
+        "display_order": 2,
+        "category": "TOP",
+        "name": "맨투맨",
+        "prompt": "beige sweatshirt",
+        "image_path": "VINTAGE/VINTAGE_05/item_02_top.png",
+        "exists": true
+      },
+      {
+        "display_order": 3,
+        "category": "BOTTOM",
+        "name": "와이드 데님",
+        "prompt": "washed blue wide jeans",
+        "image_path": "VINTAGE/VINTAGE_05/item_03_bottom.png",
+        "exists": true
+      },
+      {
+        "display_order": 4,
+        "category": "SHOES",
+        "name": "스니커즈",
+        "prompt": "navy suede sneakers",
+        "image_path": "VINTAGE/VINTAGE_05/item_04_shoes.png",
+        "exists": true
+      },
+      {
+        "display_order": 5,
+        "category": "ACC",
+        "name": "볼캡",
+        "prompt": "brown baseball cap",
+        "image_path": "VINTAGE/VINTAGE_05/item_05_acc.png",
+        "exists": true
+      }
+    ]
+  }
+]
