@@ -117,7 +117,7 @@ class ExternalLlmChatClientTest extends ChatTestSupport {
         String sid = readySession();
         BODY.set(completion("**가르마 스타일**이 잘 어울려요.\n# 팁\n뿌리 볼륨을 살려 보세요. 가벼운 제품을 쓰면 좋아요."));
 
-        JsonNode d = data(call(chatPost(sid, "가르마 스타일은 어떻게 연출하면 좋을까요?"), 200));
+        JsonNode d = data(call(chatPost(sid, "나한테 어울리는 헤어 추천해 줘"), 200));
         assertThat(d.get("assistantMessage").get("content").asText())
                 .as("마크다운 기호 제거").isEqualTo("가르마 스타일이 잘 어울려요.\n팁\n뿌리 볼륨을 살려 보세요. 가벼운 제품을 쓰면 좋아요.");
         assertThat(d.get("remainingTurns").asInt()).isEqualTo(19);
@@ -136,10 +136,10 @@ class ExternalLlmChatClientTest extends ChatTestSupport {
         ChatApiIntegrationTest.assertNoBodyMetricValues(system);
         assertThat(LAST_REQUEST.get()).doesNotContain("weightKg").doesNotContain("\"63\"").doesNotContain("20.8");
         assertThat(messages.get(1).get("role").asText()).isEqualTo("user");
-        assertThat(messages.get(1).get("content").asText()).isEqualTo("가르마 스타일은 어떻게 연출하면 좋을까요?");
+        assertThat(messages.get(1).get("content").asText()).isEqualTo("나한테 어울리는 헤어 추천해 줘");
 
         // 두 번째 턴: system + (user, assistant) + user
-        call(chatPost(sid, "왁스 대신 쓸 제품은?"), 200);
+        call(chatPost(sid, "내 유형에 맞는 패션 알려 줘"), 200);
         JsonNode second = objectMapper.readTree(LAST_REQUEST.get()).get("messages");
         assertThat(second.findValuesAsText("role")).containsExactly("system", "user", "assistant", "user");
         assertThat(second.get(2).get("content").asText()).startsWith("가르마 스타일이 잘 어울려요.");
@@ -202,14 +202,14 @@ class ExternalLlmChatClientTest extends ChatTestSupport {
 
     private void assertFailureNotPersisted(int status, String body, long delayMs, String code, int expectedHttp) throws Exception {
         String sid = readySession();
-        call(chatPost(sid, "첫 질문"), 200);                                         // 정상 1턴 (실패가 기존 데이터에 영향 없는지 확인)
+        call(chatPost(sid, "코디 추천해 줘"), 200);                                         // 정상 1턴 (실패가 기존 데이터에 영향 없는지 확인)
         Instant fixedExpiry = Instant.now().plus(10, ChronoUnit.MINUTES).truncatedTo(ChronoUnit.SECONDS);
         setExpiresAt(sid, fixedExpiry);
 
         STATUS.set(status);
         BODY.set(body);
         DELAY_MS.set(delayMs);
-        JsonNode err = assertError(call(chatPost(sid, "실패할 질문"), expectedHttp), code);
+        JsonNode err = assertError(call(chatPost(sid, "실패할 코디 추천"), expectedHttp), code);
         assertThat(err.get("status").asInt()).isEqualTo(expectedHttp);
 
         assertThat(chatCount(sid)).as("실패 시 메시지 미저장").isEqualTo(2);

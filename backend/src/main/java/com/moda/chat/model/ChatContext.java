@@ -53,9 +53,9 @@ public record ChatContext(
         return fashionStyles.size() > 1 ? fashionStyles.get(1) : fashionStyles.get(0);
     }
 
-    /** "큰 사각 체형" → 그대로, "작은 역삼각형" → "작은 역삼각형 체형". */
+    /** "큰 사각 체형"·"표준유형" → 그대로, "작은 역삼각형" → "작은 역삼각형 체형". */
     public String bodyPhrase() {
         String label = bodyType.label();
-        return label.endsWith("체형") ? label : label + " 체형";
+        return label.endsWith("체형") || label.endsWith("유형") ? label : label + " 체형";
     }
 }

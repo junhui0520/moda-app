@@ -46,7 +46,7 @@ public class ChatTemplates {
         String fashion = ctx.topFashion().name();
         List<String> candidates = switch (ChatTopic.detect(lastUserMessage)) {
             case HAIR -> List.of(
-                    eulReul(hair) + " 오래 유지하는 팁은?",
+                    eunNeun(hair) + " 어떤 얼굴형에 어울려?",
                     hair + "에 어울리는 코디는?",
                     ctx.secondHair().name() + "도 어울릴까요?");
             case FASHION -> List.of(
@@ -57,10 +57,7 @@ public class ChatTemplates {
                     fashion + " 룩에 어울리는 가방은?",
                     hair + "에 어울리는 모자는?",
                     "소개팅 코디를 추천해 줘");
-            case GROOMING -> List.of(
-                    "면도 후 피부 관리 팁은?",
-                    hair + "에 맞는 스타일링 제품은?",
-                    fashion + " 룩에 어울리는 향수는?");
+            case GROOMING -> initialPrompts(ctx);                   // 그루밍 질문은 범위 밖이라 칩으로 이어 가지 않음
             case BODY_METRIC -> List.of(
                     ctx.bodyPhrase() + "에 어울리는 바지 핏은?",
                     fashion + " 룩 기본 아이템 조합을 알려 줘",

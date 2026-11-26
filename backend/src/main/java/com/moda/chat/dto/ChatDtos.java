@@ -19,8 +19,12 @@ public final class ChatDtos {
             String message) {
     }
 
-    /** {@code ChatMessage} */
-    public record ChatMessageDto(String messageId, ChatRole role, String content, OffsetDateTime createdAt) {
+    /** {@code ChatMessage}. {@code images}: 답변과 함께 보여 줄 스타일 이미지 (USER·이미지 없음은 []). */
+    public record ChatMessageDto(String messageId, ChatRole role, String content, List<ChatImage> images, OffsetDateTime createdAt) {
+    }
+
+    /** {@code imageKey}: 결과 화면 추천과 같은 catalog 키 (앱이 이미지로 매핑), {@code label}: 스타일 이름. */
+    public record ChatImage(String imageKey, String label) {
     }
 
     /** ⑨ 응답 */
