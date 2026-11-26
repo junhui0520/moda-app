@@ -1,0 +1,4 @@
+폴더명 = 헤어 코드. 각 폴더에 사진 5장 내외를 넣으세요.
+파일명 순서 = 노출 순서 (01_, 02_ ...). 첫 파일이 대표 이미지, 파일명에 main 이 있으면 그 파일이 대표.
+파일명에 front / side / back / diagonal 을 넣으면 각도로 저장 (예: 01_front.jpg, 02_side.jpg).
+넣은 뒤: python load_hair_images.py --dry-run  ->  python load_hair_images.py

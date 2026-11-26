@@ -25,6 +25,14 @@ spring:
     password:
     driver-class-name: org.h2.Driver
 
+  # 스타일 이미지 DB(sql/): 내장 DB(H2)일 때만 기동마다 적재. MySQL은 README 순서대로 직접 실행
+  #   경로는 backend/ 에서 실행(./gradlew bootRun) 기준. 폴더가 없으면(Docker 배포) 건너뜀
+  sql:
+    init:
+      encoding: UTF-8
+      schema-locations: optional:file:../sql/schema_mysql.sql
+      data-locations: optional:file:../sql/seed_master_data.sql, optional:file:../sql/load_hair_images.sql, optional:file:../sql/load_outfits.sql
+
   h2:
     console:
       enabled: true

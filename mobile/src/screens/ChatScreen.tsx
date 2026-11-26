@@ -19,6 +19,7 @@ import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { isModaApiError } from '../api/client';
 import { modaApi } from '../api/modaApi';
 import type { ChatMessage } from '../api/types';
+import { StyleThumb } from '../components/StyleImageCard';
 import type { RootStackParamList } from '../navigation/types';
 import { useSessionStore } from '../store/useSessionStore';
 import { colors, radius } from '../theme/theme';
@@ -291,6 +292,13 @@ export function ChatScreen({ navigation }: Props) {
                   </View>
                   <View style={styles.assistantBubble}>
                     <Text style={styles.assistantText}>{msg.content}</Text>
+                    {msg.images && msg.images.length > 0 ? (
+                      <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginTop: 10 }}>
+                        {msg.images.map((img) => (
+                          <StyleThumb key={img.imageKey} imageKey={img.imageKey} label={img.label} />
+                        ))}
+                      </View>
+                    ) : null}
                   </View>
                 </View>
               ),

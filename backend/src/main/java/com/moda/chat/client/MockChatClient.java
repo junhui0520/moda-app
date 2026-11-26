@@ -59,7 +59,7 @@ public class MockChatClient implements ChatClient {
         String reply = switch (ChatTopic.detect(message)) {
             case BODY_METRIC -> ChatReplySanitizer.bodyMetricFallback(ctx);
             case ACCESSORY -> accessory(ctx);
-            case GROOMING -> grooming(ctx);
+            case GROOMING -> general(ctx);                          // ChatScopeGuard가 먼저 걸러 도달하지 않음
             case FASHION -> fashion(ctx, ChatTopic.occasion(message));
             case HAIR -> hair(ctx);
             case GENERAL -> general(ctx);
@@ -92,13 +92,6 @@ public class MockChatClient implements ChatClient {
         return EYEWEAR.get(FaceShape.fromKey(ctx.faceShape().key())) + " "
                 + "모자는 " + eulReul(ctx.topHair().name()) + " 유지하기 쉬운 볼캡이나 비니가 무난해요. "
                 + ctx.topFashion().name() + " 룩과 함께 쓴다면 소재와 컬러 톤을 옷과 비슷하게 맞추는 걸 추천드려요.";
-    }
-
-    private static String grooming(ChatContext ctx) {
-        return "깔끔한 그루밍은 '" + ctx.typeName() + "' 유형의 장점을 더 또렷하게 살려 줘요. "
-                + "아침에는 저자극 클렌저로 세안한 뒤 수분 크림과 선크림까지 챙기면 충분해요. "
-                + "눈썹 주변 잔털만 정리해도 " + iGa(ctx.topHair().name()) + " 훨씬 단정해 보여요. "
-                + "향수는 " + ctx.topFashion().name() + " 무드에 맞춰 가벼운 시트러스나 우디 계열을 추천드려요.";
     }
 
     private static String general(ChatContext ctx) {

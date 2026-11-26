@@ -1,7 +1,9 @@
 package com.moda.chat;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
@@ -111,6 +113,92 @@ class ChatApiIntegrationTest extends ChatTestSupport {
     }
 
     @Test
+    @DisplayName("⑩ 지식 자료: 질문 키워드 + 대상 조건(스타일 이름·사용자 분석·질문이 직접 말한 값)으로 항목 선택, LLM 없이 자료 문장으로 답, 자료 이미지 사용")
+    void knowledgeEntries() throws Exception {
+        String sid = readySession();                                                       // 하트형 · 작은 역삼각형 · 모질은 ChatTestSupport 값
+
+        JsonNode curly = data(call(chatPost(sid, "곱슬머리 아침에 손질하는 팁만 알려줘"), 200)).get("assistantMessage");
+        assertThat(curly.get("content").asText()).contains("컬 크림").doesNotContain("알 수 없어요");    // 질문이 '곱슬'을 직접 말함
+
+        JsonNode salon = data(call(chatPost(sid, "가르마 미용실에서 뭐라고 요청해?"), 200)).get("assistantMessage");
+        assertThat(salon.get("content").asText()).contains("가르마펌").contains("본인은 하트형이라");     // 자료 + 본인 판정
+        assertThat(salon.get("images").findValuesAsText("imageKey")).containsExactly("hair_parted_style");
+
+        assertThat(reply(sid, "둥근형은 안경테 뭐가 좋아?")).contains("스퀘어").doesNotContain("라운드나 웰링턴");   // 질문의 얼굴형 우선
+        assertThat(reply(sid, "안경테 추천해줘")).contains("라운드나 웰링턴");                              // 아니면 내 얼굴형(하트형)
+        assertThat(reply(sid, "바지 핏은 어떻게 골라?")).contains("작은 역삼각형은 스트레이트나 테이퍼드");
+        assertThat(reply(sid, "면접 때 뭐 입어?")).contains("면접에는");
+        verify(chatClient, never()).complete(any());                                       // 자료 질문은 LLM을 거치지 않음
+    }
+
+    @Test
+    @DisplayName("⑩ 범위 가드: 인사는 짧은 인사만, 손질 팁·그루밍 등은 '알 수 없어요'(이미지 없음), 범위 안 질문은 정상 답변. 모두 1턴 사용")
+    void scopeGuard() throws Exception {
+        String sid = readySession();
+
+        String hi = reply(sid, "안녕");
+        assertThat(hi).contains("Moda 스타일 챗봇").doesNotContain("V라인 프레시").doesNotContain("분석 결과로");
+        assertThat(reply(sid, "고마워!")).contains("기뻐요");
+
+        for (String q : List.of("면도 후 피부 관리 팁은?", "오늘 날씨 어때?", "헤어 질문 A", "주식 종목 알려줘")) {
+            JsonNode a = data(call(chatPost(sid, q), 200)).get("assistantMessage");
+            assertThat(a.get("content").asText()).as(q).startsWith("그 내용은 제가 알 수 없어요");
+            assertThat(a.get("images")).as(q).isEmpty();
+        }
+
+        for (String q : List.of("나한테 어울리는 헤어 추천해줘", "얼굴형은 어떻게 나눠?", "출근 코디 알려줘", "가르마도 어울릴까?")) {
+            assertThat(reply(sid, q)).as(q).doesNotContain("알 수 없어요");
+        }
+        assertThat(chatCount(sid)).isEqualTo(20);
+    }
+
+    @Test
+    @DisplayName("⑩ 특정 스타일 질문: style-rules 근거로 ①어울리는 얼굴형 ②본인 판정 ③대안 (하트형: 가르마 5점·크롭 3점, 작은 역삼각형: 미니멀 4점)")
+    void styleQuestionUsesRules() throws Exception {
+        String sid = readySession();
+
+        String parted = reply(sid, "지금 가르마도 어울릴까?");
+        assertThat(parted).contains("가르마 스타일").contains("다이아몬드형").contains("하트형").contains("가장 잘 맞는 조합");
+        assertThat(sentences(parted)).isBetween(3, 5);
+
+        String crop = reply(sid, "크롭 스타일은 어때?");                                  // 하트형 3점 → 무난, 대안 제시
+        assertThat(crop).contains("크롭 스타일").contains("무난").contains("대신").doesNotContain("가장 잘 맞는");
+
+        String minimal = reply(sid, "미니멀 코디는 어울려?");                               // 작은 역삼각형 4점
+        assertThat(minimal).contains("미니멀").contains("작은 역삼각형").contains("잘 어울려요");
+        assertNoBodyMetricValues(parted + crop + minimal);
+        verify(chatClient, never()).complete(any());                                       // 판정 질문도 LLM을 거치지 않음
+    }
+
+    private String reply(String sid, String q) throws Exception {
+        return data(call(chatPost(sid, q), 200)).get("assistantMessage").get("content").asText();
+    }
+
+    @Test
+    @DisplayName("⑩ 이미지: 헤어 질문 → 답변에 언급된 헤어 스타일 카드, 패션 질문 → 패션 카드, 안경 질문 → 없음, USER는 항상 [], ⑨에서 복원")
+    void replyImages() throws Exception {
+        String sid = readySession();
+
+        JsonNode hair = data(call(chatPost(sid, "가르마 스타일은 어떻게 연출하면 좋을까요?"), 200));
+        assertThat(hair.get("userMessage").get("images")).isEmpty();
+        JsonNode hairImages = hair.get("assistantMessage").get("images");
+        assertThat(hairImages).hasSizeBetween(1, 2);
+        assertThat(hairImages.get(0).get("imageKey").asText()).isEqualTo("hair_parted_style");
+        assertThat(hairImages.get(0).get("label").asText()).isEqualTo("가르마 스타일");
+        assertThat(hairImages.findValuesAsText("imageKey")).allMatch(k -> k.startsWith("hair_"));
+
+        JsonNode fashionImages = data(call(chatPost(sid, "댄디 룩 기본 아이템 조합을 알려 줘"), 200)).get("assistantMessage").get("images");
+        assertThat(fashionImages.get(0).get("imageKey").asText()).isEqualTo("fashion_dandy");
+        assertThat(fashionImages.findValuesAsText("imageKey")).allMatch(k -> k.startsWith("fashion_"));
+
+        assertThat(data(call(chatPost(sid, "하트형 얼굴에 어울리는 안경테는?"), 200)).get("assistantMessage").get("images")).isEmpty();
+
+        JsonNode h = data(call(chatGet(sid), 200)).get("messages");
+        assertThat(h.get(1).get("images")).isEqualTo(hairImages);
+        assertThat(h.get(3).get("images")).isEqualTo(fashionImages);
+    }
+
+    @Test
     @DisplayName("시스템 프롬프트: 가드레일 포함 · 몸무게/BMI 값 미포함 · ⑦ PATCH 보정값이 다음 턴에 즉시 반영 · 이전 대화 전달")
     void systemPromptReflectsLatestProfile() throws Exception {
         String sid = readySession();
@@ -199,7 +287,7 @@ class ChatApiIntegrationTest extends ChatTestSupport {
     void mockRepliesFollowGuardrails() throws Exception {
         String sid = readySession();
         List<String> questions = List.of("제 몸무게랑 BMI가 어느 정도인지 알려 주세요", "하트형 얼굴에 어울리는 안경테는?",
-                "소개팅 코디를 추천해 줘", "면도 후 피부 관리 팁은?", "안녕하세요");
+                "소개팅 코디를 추천해 줘");
         for (String q : questions) {
             String reply = data(call(chatPost(sid, q), 200)).get("assistantMessage").get("content").asText();
             assertThat(sentences(reply)).as(q).isBetween(3, 5);
@@ -208,9 +296,8 @@ class ChatApiIntegrationTest extends ChatTestSupport {
             switch (q.substring(0, 2)) {
                 case "제 " -> assertThat(reply).contains("수치는 따로 안내하지 않고").contains("작은 역삼각형 체형");
                 case "하트" -> assertThat(reply).contains("안경테");
-                case "소개" -> assertThat(reply).contains("소개팅이나 데이트라면 블레이저에 슬랙스를 매치해");
-                case "면도" -> assertThat(reply).contains("선크림");
-                default -> assertThat(reply).contains("'V라인 프레시' 유형");
+                case "소개" -> assertThat(reply).contains("소개팅이나 데이트에는").contains("작은 역삼각형 체형에는 댄디가");
+                default -> throw new AssertionError(q);
             }
         }
     }
@@ -259,7 +346,7 @@ class ChatApiIntegrationTest extends ChatTestSupport {
             assertError(call(chatPost(sid, "가".repeat(501)), 400), "INVALID_REQUEST");
             assertError(call(json(post(BASE + "/" + sid + "/chat/messages"), "{}"), 400), "INVALID_REQUEST");
             assertError(call(post(BASE + "/" + sid + "/chat/messages"), 400), "INVALID_REQUEST");
-            assertError(call(chatPost(sid, "헤어").header("X-Mock-Delay-Ms", "abc"), 400), "INVALID_REQUEST");
+            assertError(call(chatPost(sid, "헤어 추천").header("X-Mock-Delay-Ms", "abc"), 400), "INVALID_REQUEST");
             assertThat(chatCount(sid)).isZero();
             data(call(chatPost(sid, "  " + "가".repeat(500) + "  "), 200));             // trim 후 정확히 500자는 허용
         }

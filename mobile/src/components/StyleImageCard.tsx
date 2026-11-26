@@ -4,6 +4,7 @@ import React from 'react';
 import { Image, StyleSheet, Text, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { getStyleImage, getStylePlaceholder } from '../constants/styleImages';
+import { useStyleImages } from '../hooks/useStyleImages';
 import { colors, radius } from '../theme/theme';
 
 interface StyleImageCardProps {
@@ -21,11 +22,14 @@ export function StyleImageCard({
   total,
   height = 240,
 }: StyleImageCardProps) {
-  const asset = getStyleImage(imageKey);
+  const { images, baseUrl } = useStyleImages(imageKey);
+  // 서버 DB 이미지 > 로컬 에셋 > placeholder
+  const asset = images ? { uri: baseUrl + images.url } : getStyleImage(imageKey);
   const placeholder = getStylePlaceholder(imageKey);
   const rankStr = String(rank).padStart(2, '0');
 
   return (
+    <View>
     <View style={[styles.wrapper, { height }]}>
       {asset ? (
         <Image source={asset} style={styles.image} resizeMode="cover" />
@@ -48,10 +52,43 @@ export function StyleImageCard({
         </Text>
       </View>
     </View>
+    {images && images.items.length > 0 ? (
+      <View style={styles.items}>
+        {images.items.map((item) => (
+          <View key={item.url} style={styles.item}>
+            <Image source={{ uri: baseUrl + item.url }} style={styles.itemImage} />
+            <Text style={styles.itemLabel} numberOfLines={1}>
+              {item.label}
+            </Text>
+          </View>
+        ))}
+      </View>
+    ) : null}
+    </View>
+  );
+}
+
+/** 챗봇 답변에 붙는 작은 썸네일 */
+export function StyleThumb({ imageKey, label }: { imageKey: string; label: string }) {
+  const { images, baseUrl } = useStyleImages(imageKey);
+  if (!images) return null;
+  return (
+    <View style={styles.thumbWrap}>
+      <Image source={{ uri: baseUrl + images.url }} style={styles.thumb} accessibilityLabel={label} />
+      <Text style={styles.itemLabel} numberOfLines={1}>
+        {label}
+      </Text>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  items: { flexDirection: 'row', gap: 6, paddingHorizontal: 12, paddingVertical: 10, backgroundColor: '#18181B' },
+  item: { flex: 1, maxWidth: 76 },
+  itemImage: { width: '100%', aspectRatio: 1, backgroundColor: '#27272A' },
+  itemLabel: { fontSize: 10, color: '#A1A1AA', textAlign: 'center', marginTop: 3 },
+  thumbWrap: { width: 120 },
+  thumb: { width: 120, height: 120, backgroundColor: '#27272A' },
   wrapper: {
     width: '100%',
     backgroundColor: '#18181B',

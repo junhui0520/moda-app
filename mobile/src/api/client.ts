@@ -1,10 +1,19 @@
 // src/api/client.ts — 공통 API 클라이언트 (30초 타임아웃, 에러 표준화, Mock 헤더 지원)
 
+import Constants from 'expo-constants';
 import { Platform } from 'react-native';
 import type { ApiError, ApiResponse, ErrorCode, MockHeadersConfig } from './types';
 
+// 로컬 백엔드 자동 주소: start.cmd / start.sh 가 EXPO_PUBLIC_USE_LOCAL_API=1 로 실행할 때만 사용
+// (웹은 페이지를 연 주소, 앱은 Expo 개발 서버가 떠 있는 PC IP). EXPO_PUBLIC_API_BASE_URL 이 있으면 그 값이 우선
+const localHost =
+  Platform.OS === 'web' ? window.location.hostname : Constants.expoConfig?.hostUri?.split(':')[0];
+
 export const DEFAULT_API_BASE_URL =
-  process.env.EXPO_PUBLIC_API_BASE_URL || 'https://moda-app-production.up.railway.app';
+  process.env.EXPO_PUBLIC_API_BASE_URL ||
+  (process.env.EXPO_PUBLIC_USE_LOCAL_API === '1' && localHost
+    ? `http://${localHost}:8080`
+    : 'https://moda-app-production.up.railway.app');
 
 const DEFAULT_TIMEOUT_MS = 30_000;
 
@@ -184,18 +193,9 @@ export async function createImageFormData(uri: string, filename: string): Promis
   const mimeType = isPng ? 'image/png' : 'image/jpeg';
   const finalName = isPng ? filename.replace(/\.jpg$/i, '.png') : filename;
 
-  if (Platform.OS === 'web') {
-    const response = await fetch(uri);
-    const blob = await response.blob();
-    const typedBlob = blob.type ? blob : new Blob([blob], { type: mimeType });
-    form.append('image', typedBlob, finalName);
-  } else {
-    form.append('image', {
-      uri,
-      name: finalName,
-      type: mimeType,
-    } as unknown as Blob);
-  }
+  // Expo의 fetch는 FormData에 Blob만 받음 ({uri,name,type} 객체는 폰에서 Unsupported FormDataPart 에러)
+  const blob = await (await fetch(uri)).blob();
+  form.append('image', blob.type ? blob : new Blob([blob], { type: mimeType }), finalName);
 
   return form;
 }

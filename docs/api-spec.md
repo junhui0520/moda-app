@@ -1250,7 +1250,12 @@
 | `messageId` | string (UUID) | 불가 | 메시지 식별자 |
 | `role` | `ChatRole` | 불가 | `USER` 또는 `ASSISTANT` |
 | `content` | string | 불가 | 메시지 본문 |
+| `images` | `ChatImage[]` | 불가 | 답변과 함께 보여 줄 스타일 이미지 (최대 2개). `USER`·이미지 없는 답변은 `[]` |
 | `createdAt` | string | 불가 | 저장 시각 |
+
+`ChatImage` = `{ imageKey, label }`. `imageKey`는 결과 화면 추천의 `imageKey`와 같은 카탈로그 키(예: `hair_parted_style`), `label`은 스타일 이름(예: `가르마 스타일`)입니다. 앱은 `imageKey`로 이미지를 찾습니다(이미지 준비 전에는 `label` 텍스트로 대체).
+
+이미지 선택 규칙 (서버, LLM 출력과 무관): 질문 주제가 헤어면 헤어, 패션이면 패션 카탈로그에서 **답변에 이름이 나온 스타일**을 언급 순서대로 최대 2개 → 없으면 해당 분야 1순위 추천 1개. 일반 질문은 답변에 이름이 나온 스타일만(없으면 `[]`), 액세서리·그루밍·체중 질문은 `[]`.
 
 ---
 
@@ -1929,10 +1934,12 @@ export interface SessionDeleteData {
 }
 
 // ⑨·⑩ 챗봇 공통
+export interface ChatImage { imageKey: string; label: string; }
 export interface ChatMessage {
   messageId: string;
   role: ChatRole;
   content: string;
+  images: ChatImage[];        // USER·이미지 없는 답변은 []
   createdAt: string;
 }
 

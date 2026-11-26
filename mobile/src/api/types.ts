@@ -283,11 +283,24 @@ export interface SessionDeleteData {
 }
 
 // ⑨·⑩ 챗봇 공통
+// 챗봇 답변에 붙는 스타일 이미지 (imageKey로 StyleImages를 찾음)
+export interface ChatImage {
+  imageKey: string;
+  label: string;
+}
+
 export interface ChatMessage {
   messageId: string;
   role: ChatRole;
   content: string;
+  images?: ChatImage[];
   createdAt: string;
+}
+
+// GET /api/v1/style-images 값. url은 서버 기준 경로 (baseUrl + url), url = 큰 사진, items = 작은 아이템 사진
+export interface StyleImages {
+  url: string;
+  items: { label: string; url: string }[];
 }
 
 // ⑨ GET /chat/messages

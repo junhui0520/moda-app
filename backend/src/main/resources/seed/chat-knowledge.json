@@ -1,0 +1,805 @@
+{
+  "version": "0.1-draft",
+  "_comment": [
+    "챗봇 지식 자료 (초안). 아직 SeedLoader가 읽지 않는 파일이며, 챗봇 답변 근거로만 쓸 예정입니다.",
+    "entries[]: id(고유) / topic / appliesTo / keywords / text / imageKey / reviewed",
+    "topic: hair_style(헤어 5종 상세) · fashion_style(패션 9종 상세) · hair_care(모질별 손질) · accessory(얼굴형별 소품) · body_fit(체형별 핏) · occasion(상황별 코디)",
+    "appliesTo: 비어 있으면 모두에게 해당. 키별 값 목록 중 하나라도 맞으면 해당. hairStyle/fashionStyle은 질문에 그 스타일 이름이 있을 때, faceShape/bodyType/hairCurl/hairThickness/hairDensity는 사용자 분석 결과가 그 값일 때 맞는 것으로 봄.",
+    "appliesTo 값: hairStyle=UP_STYLE|PARTED_STYLE|DANDY_STYLE|CROP_STYLE|SHADOW_STYLE, fashionStyle=CASUAL|DANDY|MINIMAL|CITY_BOY|AMEKAJI|STREET|SPORTY|GORPCORE|VINTAGE, faceShape=diamond|heart|oval|rectangle|round|long, bodyType=standard|small_inv_triangle|large_rectangle|rectangle, hairCurl=STRAIGHT|SEMI_CURLY|CURLY, hairThickness=THIN|MEDIUM|THICK, hairDensity=LOW|MEDIUM|HIGH, occasion=WORK|INTERVIEW|DATE|WEDDING|TRAVEL",
+    "keywords: 질문 의도를 나타내는 단어 (예: 연출, 미용실, 안경). 질문에 하나라도 있으면 후보.",
+    "text: 2~3문장, 답변 말투(~해요), style-rules.md 7장 표현 가이드(R-11) 준수, 브랜드·가격 없음.",
+    "imageKey: catalog.json의 스타일 이미지 키 또는 null.",
+    "reviewed: false = 팀 검수 전 초안. 검수 후 true로 바꿔 주세요.",
+    "코디 세트(스타일별 5개)는 outfit_items.json을 그대로 연결할 예정이라 여기에는 넣지 않았습니다."
+  ],
+  "entries": [
+    {
+      "id": "HAIR_UP_HOWTO",
+      "topic": "hair_style",
+      "appliesTo": { "hairStyle": ["UP_STYLE"] },
+      "keywords": ["연출", "어떻게", "하는 법", "방법", "드라이", "스타일링", "넘기"],
+      "text": "깐머리는 머리를 감은 뒤 앞머리를 뿌리부터 위쪽, 뒤쪽 방향으로 드라이해 볼륨을 먼저 세워요. 그다음 왁스나 포마드를 손바닥에 고르게 펴서 앞쪽부터 뒤로 쓸어 넘기며 형태를 잡아요.",
+      "imageKey": "hair_up_style",
+      "reviewed": false
+    },
+    {
+      "id": "HAIR_UP_UPKEEP",
+      "topic": "hair_style",
+      "appliesTo": { "hairStyle": ["UP_STYLE"] },
+      "keywords": ["유지", "관리", "난이도", "오래", "시간", "주기", "얼마나"],
+      "text": "깐머리는 형태가 분명해서 아침 스타일링에 10분 정도 걸리는 편이에요. 앞머리 길이가 형태를 좌우하므로 4~6주마다 다듬어 주면 깔끔하게 유지돼요.",
+      "imageKey": "hair_up_style",
+      "reviewed": false
+    },
+    {
+      "id": "HAIR_UP_PRODUCT",
+      "topic": "hair_style",
+      "appliesTo": { "hairStyle": ["UP_STYLE"] },
+      "keywords": ["제품", "왁스", "포마드", "클레이", "뭐 발라", "뭘 발라"],
+      "text": "단정하고 윤기 있게 넘기려면 수성 포마드, 자연스러운 볼륨을 원하면 매트 왁스나 클레이가 잘 맞아요. 제품은 소량씩 덜어 앞머리 뿌리 쪽부터 발라 주세요.",
+      "imageKey": "hair_up_style",
+      "reviewed": false
+    },
+    {
+      "id": "HAIR_UP_SALON",
+      "topic": "hair_style",
+      "appliesTo": { "hairStyle": ["UP_STYLE"] },
+      "keywords": ["미용실", "주문", "요청", "뭐라고", "커트", "컷"],
+      "text": "미용실에서는 '리젠트컷'이나 '포마드 스타일', 더 깔끔하게는 '슬릭백'이라고 요청하면 깐머리 계열로 잘라 줘요. 옆머리를 얼마나 짧게 할지(투블럭 여부)도 함께 말하면 원하는 모양에 가까워져요.",
+      "imageKey": "hair_up_style",
+      "reviewed": false
+    },
+    {
+      "id": "HAIR_PARTED_HOWTO",
+      "topic": "hair_style",
+      "appliesTo": { "hairStyle": ["PARTED_STYLE"] },
+      "keywords": ["연출", "어떻게", "하는 법", "방법", "드라이", "스타일링", "구현"],
+      "text": "가르마 스타일은 원하는 비율(6:4, 7:3 등)로 가르마를 먼저 탄 뒤, 가르마 반대쪽으로 뿌리를 세우듯 드라이하면 볼륨이 살아나요. 마무리로 손끝에 왁스를 조금 묻혀 앞머리 끝을 바깥쪽으로 흐르게 정리해요.",
+      "imageKey": "hair_parted_style",
+      "reviewed": false
+    },
+    {
+      "id": "HAIR_PARTED_UPKEEP",
+      "topic": "hair_style",
+      "appliesTo": { "hairStyle": ["PARTED_STYLE"] },
+      "keywords": ["유지", "관리", "난이도", "오래", "시간", "주기", "얼마나"],
+      "text": "가르마는 펌을 하면 아침 손질이 5분 안팎으로 줄어 관리가 편한 편이에요. 펌은 보통 2~3개월, 커트는 5~6주 간격으로 다듬으면 라인이 유지돼요.",
+      "imageKey": "hair_parted_style",
+      "reviewed": false
+    },
+    {
+      "id": "HAIR_PARTED_PRODUCT",
+      "topic": "hair_style",
+      "appliesTo": { "hairStyle": ["PARTED_STYLE"] },
+      "keywords": ["제품", "왁스", "에센스", "스프레이", "뭐 발라", "뭘 발라"],
+      "text": "가르마 스타일에는 가벼운 텍스처 왁스나 에센스가 잘 맞고, 볼륨을 오래 유지하려면 스프레이로 가볍게 고정해요. 무거운 제품을 많이 쓰면 볼륨이 눌릴 수 있어 소량이 좋아요.",
+      "imageKey": "hair_parted_style",
+      "reviewed": false
+    },
+    {
+      "id": "HAIR_PARTED_SALON",
+      "topic": "hair_style",
+      "appliesTo": { "hairStyle": ["PARTED_STYLE"] },
+      "keywords": ["미용실", "주문", "요청", "뭐라고", "커트", "컷", "펌"],
+      "text": "미용실에서는 '가르마펌'이나 '가일컷', 부드러운 앞머리 흐름을 원하면 '리프컷'이라고 요청하면 돼요. 가르마 방향과 비율(예: 6:4)을 미리 정해 가면 결과가 더 정확해요.",
+      "imageKey": "hair_parted_style",
+      "reviewed": false
+    },
+    {
+      "id": "HAIR_DANDY_HOWTO",
+      "topic": "hair_style",
+      "appliesTo": { "hairStyle": ["DANDY_STYLE"] },
+      "keywords": ["연출", "어떻게", "하는 법", "방법", "드라이", "스타일링"],
+      "text": "댄디 스타일은 앞머리를 내린 채로 정수리부터 앞쪽으로 드라이해 뿌리 볼륨을 살짝 살리는 게 핵심이에요. 앞머리 끝은 롤빗이나 손으로 감싸며 말려 둥글게 안쪽으로 떨어지게 해 주세요.",
+      "imageKey": "hair_dandy_style",
+      "reviewed": false
+    },
+    {
+      "id": "HAIR_DANDY_UPKEEP",
+      "topic": "hair_style",
+      "appliesTo": { "hairStyle": ["DANDY_STYLE"] },
+      "keywords": ["유지", "관리", "난이도", "오래", "시간", "주기", "얼마나"],
+      "text": "댄디 스타일은 드라이만으로도 형태가 나와서 손질 난이도가 낮은 편이에요. 앞머리가 눈썹을 넘으면 답답해 보일 수 있어 4~5주마다 다듬는 걸 추천해요.",
+      "imageKey": "hair_dandy_style",
+      "reviewed": false
+    },
+    {
+      "id": "HAIR_DANDY_PRODUCT",
+      "topic": "hair_style",
+      "appliesTo": { "hairStyle": ["DANDY_STYLE"] },
+      "keywords": ["제품", "왁스", "에센스", "파우더", "뭐 발라", "뭘 발라"],
+      "text": "에센스나 소프트 왁스를 소량만 쓰면 내린 머리가 자연스럽게 정돈돼요. 볼륨이 쉽게 꺼진다면 뿌리 쪽에 볼륨 파우더를 살짝 더하는 방법도 있어요.",
+      "imageKey": "hair_dandy_style",
+      "reviewed": false
+    },
+    {
+      "id": "HAIR_DANDY_SALON",
+      "topic": "hair_style",
+      "appliesTo": { "hairStyle": ["DANDY_STYLE"] },
+      "keywords": ["미용실", "주문", "요청", "뭐라고", "커트", "컷", "펌"],
+      "text": "미용실에서는 '댄디컷'이라고 요청하고, 앞머리 길이를 눈썹 위로 할지 눈썹 라인으로 할지 말해 주면 돼요. 볼륨이 아쉬우면 '다운펌'이나 가벼운 '볼륨매직'을 함께 상담해 보세요.",
+      "imageKey": "hair_dandy_style",
+      "reviewed": false
+    },
+    {
+      "id": "HAIR_CROP_HOWTO",
+      "topic": "hair_style",
+      "appliesTo": { "hairStyle": ["CROP_STYLE"] },
+      "keywords": ["연출", "어떻게", "하는 법", "방법", "드라이", "스타일링"],
+      "text": "크롭 스타일은 짧은 앞머리를 손으로 앞쪽, 살짝 아래로 흐트러뜨리듯 말리면 자연스러운 질감이 살아나요. 매트 왁스를 손끝으로 집어 윗머리를 살짝 비틀어 주면 입체감이 생겨요.",
+      "imageKey": "hair_crop_style",
+      "reviewed": false
+    },
+    {
+      "id": "HAIR_CROP_UPKEEP",
+      "topic": "hair_style",
+      "appliesTo": { "hairStyle": ["CROP_STYLE"] },
+      "keywords": ["유지", "관리", "난이도", "오래", "시간", "주기", "얼마나"],
+      "text": "크롭 스타일은 길이가 짧아 아침 손질이 5분이면 충분할 만큼 간편해요. 대신 옆·뒷머리가 금방 자라 보이므로 3~4주마다 다듬어 주면 깔끔함이 유지돼요.",
+      "imageKey": "hair_crop_style",
+      "reviewed": false
+    },
+    {
+      "id": "HAIR_CROP_PRODUCT",
+      "topic": "hair_style",
+      "appliesTo": { "hairStyle": ["CROP_STYLE"] },
+      "keywords": ["제품", "왁스", "클레이", "뭐 발라", "뭘 발라"],
+      "text": "윤기 없는 매트 왁스나 클레이가 크롭 스타일의 거친 질감을 잘 살려 줘요. 소량을 손바닥에 충분히 비벼 녹인 뒤 윗머리 위주로 발라 주세요.",
+      "imageKey": "hair_crop_style",
+      "reviewed": false
+    },
+    {
+      "id": "HAIR_CROP_SALON",
+      "topic": "hair_style",
+      "appliesTo": { "hairStyle": ["CROP_STYLE"] },
+      "keywords": ["미용실", "주문", "요청", "뭐라고", "커트", "컷", "페이드"],
+      "text": "미용실에서는 '크롭컷'이라고 요청하고, 옆머리를 '페이드'로 자연스럽게 연결할지 '투블럭'으로 할지 정해 주면 돼요. 앞머리는 이마 위쪽에서 짧게 떨어지는 길이로 말하면 크롭 느낌이 살아나요.",
+      "imageKey": "hair_crop_style",
+      "reviewed": false
+    },
+    {
+      "id": "HAIR_SHADOW_HOWTO",
+      "topic": "hair_style",
+      "appliesTo": { "hairStyle": ["SHADOW_STYLE"] },
+      "keywords": ["연출", "어떻게", "하는 법", "방법", "드라이", "스타일링"],
+      "text": "쉐도우 스타일은 머리를 70% 정도 말린 뒤 컬 크림이나 에센스를 바르고, 손으로 컬을 쥐었다 놓듯이 말리면 웨이브가 살아나요. 앞머리는 이마 쪽으로 자연스럽게 내려 C컬 흐름이 보이게 정리해요.",
+      "imageKey": "hair_shadow_style",
+      "reviewed": false
+    },
+    {
+      "id": "HAIR_SHADOW_UPKEEP",
+      "topic": "hair_style",
+      "appliesTo": { "hairStyle": ["SHADOW_STYLE"] },
+      "keywords": ["유지", "관리", "난이도", "오래", "시간", "주기", "얼마나"],
+      "text": "쉐도우 스타일은 펌 덕분에 드라이만 잘해도 형태가 나와 손질이 쉬운 편이에요. 컬은 보통 2~3개월 유지되며, 펌이 풀리기 시작하면 커트로 길이를 다듬어 주세요.",
+      "imageKey": "hair_shadow_style",
+      "reviewed": false
+    },
+    {
+      "id": "HAIR_SHADOW_PRODUCT",
+      "topic": "hair_style",
+      "appliesTo": { "hairStyle": ["SHADOW_STYLE"] },
+      "keywords": ["제품", "컬 크림", "에센스", "왁스", "뭐 발라", "뭘 발라"],
+      "text": "컬 크림이나 가벼운 에센스가 웨이브를 촉촉하고 선명하게 유지해 줘요. 단단한 왁스는 컬을 뭉치게 할 수 있어 마무리에 아주 소량만 쓰는 게 좋아요.",
+      "imageKey": "hair_shadow_style",
+      "reviewed": false
+    },
+    {
+      "id": "HAIR_SHADOW_SALON",
+      "topic": "hair_style",
+      "appliesTo": { "hairStyle": ["SHADOW_STYLE"] },
+      "keywords": ["미용실", "주문", "요청", "뭐라고", "펌", "컷"],
+      "text": "미용실에서는 '쉐도우펌'이라고 요청하고 C컬·S컬 중 원하는 웨이브 강도를 말해 주면 돼요. 앞머리를 내리는 스타일이라 앞머리 길이는 눈썹 근처 이상으로 남겨 두는 게 좋아요.",
+      "imageKey": "hair_shadow_style",
+      "reviewed": false
+    },
+
+    {
+      "id": "FASHION_CASUAL_COMBO",
+      "topic": "fashion_style",
+      "appliesTo": { "fashionStyle": ["CASUAL"] },
+      "keywords": ["조합", "아이템", "코디", "뭐 입", "구성", "기본"],
+      "text": "캐주얼은 옥스퍼드 셔츠나 맨투맨에 치노 팬츠·데님 팬츠, 스니커즈를 기본으로 조합해요. 아우터는 후드집업이나 가벼운 재킷을 더하면 계절에 맞게 활용할 수 있어요.",
+      "imageKey": "fashion_casual",
+      "reviewed": false
+    },
+    {
+      "id": "FASHION_CASUAL_COLOR",
+      "topic": "fashion_style",
+      "appliesTo": { "fashionStyle": ["CASUAL"] },
+      "keywords": ["색", "컬러", "색깔", "톤", "색상"],
+      "text": "캐주얼은 화이트·그레이·네이비·베이지 같은 기본 컬러를 중심으로 맞추면 실패가 적어요. 포인트 컬러는 한 가지만 상의나 소품에 넣는 게 깔끔해요.",
+      "imageKey": "fashion_casual",
+      "reviewed": false
+    },
+    {
+      "id": "FASHION_CASUAL_POINT",
+      "topic": "fashion_style",
+      "appliesTo": { "fashionStyle": ["CASUAL"] },
+      "keywords": ["팁", "포인트", "연출", "어떻게", "잘 입", "핏"],
+      "text": "캐주얼은 핏이 단정할수록 성의 있어 보이므로 상의는 어깨선에 맞는 사이즈를 고르세요. 셔츠 단추를 하나 풀거나 소매를 한 번 접는 정도의 작은 디테일이 분위기를 살려 줘요.",
+      "imageKey": "fashion_casual",
+      "reviewed": false
+    },
+    {
+      "id": "FASHION_DANDY_COMBO",
+      "topic": "fashion_style",
+      "appliesTo": { "fashionStyle": ["DANDY"] },
+      "keywords": ["조합", "아이템", "코디", "뭐 입", "구성", "기본"],
+      "text": "댄디는 블레이저에 셔츠나 니트 폴로, 슬랙스를 입고 로퍼로 마무리하는 조합이 기본이에요. 격식을 낮추고 싶으면 블레이저 안에 반팔 티셔츠나 니트를 입어도 좋아요.",
+      "imageKey": "fashion_dandy",
+      "reviewed": false
+    },
+    {
+      "id": "FASHION_DANDY_COLOR",
+      "topic": "fashion_style",
+      "appliesTo": { "fashionStyle": ["DANDY"] },
+      "keywords": ["색", "컬러", "색깔", "톤", "색상"],
+      "text": "댄디는 네이비·차콜·베이지·브라운 계열이 차분한 무드를 잘 살려 줘요. 상하의 톤을 한 단계 차이 나게 맞추면 단정하면서도 입체적으로 보여요.",
+      "imageKey": "fashion_dandy",
+      "reviewed": false
+    },
+    {
+      "id": "FASHION_DANDY_POINT",
+      "topic": "fashion_style",
+      "appliesTo": { "fashionStyle": ["DANDY"] },
+      "keywords": ["팁", "포인트", "연출", "어떻게", "잘 입", "핏", "기장"],
+      "text": "댄디는 소재와 핏이 중요해서 슬랙스 기장은 신발 위에 살짝 닿는 정도가 깔끔해요. 벨트와 신발 색을 비슷하게 맞추면 전체가 정돈돼 보여요.",
+      "imageKey": "fashion_dandy",
+      "reviewed": false
+    },
+    {
+      "id": "FASHION_MINIMAL_COMBO",
+      "topic": "fashion_style",
+      "appliesTo": { "fashionStyle": ["MINIMAL"] },
+      "keywords": ["조합", "아이템", "코디", "뭐 입", "구성", "기본"],
+      "text": "미니멀은 무지 니트나 모노톤 티셔츠에 와이드 슬랙스, 더비 슈즈를 조합하는 게 기본이에요. 아우터는 장식 없는 싱글 코트나 블루종이 잘 어울려요.",
+      "imageKey": "fashion_minimal",
+      "reviewed": false
+    },
+    {
+      "id": "FASHION_MINIMAL_COLOR",
+      "topic": "fashion_style",
+      "appliesTo": { "fashionStyle": ["MINIMAL"] },
+      "keywords": ["색", "컬러", "색깔", "톤", "색상"],
+      "text": "미니멀은 블랙·화이트·그레이·네이비 같은 무채색과 뉴트럴 컬러 두세 가지 안에서 맞춰요. 로고나 패턴은 줄이고 소재감으로 변화를 주는 게 핵심이에요.",
+      "imageKey": "fashion_minimal",
+      "reviewed": false
+    },
+    {
+      "id": "FASHION_MINIMAL_POINT",
+      "topic": "fashion_style",
+      "appliesTo": { "fashionStyle": ["MINIMAL"] },
+      "keywords": ["팁", "포인트", "연출", "어떻게", "잘 입", "핏"],
+      "text": "미니멀은 단순한 만큼 핏과 기장이 깔끔해야 완성도가 높아져요. 구김 없이 관리된 옷과 깨끗한 신발이 전체 인상을 좌우해요.",
+      "imageKey": "fashion_minimal",
+      "reviewed": false
+    },
+    {
+      "id": "FASHION_CITY_BOY_COMBO",
+      "topic": "fashion_style",
+      "appliesTo": { "fashionStyle": ["CITY_BOY"] },
+      "keywords": ["조합", "아이템", "코디", "뭐 입", "구성", "기본"],
+      "text": "시티보이는 오버핏 셔츠에 와이드 치노 팬츠, 레트로 러닝화를 기본으로 조합해요. 볼캡과 토트백을 더하면 도시적이고 여유로운 무드가 완성돼요.",
+      "imageKey": "fashion_city_boy",
+      "reviewed": false
+    },
+    {
+      "id": "FASHION_CITY_BOY_COLOR",
+      "topic": "fashion_style",
+      "appliesTo": { "fashionStyle": ["CITY_BOY"] },
+      "keywords": ["색", "컬러", "색깔", "톤", "색상", "패턴"],
+      "text": "시티보이는 네이비·베이지·화이트에 스트라이프 같은 클래식 패턴을 섞으면 분위기가 잘 살아요. 밝은 컬러는 셔츠나 모자처럼 한 곳에만 쓰는 게 좋아요.",
+      "imageKey": "fashion_city_boy",
+      "reviewed": false
+    },
+    {
+      "id": "FASHION_CITY_BOY_POINT",
+      "topic": "fashion_style",
+      "appliesTo": { "fashionStyle": ["CITY_BOY"] },
+      "keywords": ["팁", "포인트", "연출", "어떻게", "잘 입", "핏", "레이어드"],
+      "text": "시티보이는 여유 있는 실루엣이 핵심이라 상의는 한 사이즈 크게, 바지는 통이 넓은 핏을 골라요. 셔츠 위에 니트 베스트를 겹치는 레이어드가 대표적인 연출이에요.",
+      "imageKey": "fashion_city_boy",
+      "reviewed": false
+    },
+    {
+      "id": "FASHION_AMEKAJI_COMBO",
+      "topic": "fashion_style",
+      "appliesTo": { "fashionStyle": ["AMEKAJI"] },
+      "keywords": ["조합", "아이템", "코디", "뭐 입", "구성", "기본"],
+      "text": "아메카지는 워크 재킷이나 데님 재킷에 플란넬 셔츠, 셀비지 데님을 입고 워커 부츠로 마무리해요. 니트 베스트나 비니를 더하면 클래식한 분위기가 짙어져요.",
+      "imageKey": "fashion_amekaji",
+      "reviewed": false
+    },
+    {
+      "id": "FASHION_AMEKAJI_COLOR",
+      "topic": "fashion_style",
+      "appliesTo": { "fashionStyle": ["AMEKAJI"] },
+      "keywords": ["색", "컬러", "색깔", "톤", "색상", "패턴"],
+      "text": "아메카지는 인디고 데님·카키·브라운·머스터드처럼 흙빛과 빈티지 톤이 잘 어울려요. 체크 패턴은 한 아이템에만 넣어야 정돈돼 보여요.",
+      "imageKey": "fashion_amekaji",
+      "reviewed": false
+    },
+    {
+      "id": "FASHION_AMEKAJI_POINT",
+      "topic": "fashion_style",
+      "appliesTo": { "fashionStyle": ["AMEKAJI"] },
+      "keywords": ["팁", "포인트", "연출", "어떻게", "잘 입", "롤업", "레이어드"],
+      "text": "아메카지는 탄탄한 소재감이 중요해서 데님은 밑단을 한두 번 롤업해 신발이 보이게 입어요. 셔츠, 베스트, 재킷 순으로 겹쳐 입으면 깊이감이 생겨요.",
+      "imageKey": "fashion_amekaji",
+      "reviewed": false
+    },
+    {
+      "id": "FASHION_STREET_COMBO",
+      "topic": "fashion_style",
+      "appliesTo": { "fashionStyle": ["STREET"] },
+      "keywords": ["조합", "아이템", "코디", "뭐 입", "구성", "기본"],
+      "text": "스트릿은 오버핏 후디나 그래픽 티셔츠에 카고 팬츠, 하이탑 스니커즈를 조합해요. 비니나 슬링백 같은 소품으로 포인트를 주면 완성도가 올라가요.",
+      "imageKey": "fashion_street",
+      "reviewed": false
+    },
+    {
+      "id": "FASHION_STREET_COLOR",
+      "topic": "fashion_style",
+      "appliesTo": { "fashionStyle": ["STREET"] },
+      "keywords": ["색", "컬러", "색깔", "톤", "색상", "그래픽"],
+      "text": "스트릿은 블랙·그레이를 바탕에 두고 그래픽이나 신발에 강한 컬러를 하나 넣는 방식이 잘 어울려요. 상하의 모두 그래픽이 들어가면 복잡해 보여 한쪽만 쓰는 게 좋아요.",
+      "imageKey": "fashion_street",
+      "reviewed": false
+    },
+    {
+      "id": "FASHION_STREET_POINT",
+      "topic": "fashion_style",
+      "appliesTo": { "fashionStyle": ["STREET"] },
+      "keywords": ["팁", "포인트", "연출", "어떻게", "잘 입", "핏", "기장"],
+      "text": "스트릿은 박시한 상의와 넓은 하의로 볼륨을 주고, 바지 끝단은 신발 위에 자연스럽게 쌓이게 입어요. 신발은 존재감 있는 스니커즈가 전체의 중심을 잡아 줘요.",
+      "imageKey": "fashion_street",
+      "reviewed": false
+    },
+    {
+      "id": "FASHION_SPORTY_COMBO",
+      "topic": "fashion_style",
+      "appliesTo": { "fashionStyle": ["SPORTY"] },
+      "keywords": ["조합", "아이템", "코디", "뭐 입", "구성", "기본"],
+      "text": "스포티는 트랙 재킷에 기능성 티셔츠, 조거 팬츠, 러닝화를 기본으로 조합해요. 볼캡이나 크로스백을 더하면 활동적인 무드가 살아나요.",
+      "imageKey": "fashion_sporty",
+      "reviewed": false
+    },
+    {
+      "id": "FASHION_SPORTY_COLOR",
+      "topic": "fashion_style",
+      "appliesTo": { "fashionStyle": ["SPORTY"] },
+      "keywords": ["색", "컬러", "색깔", "톤", "색상", "셋업"],
+      "text": "스포티는 블랙·네이비·화이트에 라인이나 로고 컬러 하나로 포인트를 주면 깔끔해요. 상하의를 같은 톤의 셋업으로 맞추면 정돈된 룩이 돼요.",
+      "imageKey": "fashion_sporty",
+      "reviewed": false
+    },
+    {
+      "id": "FASHION_SPORTY_POINT",
+      "topic": "fashion_style",
+      "appliesTo": { "fashionStyle": ["SPORTY"] },
+      "keywords": ["팁", "포인트", "연출", "어떻게", "잘 입", "일상"],
+      "text": "스포티는 운동복처럼만 보이지 않게 데님이나 셔츠 같은 일상복을 하나 섞는 게 포인트예요. 소재가 늘어나지 않은 깔끔한 상태를 유지하면 훨씬 세련돼 보여요.",
+      "imageKey": "fashion_sporty",
+      "reviewed": false
+    },
+    {
+      "id": "FASHION_GORPCORE_COMBO",
+      "topic": "fashion_style",
+      "appliesTo": { "fashionStyle": ["GORPCORE"] },
+      "keywords": ["조합", "아이템", "코디", "뭐 입", "구성", "기본"],
+      "text": "고프코어는 셸 재킷이나 플리스에 나일론 카고 팬츠, 트레일 러닝화를 조합해요. 크로스백이나 캠프캡을 더하면 아웃도어 무드가 자연스럽게 살아나요.",
+      "imageKey": "fashion_gorpcore",
+      "reviewed": false
+    },
+    {
+      "id": "FASHION_GORPCORE_COLOR",
+      "topic": "fashion_style",
+      "appliesTo": { "fashionStyle": ["GORPCORE"] },
+      "keywords": ["색", "컬러", "색깔", "톤", "색상"],
+      "text": "고프코어는 블랙·올리브·그레이 같은 차분한 톤에 오렌지나 블루 같은 아웃도어 컬러를 하나만 더하면 좋아요. 기능성 소재끼리는 광택 차이가 크지 않게 맞추면 정돈돼 보여요.",
+      "imageKey": "fashion_gorpcore",
+      "reviewed": false
+    },
+    {
+      "id": "FASHION_GORPCORE_POINT",
+      "topic": "fashion_style",
+      "appliesTo": { "fashionStyle": ["GORPCORE"] },
+      "keywords": ["팁", "포인트", "연출", "어떻게", "잘 입", "핏"],
+      "text": "고프코어는 아우터에 부피감이 있어서 하의는 테이퍼드나 스트레이트 핏으로 균형을 잡는 게 좋아요. 지퍼와 스트링을 정리해 입으면 실용적이면서도 깔끔해 보여요.",
+      "imageKey": "fashion_gorpcore",
+      "reviewed": false
+    },
+    {
+      "id": "FASHION_VINTAGE_COMBO",
+      "topic": "fashion_style",
+      "appliesTo": { "fashionStyle": ["VINTAGE"] },
+      "keywords": ["조합", "아이템", "코디", "뭐 입", "구성", "기본"],
+      "text": "빈티지는 코듀로이 재킷이나 레더 재킷에 레트로 스웨트셔츠, 워싱 데님을 입고 캔버스 스니커즈로 마무리해요. 체크 셔츠를 아우터처럼 걸쳐도 잘 어울려요.",
+      "imageKey": "fashion_vintage",
+      "reviewed": false
+    },
+    {
+      "id": "FASHION_VINTAGE_COLOR",
+      "topic": "fashion_style",
+      "appliesTo": { "fashionStyle": ["VINTAGE"] },
+      "keywords": ["색", "컬러", "색깔", "톤", "색상"],
+      "text": "빈티지는 브라운·버건디·머스터드·바랜 네이비처럼 따뜻하고 살짝 바랜 톤이 무드를 살려 줘요. 원색보다 채도를 낮춘 컬러끼리 맞추는 게 자연스러워요.",
+      "imageKey": "fashion_vintage",
+      "reviewed": false
+    },
+    {
+      "id": "FASHION_VINTAGE_POINT",
+      "topic": "fashion_style",
+      "appliesTo": { "fashionStyle": ["VINTAGE"] },
+      "keywords": ["팁", "포인트", "연출", "어떻게", "잘 입", "소재"],
+      "text": "빈티지는 코듀로이, 스웨이드, 워싱 데님처럼 질감 있는 소재를 한두 개 섞는 게 핵심이에요. 전부 오래된 느낌보다 깔끔한 기본 아이템을 하나 섞어야 세련돼 보여요.",
+      "imageKey": "fashion_vintage",
+      "reviewed": false
+    },
+
+    {
+      "id": "CARE_STRAIGHT_MORNING",
+      "topic": "hair_care",
+      "appliesTo": { "hairCurl": ["STRAIGHT"] },
+      "keywords": ["직모", "아침", "손질", "드라이", "볼륨", "가라앉"],
+      "text": "직모는 볼륨이 쉽게 가라앉아서, 드라이할 때 뿌리를 원하는 방향의 반대쪽으로 먼저 말린 뒤 다시 넘기면 볼륨이 오래가요. 마무리로 찬바람을 쐬어 주면 형태가 더 잘 고정돼요.",
+      "imageKey": null,
+      "reviewed": false
+    },
+    {
+      "id": "CARE_SEMI_CURLY_MORNING",
+      "topic": "hair_care",
+      "appliesTo": { "hairCurl": ["SEMI_CURLY"] },
+      "keywords": ["반곱슬", "아침", "손질", "드라이", "부스스"],
+      "text": "반곱슬은 머리를 감은 뒤 수건으로 물기를 꾹꾹 눌러 닦고, 결 방향대로 드라이하면 자연스러운 웨이브가 정돈돼요. 부스스한 부분은 에센스를 소량 발라 결을 눌러 주세요.",
+      "imageKey": null,
+      "reviewed": false
+    },
+    {
+      "id": "CARE_CURLY_MORNING",
+      "topic": "hair_care",
+      "appliesTo": { "hairCurl": ["CURLY"] },
+      "keywords": ["곱슬", "아침", "손질", "드라이", "부스스"],
+      "text": "곱슬 모발은 젖은 상태에서 컬 크림을 소량 바르고 손으로 쥐듯이 말리면 컬이 정돈돼요. 드라이기는 약한 바람으로 뿌리 쪽 위주로 말리고, 다 말린 뒤에는 손으로 자주 만지지 않는 게 컬 유지에 좋아요.",
+      "imageKey": null,
+      "reviewed": false
+    },
+    {
+      "id": "CARE_CURLY_STYLE",
+      "topic": "hair_care",
+      "appliesTo": { "hairCurl": ["CURLY"] },
+      "keywords": ["곱슬"],
+      "text": "곱슬 모발은 컬을 살리는 쉐도우 스타일이나 짧게 정리하는 크롭 스타일과 잘 어울려요. 매일 펴는 것보다 타고난 컬을 질감으로 살리는 쪽이 손질도 쉽고 멋스러워요.",
+      "imageKey": "hair_shadow_style",
+      "reviewed": false
+    },
+    {
+      "id": "CARE_THIN_HAIR",
+      "topic": "hair_care",
+      "appliesTo": { "hairThickness": ["THIN"] },
+      "keywords": ["가는 모발", "얇은 머리", "가는 머리", "힘없", "볼륨", "제품"],
+      "text": "가는 모발은 무거운 제품에 쉽게 눌리므로 가벼운 텍스처 왁스나 볼륨 파우더를 소량 쓰는 게 좋아요. 드라이할 때 뿌리를 세워 말리면 훨씬 풍성해 보여요.",
+      "imageKey": null,
+      "reviewed": false
+    },
+    {
+      "id": "CARE_MEDIUM_HAIR",
+      "topic": "hair_care",
+      "appliesTo": { "hairThickness": ["MEDIUM"] },
+      "keywords": ["모발", "제품", "왁스"],
+      "text": "보통 굵기 모발은 대부분의 스타일과 제품을 무난하게 소화해요. 원하는 느낌에 맞춰 자연스러움은 매트 왁스, 윤기 있는 단정함은 포마드를 골라 쓰면 돼요.",
+      "imageKey": null,
+      "reviewed": false
+    },
+    {
+      "id": "CARE_THICK_HAIR",
+      "topic": "hair_care",
+      "appliesTo": { "hairThickness": ["THICK"] },
+      "keywords": ["굵은 모발", "굵은 머리", "뜨는", "떠요", "뻗치", "부피"],
+      "text": "굵은 모발은 힘이 좋아 형태가 오래가지만, 드라이 없이 두면 뜨기 쉬워요. 젖은 상태에서 원하는 방향으로 충분히 말린 뒤 하드한 왁스로 고정하면 깔끔하게 유지돼요.",
+      "imageKey": null,
+      "reviewed": false
+    },
+    {
+      "id": "CARE_DENSITY_LOW",
+      "topic": "hair_care",
+      "appliesTo": { "hairDensity": ["LOW"] },
+      "keywords": ["숱", "볼륨", "풍성"],
+      "text": "뿌리 볼륨을 살리는 드라이와 가벼운 제품을 쓰면 실루엣이 풍성해 보여요. 앞머리를 자연스럽게 내리는 댄디·쉐도우 스타일은 모발이 고르게 덮여 안정감 있는 인상을 줘요.",
+      "imageKey": null,
+      "reviewed": false
+    },
+    {
+      "id": "CARE_DENSITY_HIGH",
+      "topic": "hair_care",
+      "appliesTo": { "hairDensity": ["HIGH"] },
+      "keywords": ["숱이 많", "숱 많", "무거", "부피", "숱치기"],
+      "text": "숱이 풍성하면 볼륨이 쉽게 살아서 넘긴 머리나 가르마 스타일이 잘 어울려요. 부피가 커 보일 때는 미용실에서 숱을 가볍게 쳐 달라고 하면 손질이 편해져요.",
+      "imageKey": null,
+      "reviewed": false
+    },
+    {
+      "id": "CARE_DRY_BASIC",
+      "topic": "hair_care",
+      "appliesTo": {},
+      "keywords": ["드라이", "말리", "드라이기", "말리는 법"],
+      "text": "드라이는 뿌리부터 먼저 말리고 끝은 나중에 말려야 볼륨과 방향이 잘 잡혀요. 드라이기는 머리에서 15~20cm 정도 떨어뜨리고, 마지막에 찬바람으로 마무리하면 형태가 오래가요.",
+      "imageKey": null,
+      "reviewed": false
+    },
+    {
+      "id": "CARE_PRODUCT_GUIDE",
+      "topic": "hair_care",
+      "appliesTo": {},
+      "keywords": ["왁스", "포마드", "클레이", "컬 크림", "제품"],
+      "text": "자연스러운 무광 질감은 매트 왁스·클레이, 윤기 있는 단정함은 포마드, 웨이브 유지는 컬 크림이 잘 맞아요. 어떤 제품이든 손바닥에 충분히 펴 바른 뒤 모발 중간부터 바르면 뭉치지 않아요.",
+      "imageKey": null,
+      "reviewed": false
+    },
+
+    {
+      "id": "ACC_DIAMOND_GLASSES",
+      "topic": "accessory",
+      "appliesTo": { "faceShape": ["diamond"] },
+      "keywords": ["안경", "안경테", "선글라스"],
+      "text": "광대 라인이 또렷한 다이아몬드형에는 윗선이 살짝 강조된 오벌이나 브로우 라인 안경테가 잘 어울려요. 테의 가로 폭이 광대 폭과 비슷하면 균형이 좋아요.",
+      "imageKey": null,
+      "reviewed": false
+    },
+    {
+      "id": "ACC_DIAMOND_HAT",
+      "topic": "accessory",
+      "appliesTo": { "faceShape": ["diamond"] },
+      "keywords": ["모자", "볼캡", "비니", "버킷햇", "캡"],
+      "text": "다이아몬드형은 볼캡이나 버킷햇이 이마와 관자놀이 쪽에 폭을 더해 균형을 맞춰 줘요. 정수리가 뾰족하게 높은 모자보다 둥근 형태가 자연스러워요.",
+      "imageKey": null,
+      "reviewed": false
+    },
+    {
+      "id": "ACC_HEART_GLASSES",
+      "topic": "accessory",
+      "appliesTo": { "faceShape": ["heart"] },
+      "keywords": ["안경", "안경테", "선글라스"],
+      "text": "하트형 얼굴에는 아랫부분이 둥근 라운드나 웰링턴 안경테가 시원한 이마 라인과 균형을 맞춰 줘요. 테 아래쪽에 무게감이 있는 디자인이 특히 잘 어울려요.",
+      "imageKey": null,
+      "reviewed": false
+    },
+    {
+      "id": "ACC_HEART_HAT",
+      "topic": "accessory",
+      "appliesTo": { "faceShape": ["heart"] },
+      "keywords": ["모자", "볼캡", "비니", "버킷햇", "캡"],
+      "text": "하트형은 비니나 챙이 짧은 볼캡이 이마 라인을 차분하게 정돈해 줘요. 챙이 너무 넓은 모자보다 적당한 크기가 갸름한 턱선과 잘 어울려요.",
+      "imageKey": null,
+      "reviewed": false
+    },
+    {
+      "id": "ACC_OVAL_GLASSES",
+      "topic": "accessory",
+      "appliesTo": { "faceShape": ["oval"] },
+      "keywords": ["안경", "안경테", "선글라스"],
+      "text": "계란형은 대부분의 안경테를 잘 소화해서 스퀘어나 보스턴 테로 분위기를 바꿔 보기 좋아요. 얼굴 폭과 비슷한 가로 길이의 테를 고르면 가장 자연스러워요.",
+      "imageKey": null,
+      "reviewed": false
+    },
+    {
+      "id": "ACC_OVAL_HAT",
+      "topic": "accessory",
+      "appliesTo": { "faceShape": ["oval"] },
+      "keywords": ["모자", "볼캡", "비니", "버킷햇", "캡"],
+      "text": "계란형은 볼캡, 비니, 버킷햇 등 대부분의 모자를 잘 소화해요. 옷 무드에 맞춰 캐주얼엔 볼캡, 미니멀엔 무지 비니처럼 고르면 돼요.",
+      "imageKey": null,
+      "reviewed": false
+    },
+    {
+      "id": "ACC_RECTANGLE_GLASSES",
+      "topic": "accessory",
+      "appliesTo": { "faceShape": ["rectangle"] },
+      "keywords": ["안경", "안경테", "선글라스"],
+      "text": "직사각형 얼굴에는 세로 폭이 넉넉한 라운드·보스턴 테가 또렷한 턱선을 부드럽게 이어 줘요. 테가 얇고 곡선이 있는 디자인이 세련된 인상을 줘요.",
+      "imageKey": null,
+      "reviewed": false
+    },
+    {
+      "id": "ACC_RECTANGLE_HAT",
+      "topic": "accessory",
+      "appliesTo": { "faceShape": ["rectangle"] },
+      "keywords": ["모자", "볼캡", "비니", "버킷햇", "캡"],
+      "text": "직사각형 얼굴은 볼캡이나 버킷햇을 살짝 눌러 쓰면 세로 비율이 안정적으로 보여요. 높이가 높은 모자보다 정수리가 낮은 형태가 잘 어울려요.",
+      "imageKey": null,
+      "reviewed": false
+    },
+    {
+      "id": "ACC_ROUND_GLASSES",
+      "topic": "accessory",
+      "appliesTo": { "faceShape": ["round"] },
+      "keywords": ["안경", "안경테", "선글라스"],
+      "text": "둥근형 얼굴에는 직선이 살아 있는 스퀘어·웰링턴 테가 산뜻한 인상을 더해 줘요. 테 위쪽 라인이 또렷한 디자인이 시원한 세로 흐름을 만들어 줘요.",
+      "imageKey": null,
+      "reviewed": false
+    },
+    {
+      "id": "ACC_ROUND_HAT",
+      "topic": "accessory",
+      "appliesTo": { "faceShape": ["round"] },
+      "keywords": ["모자", "볼캡", "비니", "버킷햇", "캡"],
+      "text": "둥근형은 정수리에 높이가 있는 볼캡이나 비니를 살짝 뒤로 쓰면 세로 라인이 살아나요. 이마를 조금 드러내도록 쓰면 더 산뜻해 보여요.",
+      "imageKey": null,
+      "reviewed": false
+    },
+    {
+      "id": "ACC_LONG_GLASSES",
+      "topic": "accessory",
+      "appliesTo": { "faceShape": ["long"] },
+      "keywords": ["안경", "안경테", "선글라스"],
+      "text": "긴형 얼굴에는 가로 폭이 넉넉하고 테가 도톰한 디자인이 세로 비율을 안정적으로 정돈해 줘요. 세로 높이가 있는 테도 얼굴 비율과 잘 어울려요.",
+      "imageKey": null,
+      "reviewed": false
+    },
+    {
+      "id": "ACC_LONG_HAT",
+      "topic": "accessory",
+      "appliesTo": { "faceShape": ["long"] },
+      "keywords": ["모자", "볼캡", "비니", "버킷햇", "캡"],
+      "text": "긴형은 이마를 살짝 덮는 비니나 버킷햇, 챙이 있는 볼캡을 눌러 쓰면 세로 비율이 부드럽게 정리돼요. 정수리가 높은 모자보다 납작한 형태가 잘 어울려요.",
+      "imageKey": null,
+      "reviewed": false
+    },
+
+    {
+      "id": "FIT_STANDARD_TOP",
+      "topic": "body_fit",
+      "appliesTo": { "bodyType": ["standard"] },
+      "keywords": ["상의", "셔츠", "티셔츠", "니트", "핏", "사이즈"],
+      "text": "표준유형은 어깨선이 맞는 레귤러 핏 상의가 가장 깔끔하고, 세미 오버핏도 무리 없이 소화해요. 셔츠는 어깨 봉제선이 어깨 끝에 오는 사이즈를 고르세요.",
+      "imageKey": null,
+      "reviewed": false
+    },
+    {
+      "id": "FIT_STANDARD_BOTTOM",
+      "topic": "body_fit",
+      "appliesTo": { "bodyType": ["standard"] },
+      "keywords": ["바지", "하의", "팬츠", "청바지", "슬랙스", "기장"],
+      "text": "표준유형은 스트레이트나 테이퍼드 핏 하의가 기본이고, 와이드 팬츠도 상의를 단정하게 맞추면 잘 어울려요. 기장은 신발 위에 살짝 닿는 정도가 깔끔해요.",
+      "imageKey": null,
+      "reviewed": false
+    },
+    {
+      "id": "FIT_STANDARD_OUTER",
+      "topic": "body_fit",
+      "appliesTo": { "bodyType": ["standard"] },
+      "keywords": ["아우터", "재킷", "자켓", "코트", "패딩", "점퍼"],
+      "text": "표준유형은 엉덩이를 살짝 덮는 재킷이나 블루종, 무릎 위 기장의 코트 모두 잘 맞아요. 비율이 고른 체형이라 원하는 스타일에 맞춰 자유롭게 골라도 돼요.",
+      "imageKey": null,
+      "reviewed": false
+    },
+    {
+      "id": "FIT_SMALL_INV_TRIANGLE_TOP",
+      "topic": "body_fit",
+      "appliesTo": { "bodyType": ["small_inv_triangle"] },
+      "keywords": ["상의", "셔츠", "티셔츠", "니트", "핏", "사이즈"],
+      "text": "작은 역삼각형은 어깨선에 맞는 슬림·레귤러 핏 상의가 V라인 실루엣을 잘 살려 줘요. 니트나 셔츠를 바지에 살짝 넣어 입으면 슬림한 허리 라인이 돋보여요.",
+      "imageKey": null,
+      "reviewed": false
+    },
+    {
+      "id": "FIT_SMALL_INV_TRIANGLE_BOTTOM",
+      "topic": "body_fit",
+      "appliesTo": { "bodyType": ["small_inv_triangle"] },
+      "keywords": ["바지", "하의", "팬츠", "청바지", "슬랙스", "기장"],
+      "text": "작은 역삼각형은 스트레이트나 테이퍼드 핏 하의가 상체와 균형을 맞춰 줘요. 슬랙스나 조거 팬츠처럼 깔끔한 라인의 바지가 특히 잘 어울려요.",
+      "imageKey": null,
+      "reviewed": false
+    },
+    {
+      "id": "FIT_SMALL_INV_TRIANGLE_OUTER",
+      "topic": "body_fit",
+      "appliesTo": { "bodyType": ["small_inv_triangle"] },
+      "keywords": ["아우터", "재킷", "자켓", "코트", "패딩", "점퍼"],
+      "text": "작은 역삼각형은 허리 근처에서 끝나는 짧은 재킷이나 테일러드 블레이저가 어깨선을 또렷하게 살려 줘요. 부피가 큰 패딩보다 구조감 있는 아우터가 프레임에 잘 맞아요.",
+      "imageKey": null,
+      "reviewed": false
+    },
+    {
+      "id": "FIT_LARGE_RECTANGLE_TOP",
+      "topic": "body_fit",
+      "appliesTo": { "bodyType": ["large_rectangle"] },
+      "keywords": ["상의", "셔츠", "티셔츠", "니트", "핏", "사이즈"],
+      "text": "큰 사각 체형은 몸에 붙는 핏보다 레귤러~세미 오버핏 상의가 듬직한 프레임을 편안하게 정돈해 줘요. 두께감 있는 소재가 실루엣을 안정적으로 잡아 줘요.",
+      "imageKey": null,
+      "reviewed": false
+    },
+    {
+      "id": "FIT_LARGE_RECTANGLE_BOTTOM",
+      "topic": "body_fit",
+      "appliesTo": { "bodyType": ["large_rectangle"] },
+      "keywords": ["바지", "하의", "팬츠", "청바지", "슬랙스", "기장"],
+      "text": "큰 사각 체형은 스트레이트나 와이드 핏 하의가 상체와 균형을 이뤄요. 데님이나 워크 팬츠처럼 탄탄한 소재가 특히 잘 어울려요.",
+      "imageKey": null,
+      "reviewed": false
+    },
+    {
+      "id": "FIT_LARGE_RECTANGLE_OUTER",
+      "topic": "body_fit",
+      "appliesTo": { "bodyType": ["large_rectangle"] },
+      "keywords": ["아우터", "재킷", "자켓", "코트", "패딩", "점퍼"],
+      "text": "큰 사각 체형은 워크 재킷이나 셸 재킷처럼 직선 실루엣의 아우터가 당당한 체격과 잘 어울려요. 엉덩이를 덮는 기장이 전체 비율을 안정적으로 이어 줘요.",
+      "imageKey": null,
+      "reviewed": false
+    },
+    {
+      "id": "FIT_RECTANGLE_TOP",
+      "topic": "body_fit",
+      "appliesTo": { "bodyType": ["rectangle"] },
+      "keywords": ["상의", "셔츠", "티셔츠", "니트", "핏", "사이즈", "레이어드"],
+      "text": "사각 체형은 곧은 상체 라인에 레이어드를 더하면 자연스러운 입체감이 생겨요. 셔츠 위에 니트 베스트를 겹치거나 오버핏 셔츠를 활용해 보세요.",
+      "imageKey": null,
+      "reviewed": false
+    },
+    {
+      "id": "FIT_RECTANGLE_BOTTOM",
+      "topic": "body_fit",
+      "appliesTo": { "bodyType": ["rectangle"] },
+      "keywords": ["바지", "하의", "팬츠", "청바지", "슬랙스", "기장"],
+      "text": "사각 체형은 와이드나 스트레이트 핏 하의가 박시한 상의와 균형을 맞춰 줘요. 코듀로이나 워싱 데님처럼 질감 있는 소재가 곧은 라인에 따뜻한 포인트를 줘요.",
+      "imageKey": null,
+      "reviewed": false
+    },
+    {
+      "id": "FIT_RECTANGLE_OUTER",
+      "topic": "body_fit",
+      "appliesTo": { "bodyType": ["rectangle"] },
+      "keywords": ["아우터", "재킷", "자켓", "코트", "패딩", "점퍼"],
+      "text": "사각 체형은 코치 재킷이나 블루종처럼 가볍게 걸치는 아우터로 레이어드를 완성하면 좋아요. 셔츠, 베스트, 재킷처럼 층을 쌓으면 깊이감 있는 실루엣이 돼요.",
+      "imageKey": null,
+      "reviewed": false
+    },
+
+    {
+      "id": "OCC_WORK",
+      "topic": "occasion",
+      "appliesTo": { "occasion": ["WORK"] },
+      "keywords": ["출근", "회사", "오피스", "직장", "출근룩"],
+      "text": "출근룩은 셔츠나 니트에 슬랙스, 로퍼를 기본으로 하면 단정하면서도 편안해요. 회사 분위기가 자유롭다면 블레이저 안에 무지 티셔츠를 입는 정도로 격식을 조절해 보세요.",
+      "imageKey": "fashion_dandy",
+      "reviewed": false
+    },
+    {
+      "id": "OCC_INTERVIEW",
+      "topic": "occasion",
+      "appliesTo": { "occasion": ["INTERVIEW"] },
+      "keywords": ["면접", "인터뷰", "취업"],
+      "text": "면접에는 네이비나 차콜 수트, 또는 블레이저에 슬랙스를 맞춰 입고 흰색·하늘색 셔츠를 고르면 신뢰감 있는 인상을 줘요. 구두는 깨끗하게 관리된 더비나 로퍼가 좋아요. 업계 분위기가 캐주얼하다면 넥타이 없이 셔츠와 니트 정도로도 충분해요.",
+      "imageKey": "fashion_dandy",
+      "reviewed": false
+    },
+    {
+      "id": "OCC_DATE",
+      "topic": "occasion",
+      "appliesTo": { "occasion": ["DATE"] },
+      "keywords": ["소개팅", "데이트", "첫만남"],
+      "text": "소개팅이나 데이트에는 셔츠나 니트에 슬랙스나 깔끔한 데님을 조합한 단정한 캐주얼이 호감을 주기 좋아요. 화이트·베이지처럼 밝은 톤을 한 가지 넣으면 인상이 부드러워 보여요.",
+      "imageKey": "fashion_casual",
+      "reviewed": false
+    },
+    {
+      "id": "OCC_WEDDING",
+      "topic": "occasion",
+      "appliesTo": { "occasion": ["WEDDING"] },
+      "keywords": ["하객", "결혼식", "예식장"],
+      "text": "결혼식 하객룩은 네이비·그레이·베이지 계열의 셋업이나 블레이저에 슬랙스가 무난해요. 신랑 의상과 겹치지 않도록 화이트 정장은 피하는 게 예의예요.",
+      "imageKey": "fashion_dandy",
+      "reviewed": false
+    },
+    {
+      "id": "OCC_TRAVEL",
+      "topic": "occasion",
+      "appliesTo": { "occasion": ["TRAVEL"] },
+      "keywords": ["여행", "휴가", "놀러"],
+      "text": "여행에는 오래 걸어도 편한 스니커즈나 러닝화에 신축성 있는 팬츠, 가볍게 걸칠 아우터를 챙기는 게 좋아요. 사진을 많이 찍는다면 단색 상의에 컬러 포인트 하나를 더하면 깔끔하게 나와요.",
+      "imageKey": "fashion_city_boy",
+      "reviewed": false
+    }
+  ]
+}

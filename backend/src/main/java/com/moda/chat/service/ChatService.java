@@ -7,6 +7,7 @@ import com.moda.chat.client.ChatClient.ChatReply;
 import com.moda.chat.client.ChatClient.ChatTurn;
 import com.moda.chat.domain.ChatMessage;
 import com.moda.chat.dto.ChatDtos.ChatHistoryData;
+import com.moda.chat.dto.ChatDtos.ChatImage;
 import com.moda.chat.dto.ChatDtos.ChatMessageDto;
 import com.moda.chat.dto.ChatDtos.ChatSendData;
 import com.moda.chat.model.ChatContext;
@@ -23,6 +24,7 @@ import java.time.Instant;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.locks.ReentrantLock;
 import org.springframework.stereotype.Service;
@@ -47,6 +49,10 @@ public class ChatService {
     private final ChatPromptBuilder promptBuilder;
     private final ChatTemplates templates;
     private final ChatReplySanitizer sanitizer;
+    private final ChatImagePicker imagePicker;
+    private final StyleFactsService styleFacts;
+    private final ChatScopeGuard scopeGuard;
+    private final ChatKnowledgeService knowledge;
     private final ChatClient chatClient;
     private final ChatSessionLocks locks;
     private final Clock clock;
@@ -55,14 +61,20 @@ public class ChatService {
     private final TransactionTemplate readOnlyTx;
 
     public ChatService(ChatMessageRepository repository, GuestSessionService sessionService, ChatContextAssembler contextAssembler,
-                       ChatPromptBuilder promptBuilder, ChatTemplates templates, ChatReplySanitizer sanitizer, ChatClient chatClient,
-                       ChatSessionLocks locks, Clock clock, ModaProperties properties, PlatformTransactionManager transactionManager) {
+                       ChatPromptBuilder promptBuilder, ChatTemplates templates, ChatReplySanitizer sanitizer, ChatImagePicker imagePicker,
+                       StyleFactsService styleFacts, ChatScopeGuard scopeGuard, ChatKnowledgeService knowledge,
+                       ChatClient chatClient, ChatSessionLocks locks, Clock clock, ModaProperties properties,
+                       PlatformTransactionManager transactionManager) {
         this.repository = repository;
         this.sessionService = sessionService;
         this.contextAssembler = contextAssembler;
         this.promptBuilder = promptBuilder;
         this.templates = templates;
         this.sanitizer = sanitizer;
+        this.imagePicker = imagePicker;
+        this.styleFacts = styleFacts;
+        this.scopeGuard = scopeGuard;
+        this.knowledge = knowledge;
         this.chatClient = chatClient;
         this.locks = locks;
         this.clock = clock;
@@ -84,7 +96,8 @@ public class ChatService {
             List<String> prompts = remaining <= 0 ? List.of()
                     : history.isEmpty() ? templates.initialPrompts(ctx)
                     : templates.followUpPrompts(ctx, lastUserMessage(history), userMessages(history));
-            return new ChatHistoryData(sessionId, templates.welcome(ctx), history.stream().map(ChatService::toDto).toList(),
+            Map<String, String> labels = imagePicker.labels();
+            return new ChatHistoryData(sessionId, templates.welcome(ctx), history.stream().map(m -> toDto(m, labels)).toList(),
                     prompts, remaining, maxTurns, KstTime.toOffset(session.getExpiresAt()));
         });
     }
@@ -96,32 +109,58 @@ public class ChatService {
         ReentrantLock lock = locks.forSession(sessionId);
         lock.lock();
         try {
-            Prepared prepared = readOnlyTx.execute(status -> prepare(sessionId));
+            Prepared prepared = readOnlyTx.execute(status -> prepare(sessionId, message));
             Instant userAt = now();
-            ChatReply reply = chatClient.complete(new ChatCompletionCommand(prepared.systemPrompt(), prepared.history(), message,
-                    prepared.context(), options));                                   // 실패 시 예외 → 저장·턴 차감·TTL 연장 없음
-            String content = sanitizer.sanitize(reply.content(), prepared.context());
-            return tx.execute(status -> persist(sessionId, message, content, userAt, prepared.context()));
+            boolean fixed = prepared.fixedReply() != null;                       // 인사·범위 밖·지식 자료 질문은 LLM 없이 바로 답
+            String content = fixed ? prepared.fixedReply() : sanitizer.sanitize(chatClient.complete(new ChatCompletionCommand(
+                    prepared.systemPrompt(), prepared.history(), message, prepared.context(), options)).content(),
+                    prepared.context());                                           // 실패 시 예외 → 저장·턴 차감·TTL 연장 없음
+            List<String> imageKeys = fixed ? prepared.fixedImageKeys() : imagePicker.pick(message, content, prepared.context());
+            return tx.execute(status -> persist(sessionId, message, content, imageKeys, userAt, prepared.context()));
         } finally {
             lock.unlock();
         }
     }
 
-    private record Prepared(ChatContext context, String systemPrompt, List<ChatTurn> history) {
+    private record Prepared(ChatContext context, String systemPrompt, List<ChatTurn> history, String fixedReply,
+                            List<String> fixedImageKeys) {
     }
 
-    /** 검증·턴 한도 확인 후, DB 최신 값으로 컨텍스트·시스템 프롬프트·이전 대화를 준비합니다. */
-    private Prepared prepare(String sessionId) {
+    /**
+     * 검증·턴 한도 확인 후 답변 경로를 정합니다. 근거가 있는 질문은 LLM 없이 바로 답합니다 (작은 모델이 사실을 지어내지 않도록).
+     * <ol>
+     *   <li>인사·범위 밖 → 고정 문구</li>
+     *   <li>지식 자료 항목 매칭 → 자료 문장 (+ 특정 스타일이면 본인 판정)</li>
+     *   <li>특정 스타일 판정 질문 → style-rules 규칙 문장</li>
+     *   <li>그 외 → LLM (DB 최신 값으로 만든 시스템 프롬프트 + 이전 대화)</li>
+     * </ol>
+     */
+    private Prepared prepare(String sessionId, String message) {
         GuestSession session = requireChatReady(sessionId);
         List<ChatMessage> history = repository.findHistory(sessionId);
         requireTurnAvailable(usedTurns(history));
         ChatContext ctx = contextAssembler.build(session);
         List<ChatTurn> turns = history.stream().map(m -> new ChatTurn(m.getRole(), m.getContent())).toList();
-        return new Prepared(ctx, promptBuilder.build(ctx), turns);
+        String prompt = promptBuilder.build(ctx);
+        StyleFactsService.StyleFacts facts = styleFacts.find(message, ctx).orElse(null);
+        List<ChatKnowledgeService.KnowledgeEntry> found = knowledge.find(message, ctx);
+        Optional<String> guard = scopeGuard.shortReply(message, ctx, facts != null || !found.isEmpty());
+        if (guard.isPresent()) {
+            return new Prepared(ctx, prompt, turns, guard.get(), List.of());
+        }
+        if (!found.isEmpty()) {
+            return new Prepared(ctx, prompt, turns, ChatKnowledgeService.answer(found, facts, ctx), ChatKnowledgeService.imageKeys(found));
+        }
+        if (facts != null) {
+            String answer = StyleFactsService.answer(facts);
+            return new Prepared(ctx, prompt, turns, answer, imagePicker.pick(message, answer, ctx));
+        }
+        return new Prepared(ctx, prompt, turns, null, null);
     }
 
     /** LLM 성공 후에만 호출: 세션 재확인(호출 중 삭제·만료 대비) → 턴 재확인 → USER·ASSISTANT 저장 → TTL 연장. */
-    private ChatSendData persist(String sessionId, String message, String reply, Instant userAt, ChatContext ctx) {
+    private ChatSendData persist(String sessionId, String message, String reply, List<String> imageKeys, Instant userAt,
+                                 ChatContext ctx) {
         GuestSession session = sessionService.requireActive(sessionId);
         int used = (int) repository.countByRole(sessionId, ChatRole.ASSISTANT);
         requireTurnAvailable(used);
@@ -129,7 +168,7 @@ public class ChatService {
         int seq = used * 2;
         ChatMessage user = new ChatMessage(UUID.randomUUID().toString(), session, seq + 1, ChatRole.USER, message, userAt);
         ChatMessage assistant = new ChatMessage(UUID.randomUUID().toString(), session, seq + 2, ChatRole.ASSISTANT,
-                truncate(reply), now);
+                truncate(reply), now, imageKeys);
         repository.save(user);
         repository.save(assistant);
         sessionService.extendExpiry(session, now);
@@ -137,7 +176,8 @@ public class ChatService {
         int remaining = maxTurns - (used + 1);
         List<String> prompts = remaining <= 0 ? List.of()
                 : templates.followUpPrompts(ctx, message, userMessages(repository.findHistory(sessionId)));
-        return new ChatSendData(sessionId, toDto(user), toDto(assistant), prompts, remaining, maxTurns,
+        Map<String, String> labels = imagePicker.labels();
+        return new ChatSendData(sessionId, toDto(user, labels), toDto(assistant, labels), prompts, remaining, maxTurns,
                 KstTime.toOffset(session.getExpiresAt()));
     }
 
@@ -185,8 +225,12 @@ public class ChatService {
         return content.length() <= ChatMessage.MAX_CONTENT_LENGTH ? content : content.substring(0, ChatMessage.MAX_CONTENT_LENGTH);
     }
 
-    private static ChatMessageDto toDto(ChatMessage m) {
-        return new ChatMessageDto(m.getMessageId(), m.getRole(), m.getContent(), KstTime.toOffset(m.getCreatedAt()));
+    private static ChatMessageDto toDto(ChatMessage m, Map<String, String> labels) {
+        List<ChatImage> images = m.getImageKeys().stream()
+                .filter(labels::containsKey)                                         // 카탈로그에서 빠진 키는 숨김
+                .map(k -> new ChatImage(k, labels.get(k)))
+                .toList();
+        return new ChatMessageDto(m.getMessageId(), m.getRole(), m.getContent(), images, KstTime.toOffset(m.getCreatedAt()));
     }
 
     private Instant now() {

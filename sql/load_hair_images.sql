@@ -1,0 +1,27 @@
+/*!40101 SET NAMES utf8mb4 */;
+BEGIN; -- MySQL·H2 공통 (H2는 START TRANSACTION 미지원)
+DELETE FROM hair_style_images WHERE hair_style_code = 'CROP_CUT';
+INSERT INTO hair_style_images (hair_style_code, image_path, view_angle, is_primary, sort_order) VALUES ('CROP_CUT', 'CROP_CUT/01.png', NULL, TRUE, 1);
+DELETE FROM hair_style_images WHERE hair_style_code = 'DANDY_CUT';
+INSERT INTO hair_style_images (hair_style_code, image_path, view_angle, is_primary, sort_order) VALUES ('DANDY_CUT', 'DANDY_CUT/01.png', NULL, TRUE, 1);
+DELETE FROM hair_style_images WHERE hair_style_code = 'DROP_CUT';
+INSERT INTO hair_style_images (hair_style_code, image_path, view_angle, is_primary, sort_order) VALUES ('DROP_CUT', 'DROP_CUT/01.png', NULL, TRUE, 1);
+DELETE FROM hair_style_images WHERE hair_style_code = 'GUILE_CUT';
+INSERT INTO hair_style_images (hair_style_code, image_path, view_angle, is_primary, sort_order) VALUES ('GUILE_CUT', 'GUILE_CUT/01.png', NULL, TRUE, 1);
+DELETE FROM hair_style_images WHERE hair_style_code = 'HIPPIE_PERM';
+INSERT INTO hair_style_images (hair_style_code, image_path, view_angle, is_primary, sort_order) VALUES ('HIPPIE_PERM', 'HIPPIE_PERM/01.png', NULL, TRUE, 1);
+DELETE FROM hair_style_images WHERE hair_style_code = 'LEAF_CUT';
+INSERT INTO hair_style_images (hair_style_code, image_path, view_angle, is_primary, sort_order) VALUES ('LEAF_CUT', 'LEAF_CUT/01.png', NULL, TRUE, 1);
+DELETE FROM hair_style_images WHERE hair_style_code = 'PARTED_PERM';
+INSERT INTO hair_style_images (hair_style_code, image_path, view_angle, is_primary, sort_order) VALUES ('PARTED_PERM', 'PARTED_PERM/01.png', NULL, TRUE, 1);
+DELETE FROM hair_style_images WHERE hair_style_code = 'POMADE';
+INSERT INTO hair_style_images (hair_style_code, image_path, view_angle, is_primary, sort_order) VALUES ('POMADE', 'POMADE/01.png', NULL, TRUE, 1);
+DELETE FROM hair_style_images WHERE hair_style_code = 'REGENT_CUT';
+INSERT INTO hair_style_images (hair_style_code, image_path, view_angle, is_primary, sort_order) VALUES ('REGENT_CUT', 'REGENT_CUT/01.png', NULL, TRUE, 1);
+DELETE FROM hair_style_images WHERE hair_style_code = 'SHADOW_PERM';
+INSERT INTO hair_style_images (hair_style_code, image_path, view_angle, is_primary, sort_order) VALUES ('SHADOW_PERM', 'SHADOW_PERM/01.png', NULL, TRUE, 1);
+DELETE FROM hair_style_images WHERE hair_style_code = 'SLICK_BACK';
+INSERT INTO hair_style_images (hair_style_code, image_path, view_angle, is_primary, sort_order) VALUES ('SLICK_BACK', 'SLICK_BACK/01.png', NULL, TRUE, 1);
+DELETE FROM hair_style_images WHERE hair_style_code = 'WAVE_PERM';
+INSERT INTO hair_style_images (hair_style_code, image_path, view_angle, is_primary, sort_order) VALUES ('WAVE_PERM', 'WAVE_PERM/01.png', NULL, TRUE, 1);
+COMMIT;
