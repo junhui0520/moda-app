@@ -53,30 +53,29 @@ public class StyleImageController {
     public record ItemImage(String label, String url) {
     }
 
-    @Operation(summary = "스타일 이미지 경로", description = "imageKey → {url, items[]}. 이미지가 없는 스타일은 키가 없음 (앱은 텍스트로 대체)")
+    @Operation(summary = "스타일 이미지 경로", description = "imageKey → [{url, items[]}, ...] (스타일당 여러 장, 앱이 랜덤으로 고름). 이미지가 없는 스타일은 키가 없음 (앱은 텍스트로 대체)")
     @GetMapping("/api/v1/style-images")
-    public ApiResponse<Map<String, StyleImages>> styleImages() {
-        Map<String, StyleImages> result = new LinkedHashMap<>();
+    public ApiResponse<Map<String, List<StyleImages>>> styleImages() {
+        Map<String, List<StyleImages>> result = new LinkedHashMap<>();
         try {
             for (HairStyle h : hairStyles.findAllByOrderBySortOrderAsc()) {
-                jdbc.queryForList("""
+                List<StyleImages> variants = jdbc.queryForList("""
                                 SELECT i.image_path FROM hair_style_images i
                                 JOIN hair_styles s ON s.hair_style_code = i.hair_style_code
                                 WHERE s.hair_category_code = ? AND s.is_active AND i.is_active AND i.is_primary
-                                ORDER BY s.sort_order LIMIT 1""", String.class, HAIR_CATEGORY.get(h.getStyleCode()))
-                        .stream().findFirst()
-                        .ifPresent(path -> result.put(h.getImageKey(), new StyleImages("/images/hair/" + path, List.of())));
+                                ORDER BY s.sort_order""", String.class, HAIR_CATEGORY.get(h.getStyleCode()))
+                        .stream().map(path -> new StyleImages("/images/hair/" + path, List.of())).toList();
+                if (!variants.isEmpty()) result.put(h.getImageKey(), variants);
             }
             for (FashionStyle f : fashionStyles.findAllByOrderBySortOrderAsc()) {
-                // shortcut: 스타일당 코디 세트 5개 중 첫 세트만 노출, 세트 넘겨보기가 필요해지면 세트 목록으로 확장
-                jdbc.queryForList("SELECT set_id, full_shot_image_path FROM outfit_sets WHERE style_code = ? AND is_active ORDER BY recipe_key LIMIT 1",
+                List<StyleImages> variants = jdbc.queryForList("SELECT set_id, full_shot_image_path FROM outfit_sets WHERE style_code = ? AND is_active ORDER BY recipe_key",
                                 f.getCode())
-                        .stream().findFirst()
-                        .ifPresent(set -> result.put(f.getImageKey(), new StyleImages(
+                        .stream().map(set -> new StyleImages(
                                 "/images/style/" + set.get("full_shot_image_path"),
                                 jdbc.query("SELECT item_name, item_image_path FROM outfit_items WHERE set_id = ? ORDER BY display_order",
                                         (rs, n) -> new ItemImage(rs.getString(1), "/images/style/" + rs.getString(2)),
-                                        set.get("set_id")))));
+                                        set.get("set_id")))).toList();
+                if (!variants.isEmpty()) result.put(f.getImageKey(), variants);
             }
         } catch (DataAccessException e) {
             // sql/ 미적재(MySQL에 아직 실행 안 함 등): 앱이 텍스트로 대체하도록 빈 결과
