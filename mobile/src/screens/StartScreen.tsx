@@ -78,12 +78,16 @@ export function StartScreen({ navigation }: Props) {
           </Pressable>
         </View>
 
-        {/* 중앙 에디토리얼 헤드라인 — 군더더기 없이 딱 핵심만 */}
+        {/* 중앙 Apple 온보딩 스타일 헤드라인 */}
         <View style={styles.hero}>
-          <View style={styles.accentBar} />
-          <Text style={styles.eyebrow}>PERSONAL STYLE REPORT</Text>
+          <View style={styles.appIcon}>
+            <Text style={styles.appIconText}>M</Text>
+          </View>
           <Text style={styles.title}>
-            당신의 얼굴과 체형에{'\n'}가장 잘 어울리는 무드
+            당신의 얼굴과 체형에{'\n'}가장 잘 어울리는 스타일
+          </Text>
+          <Text style={styles.subtitle}>
+            간단한 촬영과 정보 입력만으로 맞춤 헤어와 패션을 추천해 드려요.
           </Text>
         </View>
 
@@ -142,63 +146,68 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingBottom: 14,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.border,
+    paddingBottom: 12,
   },
   brand: {
-    fontSize: 18,
-    fontWeight: '900',
-    letterSpacing: 4,
+    fontSize: 17,
+    fontWeight: '700',
+    letterSpacing: 1.5,
     color: colors.text,
   },
   mockBtn: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
-    paddingHorizontal: 9,
-    paddingVertical: 5,
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    backgroundColor: colors.surface,
     borderWidth: 1,
     borderColor: colors.border,
-    borderRadius: radius.xs,
+    borderRadius: radius.full,
   },
   mockBtnActive: {
-    borderColor: colors.primary,
-    backgroundColor: colors.surfaceMuted,
+    borderColor: colors.accentBorder,
+    backgroundColor: colors.accentLight,
   },
   mockBtnText: {
-    fontSize: 10.5,
-    fontWeight: '700',
-    letterSpacing: 1,
+    fontSize: 11.5,
+    fontWeight: '600',
     color: colors.textMuted,
   },
   mockBtnTextActive: {
-    color: colors.text,
+    color: colors.accent,
   },
   hero: {
     flex: 1,
     justifyContent: 'center',
-    paddingBottom: 40,
+    paddingBottom: 32,
   },
-  accentBar: {
-    width: 32,
-    height: 2.5,
+  appIcon: {
+    width: 60,
+    height: 60,
+    borderRadius: 15,
     backgroundColor: colors.primary,
+    alignItems: 'center',
+    justifyContent: 'center',
     marginBottom: 20,
   },
-  eyebrow: {
-    fontSize: 11.5,
+  appIconText: {
+    color: '#FFFFFF',
+    fontSize: 28,
     fontWeight: '800',
-    letterSpacing: 2.2,
-    color: colors.textMuted,
-    marginBottom: 14,
   },
   title: {
-    fontSize: 32,
-    fontWeight: '900',
+    fontSize: 30,
+    fontWeight: '700',
     color: colors.text,
-    lineHeight: 43,
-    letterSpacing: -0.9,
+    lineHeight: 38,
+    letterSpacing: -0.6,
+  },
+  subtitle: {
+    marginTop: 12,
+    fontSize: 15,
+    lineHeight: 22,
+    color: colors.textSecondary,
   },
   bottomArea: {
     gap: 12,
@@ -207,19 +216,20 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'flex-start',
     gap: 12,
-    padding: 15,
+    padding: 16,
     borderWidth: 1,
     borderColor: colors.border,
-    borderRadius: radius.sm,
+    borderRadius: radius.md,
     backgroundColor: colors.surface,
   },
   consentRowChecked: {
     borderColor: colors.primary,
+    backgroundColor: colors.surface,
   },
   checkbox: {
-    width: 20,
-    height: 20,
-    borderRadius: radius.xs,
+    width: 22,
+    height: 22,
+    borderRadius: radius.full,
     borderWidth: 1.5,
     borderColor: colors.borderStrong,
     alignItems: 'center',
@@ -231,29 +241,28 @@ const styles = StyleSheet.create({
     borderColor: colors.primary,
   },
   consentTitle: {
-    fontSize: 13.5,
-    fontWeight: '800',
+    fontSize: 14,
+    fontWeight: '600',
     color: colors.text,
   },
   consentSub: {
     marginTop: 3,
-    fontSize: 12,
+    fontSize: 12.5,
     color: colors.textSecondary,
-    lineHeight: 17,
+    lineHeight: 18,
   },
   startBtn: {
     backgroundColor: colors.primary,
-    paddingVertical: 17,
-    borderRadius: radius.sm,
+    paddingVertical: 16,
+    borderRadius: 14,
     alignItems: 'center',
   },
   startBtnDisabled: {
-    opacity: 0.35,
+    opacity: 0.38,
   },
   startBtnText: {
     color: '#FFFFFF',
-    fontSize: 15.5,
-    fontWeight: '800',
-    letterSpacing: 0.3,
+    fontSize: 16.5,
+    fontWeight: '600',
   },
 });

@@ -18,6 +18,7 @@ import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { isModaApiError } from '../api/client';
 import { modaApi } from '../api/modaApi';
 import type { HairCurl, HairDensity, HairThickness } from '../api/types';
+import { SlidingSegmentControl } from '../components/SlidingSegmentControl';
 import { StepHeader } from '../components/StepHeader';
 import type { RootStackParamList } from '../navigation/types';
 import { useSessionStore } from '../store/useSessionStore';
@@ -124,7 +125,7 @@ export function ProfileInputScreen({ navigation }: Props) {
 
       const goNext = () => {
         if (data.nextStep === 'RESULT_READY') {
-          navigation.navigate('Result');
+          navigation.reset({ index: 0, routes: [{ name: 'Result' }] });
         } else if (data.nextStep === 'BODY_ANALYSIS') {
           navigation.navigate('BodyCapture');
         } else {
@@ -248,62 +249,29 @@ export function ProfileInputScreen({ navigation }: Props) {
 
           <View style={styles.fieldGroup}>
             <Text style={styles.label}>모발 굵기</Text>
-            <View style={styles.segmentRow}>
-              {THICKNESS_OPTIONS.map((opt) => {
-                const active = hairThickness === opt.value;
-                return (
-                  <Pressable
-                    key={opt.value}
-                    style={[styles.segmentBtn, active && styles.segmentBtnActive]}
-                    onPress={() => setHairThickness(opt.value)}
-                  >
-                    <Text style={[styles.segmentText, active && styles.segmentTextActive]}>
-                      {opt.label}
-                    </Text>
-                  </Pressable>
-                );
-              })}
-            </View>
+            <SlidingSegmentControl
+              options={THICKNESS_OPTIONS}
+              value={hairThickness}
+              onChange={setHairThickness}
+            />
           </View>
 
           <View style={styles.fieldGroup}>
             <Text style={styles.label}>곱슬 정도</Text>
-            <View style={styles.segmentRow}>
-              {CURL_OPTIONS.map((opt) => {
-                const active = hairCurl === opt.value;
-                return (
-                  <Pressable
-                    key={opt.value}
-                    style={[styles.segmentBtn, active && styles.segmentBtnActive]}
-                    onPress={() => setHairCurl(opt.value)}
-                  >
-                    <Text style={[styles.segmentText, active && styles.segmentTextActive]}>
-                      {opt.label}
-                    </Text>
-                  </Pressable>
-                );
-              })}
-            </View>
+            <SlidingSegmentControl
+              options={CURL_OPTIONS}
+              value={hairCurl}
+              onChange={setHairCurl}
+            />
           </View>
 
           <View style={styles.fieldGroup}>
             <Text style={styles.label}>머리숱</Text>
-            <View style={styles.segmentRow}>
-              {DENSITY_OPTIONS.map((opt) => {
-                const active = hairDensity === opt.value;
-                return (
-                  <Pressable
-                    key={opt.value}
-                    style={[styles.segmentBtn, active && styles.segmentBtnActive]}
-                    onPress={() => setHairDensity(opt.value)}
-                  >
-                    <Text style={[styles.segmentText, active && styles.segmentTextActive]}>
-                      {opt.label}
-                    </Text>
-                  </Pressable>
-                );
-              })}
-            </View>
+            <SlidingSegmentControl
+              options={DENSITY_OPTIONS}
+              value={hairDensity}
+              onChange={setHairDensity}
+            />
           </View>
         </ScrollView>
 
@@ -356,31 +324,32 @@ const styles = StyleSheet.create({
   inputBox: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: colors.surfaceMuted,
+    backgroundColor: colors.surface,
     borderWidth: 1,
     borderColor: colors.border,
     borderRadius: radius.sm,
-    paddingHorizontal: 13,
+    paddingHorizontal: 14,
   },
   inputError: {
+    borderWidth: 1,
     borderColor: colors.danger,
   },
   input: {
     flex: 1,
-    paddingVertical: 12,
-    fontSize: 15,
-    fontWeight: '700',
+    paddingVertical: 13,
+    fontSize: 16,
+    fontWeight: '500',
     color: colors.text,
   },
   unit: {
-    fontSize: 13,
-    fontWeight: '600',
+    fontSize: 14,
+    fontWeight: '500',
     color: colors.textMuted,
     marginLeft: 6,
   },
   errorText: {
     marginTop: 4,
-    fontSize: 11.5,
+    fontSize: 12,
     color: colors.danger,
   },
   divider: {
@@ -389,54 +358,57 @@ const styles = StyleSheet.create({
     marginVertical: 14,
   },
   sectionEyebrow: {
-    fontSize: 11,
-    fontWeight: '800',
-    letterSpacing: 2,
+    fontSize: 12,
+    fontWeight: '600',
+    letterSpacing: 0.4,
     color: colors.textMuted,
     marginBottom: 14,
   },
   segmentRow: {
     flexDirection: 'row',
-    gap: 8,
+    backgroundColor: colors.surfaceMuted,
+    borderRadius: 10,
+    padding: 3,
+    gap: 2,
   },
   segmentBtn: {
     flex: 1,
-    paddingVertical: 12,
-    borderRadius: radius.sm,
-    borderWidth: 1,
-    borderColor: colors.border,
-    backgroundColor: colors.surface,
+    paddingVertical: 9,
+    borderRadius: 8,
     alignItems: 'center',
   },
   segmentBtnActive: {
-    borderColor: colors.primary,
-    backgroundColor: colors.primary,
+    backgroundColor: colors.surface,
+    shadowColor: '#000000',
+    shadowOpacity: 0.08,
+    shadowRadius: 3,
+    shadowOffset: { width: 0, height: 1 },
+    elevation: 1,
   },
   segmentText: {
     fontSize: 13.5,
-    fontWeight: '700',
+    fontWeight: '500',
     color: colors.textSecondary,
   },
   segmentTextActive: {
-    color: '#FFFFFF',
+    fontWeight: '600',
+    color: colors.text,
   },
   bottomBar: {
-    paddingHorizontal: 22,
+    paddingHorizontal: 20,
     paddingTop: 10,
-    paddingBottom: 16,
-    borderTopWidth: 1,
-    borderTopColor: colors.border,
+    paddingBottom: 14,
     backgroundColor: colors.bg,
   },
   nextBtn: {
     backgroundColor: colors.primary,
     paddingVertical: 16,
-    borderRadius: radius.sm,
+    borderRadius: 14,
     alignItems: 'center',
   },
   nextBtnText: {
     color: '#FFFFFF',
-    fontSize: 15.5,
-    fontWeight: '800',
+    fontSize: 16.5,
+    fontWeight: '600',
   },
 });
