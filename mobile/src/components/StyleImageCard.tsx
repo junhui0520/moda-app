@@ -22,7 +22,8 @@ export function StyleImageCard({
   total,
   height = 240,
 }: StyleImageCardProps) {
-  const { images, baseUrl } = useStyleImages(imageKey);
+  const { images: picked, baseUrl } = useStyleImages(imageKey);
+  const images = picked[0];
   // 서버 DB 이미지 > 로컬 에셋 > placeholder
   const asset = images ? { uri: baseUrl + images.url } : getStyleImage(imageKey);
   const placeholder = getStylePlaceholder(imageKey);
@@ -68,13 +69,17 @@ export function StyleImageCard({
   );
 }
 
-/** 챗봇 답변에 붙는 작은 썸네일 */
+/** 챗봇 답변에 붙는 썸네일: 스타일당 서로 다른 코디(full_shot) 랜덤 3장 */
 export function StyleThumb({ imageKey, label }: { imageKey: string; label: string }) {
-  const { images, baseUrl } = useStyleImages(imageKey);
-  if (!images) return null;
+  const { images, baseUrl } = useStyleImages(imageKey, 3);
+  if (images.length === 0) return null;
   return (
-    <View style={styles.thumbWrap}>
-      <Image source={{ uri: baseUrl + images.url }} style={styles.thumb} accessibilityLabel={label} />
+    <View>
+      <View style={{ flexDirection: 'row', gap: 6 }}>
+        {images.map((img) => (
+          <Image key={img.url} source={{ uri: baseUrl + img.url }} style={styles.thumb} accessibilityLabel={label} />
+        ))}
+      </View>
       <Text style={styles.itemLabel} numberOfLines={1}>
         {label}
       </Text>
@@ -87,8 +92,7 @@ const styles = StyleSheet.create({
   item: { flex: 1, maxWidth: 76 },
   itemImage: { width: '100%', aspectRatio: 1, backgroundColor: '#27272A' },
   itemLabel: { fontSize: 10, color: '#A1A1AA', textAlign: 'center', marginTop: 3 },
-  thumbWrap: { width: 120 },
-  thumb: { width: 120, height: 120, backgroundColor: '#27272A' },
+  thumb: { width: 84, height: 112, backgroundColor: '#27272A' },
   wrapper: {
     width: '100%',
     backgroundColor: '#18181B',

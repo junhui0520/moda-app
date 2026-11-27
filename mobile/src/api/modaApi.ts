@@ -23,7 +23,7 @@ import type {
 export const modaApi = {
   // 스타일 이미지 경로 (imageKey → 큰 사진 + 아이템 사진)
   getStyleImages: (baseUrl?: string) =>
-    apiRequest<Record<string, StyleImages>>('/api/v1/style-images', { method: 'GET', baseUrl, timeoutMs: 10_000 }),
+    apiRequest<Record<string, StyleImages[]>>('/api/v1/style-images', { method: 'GET', baseUrl, timeoutMs: 10_000 }),
 
   // 헬스체크
   checkHealth: (baseUrl?: string) =>
