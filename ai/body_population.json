@@ -10,9 +10,13 @@
     "upper_taper": 0.05945225999999997
   },
   "rules": {
-    "standard_radius": 0.589,
-    "large_rect_min_trunk_z": 0.898,
-    "small_inv_min_taper_z": -0.234
+    "standard_radius": 0.65,
+    "large_rect_min_trunk_z": 1.0,
+    "small_inv_min_taper_z": -0.25
+  },
+  "noise": {
+    "shoulder_dev": 0.0437,
+    "trunk_dev": 0.0436
   },
   "n_people": 15,
   "standard_share": 0.2,
@@ -24,5 +28,5 @@
   "sources": [
     "live_body_measurements.csv"
   ],
-  "created": "2026-11-26 18:17"
+  "created": "2026-11-28 22:46"
 }

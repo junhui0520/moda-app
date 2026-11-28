@@ -95,13 +95,51 @@ def robust_spread(x):
     return float(mad if mad > 0 else np.std(x))
 
 
-def classify_all(people, median, spread, rules, mode="relative"):
+FIT_N_ROUNDS = 2   # 실시간 측정 기본 회차 수 — 분포는 '2회 측정' 기준으로 계산 (fit_population.py 와 같음)
+
+
+def classify_all(people, median, spread, rules, mode="relative", noise=None):
+    """사람별 판정. noise 를 주면 실제 측정 화면과 같은 방식(측정 오차만큼 흔든 확률의 1위)으로 판정."""
     keep = (config.BODY_CLASSIFIER, B._BODY_POP)
     config.BODY_CLASSIFIER = mode
-    B._BODY_POP = {"median": median, "spread": spread, "rules": rules, "source": "fit"}
-    preds = [B.classify({"shoulder_dev": r["shoulder_dev"], "trunk_dev": r["trunk_dev"]}) for _, r in people.iterrows()]
+    B._BODY_POP = {"median": median, "spread": spread, "rules": rules, "source": "fit", "noise": noise}
+    preds = []
+    for _, r in people.iterrows():
+        f = {"shoulder_dev": r["shoulder_dev"], "trunk_dev": r["trunk_dev"]}
+        preds.append(B.probabilities(f, n_photos=FIT_N_ROUNDS)[0][0] if noise else B.classify(f))
     config.BODY_CLASSIFIER, B._BODY_POP = keep
     return preds
+
+
+def measurement_noise(d):
+    """같은 사람을 여러 번 잰 기록으로 1회 측정의 흔들림(표준편차) 계산. 반복 측정한 사람이 5명 미만이면 None."""
+    g = d.groupby("person_id")
+    rep = g.size()[g.size() >= 2].index
+    if len(rep) < 5:
+        return None
+    dr = d[d["person_id"].isin(rep)].groupby("person_id")
+    return {k: round(float(dr[k].var(ddof=1).mean()) ** 0.5, 4) for k in ("shoulder_dev", "trunk_dev")}
+
+
+def calibrate_rules(people, median, spread, rules, noise, target, passes=2):
+    """fit_rules 는 '한 번 판정' 기준으로 비율을 맞춤. 실제 판정은 '확률 1위'라 경계 근처 사람이 조금 다르게 갈 수 있어서,
+    기준 3개를 하나씩 조금씩 움직여 '확률 1위' 판정에서도 목표 비율이 되게 다시 맞춤 (fit_population.py 의 반경 맞추기와 같은 생각)."""
+    grids = [("standard_radius", "standard", np.arange(0.10, 2.51, 0.05)),
+             ("large_rect_min_trunk_z", "large_rectangle", np.arange(-1.0, 3.01, 0.05)),
+             ("small_inv_min_taper_z", "small_inv_triangle", np.arange(-2.0, 2.01, 0.05))]
+    best_rules = dict(rules)
+    for _ in range(passes):
+        for key, cls, grid in grids:
+            best = None
+            for v in grid:
+                cand = dict(best_rules)
+                cand[key] = round(float(v), 3)
+                share = Counter(classify_all(people, median, spread, cand, noise=noise))[cls] / len(people)
+                score = (round(abs(share - target[cls]), 6), abs(v - rules[key]))   # 목표 비율에 가깝게, 같으면 원래 값에 가깝게
+                if best is None or score < best[0]:
+                    best = (score, cand)
+            best_rules = best[1]
+    return best_rules
 
 
 def fit_rules(people, median, spread, standard_share, sk):
@@ -153,7 +191,12 @@ def main():
 
     median = {k: float(people[k].median()) for k in KEYS + ["upper_taper"]}
     spread = {k: max(robust_spread(people[k].to_numpy()), 1e-3) for k in KEYS + ["upper_taper"]}
-    rules = fit_rules(people, median, spread, a.standard_share, a.sk_shares)
+    noise = measurement_noise(d)
+    if noise:
+        print(f"측정 오차 (같은 사람 1회 측정의 흔들림): 어깨 {noise['shoulder_dev']:.3f}, 몸통 {noise['trunk_dev']:.3f}")
+    else:
+        noise = dict(config.BODY_FEATURE_NOISE)
+        print(f"반복 측정한 사람이 5명 미만이라 측정 오차는 config.BODY_FEATURE_NOISE 값을 씁니다: {noise}")
 
     print("\n측정 치우침 진단 (Size Korea 20대 남성 평균 = 0%)")
     print(f"  팀 데이터 중앙값: 어깨 폭 {median['shoulder_dev']:+.1%}, 몸통 굵기 {median['trunk_dev']:+.1%}")
@@ -167,10 +210,13 @@ def main():
     target = {"standard": a.standard_share, "small_inv_triangle": (1 - a.standard_share) * a.sk_shares[0] / sk_tot,
               "large_rectangle": (1 - a.standard_share) * a.sk_shares[1] / sk_tot,
               "rectangle": (1 - a.standard_share) * a.sk_shares[2] / sk_tot}
+    first = fit_rules(people, median, spread, a.standard_share, a.sk_shares)
+    rules = calibrate_rules(people, median, spread, first, noise, target)
     rows = [
-        ("예전 규칙 (Size Korea 절대 기준)", classify_all(people, median, spread, rules, "rules")),
+        ("예전 규칙 (Size Korea 절대 기준)", classify_all(people, median, spread, first, "rules")),
         ("상대 판정 · 임시 기준", classify_all(people, config.BODY_POP_MEDIAN, config.BODY_POP_SPREAD, config.BODY_REL_RULES)),
-        ("상대 판정 · 팀 데이터 기준 ← 추천", classify_all(people, median, spread, rules)),
+        ("상대 판정 · 팀 기준 (한 번 판정)", classify_all(people, median, spread, first)),
+        ("상대 판정 · 팀 기준 (확률 1위) ← 실제", classify_all(people, median, spread, rules, noise=noise)),
     ]
     print("\n유형 분포 비교 (사람 기준)")
     print("-" * 96)
@@ -179,12 +225,13 @@ def main():
         acc = accuracy(people, preds)
         print(f"{name:34s} {fmt(preds)}" + (f"   정확도 {acc[0]:.0%} ({acc[1]}명)" if acc else ""))
     print("-" * 96)
-    print("\n계산된 기준:", rules)
+    print(f"\n계산된 기준 (확률 1위·{FIT_N_ROUNDS}회 측정 기준으로 다시 맞춤):", rules)
+    print("  (한 번 판정 기준으로 처음 계산한 값:", first, ")")
     print(f"팀 평균 체형: {json.dumps({k: round(v, 4) for k, v in median.items()})}")
     print(f"사람 간 퍼짐: {json.dumps({k: round(v, 4) for k, v in spread.items()})}")
 
     if a.save:
-        out = {"median": median, "spread": spread, "rules": rules, "n_people": n,
+        out = {"median": median, "spread": spread, "rules": rules, "noise": noise, "n_people": n,
                "standard_share": a.standard_share, "sk_shares": a.sk_shares, "sources": a.csv,
                "created": time.strftime("%Y-%m-%d %H:%M")}
         path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "body_population.json")

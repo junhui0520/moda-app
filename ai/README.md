@@ -89,7 +89,7 @@ Railway: 새 서비스 → 이 저장소 → **Root Directory = `ai`** → Docke
 |---|---|---|
 | 요청 | `image`, `request_id`(선택) | `image`, `height_cm`, `request_id`(선택) |
 | 판정 | `face_shape`: diamond / heart / oval / rectangle / round / long | `body_type`: standard / small_inv_triangle / large_rectangle / rectangle |
-| 확률 | `confidence`, `borderline`(60% 미만), `candidates` 6종 | 보내지 않음 (체형은 확률 계산 없음, 선택 필드) |
+| 확률 | `confidence`, `borderline`(60% 미만), `candidates` 6종 | `confidence`, `borderline`(60% 미만), `candidates` 4종 |
 | 측정값 | `features` 5종 + `reason` 문장 | `features` 3종 + `compare_to_size_korea` |
 | 판정 불가 | HTTP 200 + `usable: false` + `warnings` 코드 | 같음 |
 

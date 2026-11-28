@@ -208,6 +208,12 @@ BODY_RULES = {
     "small_inv_max_trunk": 0.00,       # 몸통이 평균 이하로 가늘고
     "small_inv_min_shoulder_gap": 0.06,  #  (어깨 편차 - 몸통 편차) 가 +6% 이상 → 작은 역삼각체형
 }                                       # 나머지 → 사각체형 (몸통 굵기가 고르고 어깨 보통)
+# 체형 측정 오차 (같은 사람을 다시 쟀을 때 1회차 값이 흔들리는 정도, 표준편차).
+# 판정 확률(확신도)을 계산할 때 이만큼 값을 흔들어 봅니다. fit_body_population.py 가 팀 데이터로 다시 계산해
+# body_population.json 에 넣으면 그 값이 우선 적용됩니다. 아래는 2026-11-26 팀 데이터(15명) 값.
+BODY_FEATURE_NOISE = {"shoulder_dev": 0.0437, "trunk_dev": 0.0436}
+BODY_MIN_CONFIDENCE = 0.60   # 1위 체형 확률이 이보다 낮으면 '두 체형의 경계'로 표시 (얼굴과 같은 기준)
+
 BODY_LABELS = {
     "standard": "표준체형",
     "small_inv_triangle": "작은 역삼각체형",
