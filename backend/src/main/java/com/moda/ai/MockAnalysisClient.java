@@ -1,5 +1,6 @@
 package com.moda.ai;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -175,6 +176,19 @@ public class MockAnalysisClient implements AnalysisClient {
         root.putObject("quality").put("min_visibility", 0.83).put("shoulder_tilt_deg", 2.1);
         root.put("model_version", "mock-body-0.1");
         return parser.parseBody(root);
+    }
+
+    // ------------------------------------------------------------------ ③-L · ④-L 실시간 분석
+
+    /** Mock은 측정값을 보지 않으므로 기존 사진 분석과 같은 결과를 냅니다 (X-Mock-* 헤더 동일 적용, ai/LIVE_INTEGRATION.md 2.3). */
+    @Override
+    public FaceAnalysisResult analyzeFaceLive(JsonNode measurement, String requestId, AnalysisOptions options) {
+        return analyzeFace(null, options);
+    }
+
+    @Override
+    public BodyAnalysisResult analyzeBodyLive(JsonNode measurement, int heightCm, String requestId, AnalysisOptions options) {
+        return analyzeBody(null, heightCm, options);
     }
 
     // ------------------------------------------------------------------ header parsing

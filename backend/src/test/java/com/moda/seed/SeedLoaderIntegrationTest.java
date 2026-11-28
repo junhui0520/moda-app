@@ -158,9 +158,9 @@ class SeedLoaderIntegrationTest {
     }
 
     @Test
-    @DisplayName("분석 라벨: 경고 코드 14종 + 기본값, features 8, Size Korea 항목 6 + 기준 1")
+    @DisplayName("분석 라벨: 경고 코드 16종(실시간 분석 2종 포함) + 기본값, features 8, Size Korea 항목 6 + 기준 1")
     void analysisLabels() {
-        assertThat(analysisLabelRepository.countByCategory(LabelCategory.WARNING)).isEqualTo(14);
+        assertThat(analysisLabelRepository.countByCategory(LabelCategory.WARNING)).isEqualTo(16);
         assertThat(analysisLabelRepository.findAllByCategory(LabelCategory.WARNING))
                 .extracting(AnalysisLabel::getLabelCode)
                 .containsExactlyInAnyOrderElementsOf(SeedValidator.REQUIRED_WARNING_CODES);
@@ -176,6 +176,14 @@ class SeedLoaderIntegrationTest {
 
         AnalysisLabel borderline = analysisLabelRepository.findByCategoryAndLabelCode(LabelCategory.WARNING, "BODY_BORDERLINE").orElseThrow();
         assertThat(borderline.getSeverity()).isEqualTo(WarningSeverity.INFO);
+
+        AnalysisLabel notEnough = analysisLabelRepository.findByCategoryAndLabelCode(LabelCategory.WARNING, "LIVE_NOT_ENOUGH_FRAMES").orElseThrow();
+        assertThat(notEnough.getSeverity()).isEqualTo(WarningSeverity.RETAKE);
+        assertThat(notEnough.getTarget()).isEqualTo("COMMON");
+        assertThat(notEnough.getDisplayText()).isEqualTo("측정이 충분히 되지 않았어요. 안내에 맞춰 다시 측정해 주세요.");
+        AnalysisLabel legs = analysisLabelRepository.findByCategoryAndLabelCode(LabelCategory.WARNING, "BODY_LEGS_CLOSED").orElseThrow();
+        assertThat(legs.getSeverity()).isEqualTo(WarningSeverity.INFO);
+        assertThat(legs.getTarget()).isEqualTo("BODY");
 
         AnalysisLabel fallback = analysisLabelRepository
                 .findByCategoryAndLabelCode(LabelCategory.WARNING_FALLBACK, AnalysisLabel.UNDEFINED_WARNING_CODE).orElseThrow();

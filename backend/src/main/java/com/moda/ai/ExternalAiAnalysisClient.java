@@ -1,5 +1,8 @@
 package com.moda.ai;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.moda.ai.model.BodyAnalysisResult;
 import com.moda.ai.model.FaceAnalysisResult;
 import com.moda.global.config.ModaProperties;
@@ -11,6 +14,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpConnectTimeoutException;
 import java.net.http.HttpTimeoutException;
 import java.time.Duration;
+import java.util.function.Supplier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ByteArrayResource;
@@ -29,6 +33,8 @@ import org.springframework.web.client.RestClientException;
  * <ul>
  *   <li>{@code POST {base-url}/v1/analyze/face}: {@code image}, {@code request_id}</li>
  *   <li>{@code POST {base-url}/v1/analyze/body}: {@code image}, {@code height_cm}, {@code request_id}</li>
+ *   <li>{@code POST {base-url}/v1/live/face} · {@code /v1/live/body}: JSON {@code rounds}, {@code quality}, {@code request_id}
+ *       (+ 체형 {@code height_cm}) — 실시간 분석 (ai/LIVE_INTEGRATION.md, api-spec.md 부록 A.7)</li>
  *   <li>연결 타임아웃 3초, 읽기 타임아웃 얼굴 15초 / 전신 20초</li>
  * </ul>
  * 사진은 메모리 바이트 그대로 multipart로 전달하며 디스크에 쓰지 않습니다 (R-01).
@@ -40,6 +46,8 @@ public class ExternalAiAnalysisClient implements AnalysisClient {
 
     static final String FACE_PATH = "/v1/analyze/face";
     static final String BODY_PATH = "/v1/analyze/body";
+    static final String FACE_LIVE_PATH = "/v1/live/face";
+    static final String BODY_LIVE_PATH = "/v1/live/body";
 
     private final RestClient faceClient;
     private final RestClient bodyClient;
@@ -93,13 +101,54 @@ public class ExternalAiAnalysisClient implements AnalysisClient {
         return parts;
     }
 
+    // ------------------------------------------------------------------ ③-L · ④-L 실시간 분석 (JSON)
+
+    @Override
+    public FaceAnalysisResult analyzeFaceLive(JsonNode measurement, String requestId, AnalysisOptions options) {
+        ObjectNode body = liveBody(measurement, requestId);
+        return parser.parseFace(parser.readTree(postJson(faceClient, FACE_LIVE_PATH, body), "face"));
+    }
+
+    @Override
+    public BodyAnalysisResult analyzeBodyLive(JsonNode measurement, int heightCm, String requestId, AnalysisOptions options) {
+        ObjectNode body = liveBody(measurement, requestId);
+        body.put("height_cm", heightCm);                                            // 키는 세션 값을 서버가 붙임 (기존 ④와 같음)
+        return parser.parseBody(parser.readTree(postJson(bodyClient, BODY_LIVE_PATH, body), "body"));
+    }
+
+    /** 앱이 보낸 측정값에서 {@code rounds}·{@code quality}만 골라 AI로 전달 (다른 필드는 버림). */
+    static ObjectNode liveBody(JsonNode measurement, String requestId) {
+        ObjectNode body = JsonNodeFactory.instance.objectNode();
+        body.set("rounds", measurement.path("rounds"));
+        if (measurement.path("quality").isObject()) {
+            body.set("quality", measurement.get("quality"));
+        }
+        if (requestId != null) {
+            body.put("request_id", requestId);
+        }
+        return body;
+    }
+
+    private String postJson(RestClient client, String path, JsonNode body) {
+        return execute(path, () -> client.post()
+                .uri(path)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .body(body.toString()));
+    }
+
     private String post(RestClient client, String path, MultiValueMap<String, Object> body) {
+        return execute(path, () -> client.post()
+                .uri(path)
+                .contentType(MediaType.MULTIPART_FORM_DATA)
+                .accept(MediaType.APPLICATION_JSON)
+                .body(body));
+    }
+
+    /** 사진(multipart)·실시간(JSON) 공통 호출 + 오류 변환 (A.6): 5xx·연결 실패 → 503, 읽기 타임아웃 → 504, 4xx(422 포함)·형식 오류 → 502. */
+    private String execute(String path, Supplier<RestClient.RequestBodySpec> request) {
         try {
-            return client.post()
-                    .uri(path)
-                    .contentType(MediaType.MULTIPART_FORM_DATA)
-                    .accept(MediaType.APPLICATION_JSON)
-                    .body(body)
+            return request.get()
                     .retrieve()
                     .onStatus(status -> status.is5xxServerError(), (req, res) -> {
                         throw new BusinessException(ErrorCode.AI_SERVER_UNAVAILABLE, null,
