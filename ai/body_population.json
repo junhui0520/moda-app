@@ -1,0 +1,28 @@
+{
+  "median": {
+    "shoulder_dev": 0.08075,
+    "trunk_dev": 0.22275,
+    "upper_taper": -0.12619999999999998
+  },
+  "spread": {
+    "shoulder_dev": 0.08828883,
+    "trunk_dev": 0.07909671000000001,
+    "upper_taper": 0.05945225999999997
+  },
+  "rules": {
+    "standard_radius": 0.589,
+    "large_rect_min_trunk_z": 0.898,
+    "small_inv_min_taper_z": -0.234
+  },
+  "n_people": 15,
+  "standard_share": 0.2,
+  "sk_shares": [
+    30.8,
+    33.2,
+    35.9
+  ],
+  "sources": [
+    "live_body_measurements.csv"
+  ],
+  "created": "2026-11-26 18:17"
+}
