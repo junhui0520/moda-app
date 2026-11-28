@@ -70,6 +70,8 @@
 
 - 측정값이 부족하면 HTTP 200 + `usable:false` + `warnings:["LIVE_NOT_ENOUGH_FRAMES"]` (재측정 안내).
 - `height_cm` 누락·형식 오류는 422 → 백엔드 규칙상 `502 AI_BAD_RESPONSE`.
+- 체형도 `confidence`·`borderline`·`candidates`(4종)를 보냅니다 (11/28 추가). 백엔드는 이미 받을 준비가 되어 있어
+  `borderline=true` 면 `BODY_BORDERLINE` 안내가 자동으로 붙고, 상세보기에 체형 후보·확률이 나옵니다.
 - 추가 필드(`n_rounds` 등)는 `AiResponseParser` 가 무시하므로 문제없습니다.
 
 ---

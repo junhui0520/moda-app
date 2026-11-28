@@ -59,6 +59,12 @@ def check_body(r):
     if not r["usable"]:
         return
     assert r["body_type"] in BODY_KEYS
+    if r.get("candidates") is not None:
+        check_candidates(r["candidates"], BODY_KEYS)
+        assert r["candidates"][0]["key"] == r["body_type"], "최종 체형 ≠ 확률 1위"
+        assert r["confidence"] == r["candidates"][0]["prob"]
+        assert isinstance(r["borderline"], bool)
+        assert r["borderline"] == (r["confidence"] < 0.6)
     f = r.get("features")
     assert f is None or (isinstance(f, dict) and all(_is_num(v) for v in f.values()))
     sk = r.get("compare_to_size_korea")

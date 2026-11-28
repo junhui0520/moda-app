@@ -118,8 +118,7 @@ def body_live(rounds, height_cm, quality=None):
         return {"usable": False, "body_type": None, "warnings": ["LIVE_NOT_ENOUGH_FRAMES"],
                 "model_version": api_format.BODY_MODEL_VERSION}
     final = _median_features([r["features"] for r in per_round])
-    key = B.classify(final)
     codes = [] if final.get("crotch_height_cm") is not None else ["BODY_LEGS_CLOSED"]
     extra = {"n_rounds": len(per_round), "n_frames": sum(r["n"] for r in per_round),
              "round_results": [r["key"] for r in per_round]}
-    return api_format.body_result(final, key, height_cm, codes, dict(quality or {}), extra)
+    return api_format.body_result(final, len(per_round), height_cm, codes, dict(quality or {}), extra)

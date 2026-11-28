@@ -2,7 +2,7 @@
 
 백엔드 AiResponseParser 가 검사하는 규칙:
 - 얼굴: usable·face_shape·warnings 필수. usable=true 이면 confidence·borderline·candidates·features 도 필수.
-- 체형: usable·body_type·warnings 만 필수, 나머지는 선택.
+- 체형: usable·body_type·warnings 만 필수, 나머지는 선택 (우리는 확신도·후보까지 모두 보냄).
 - face_shape / body_type 은 정해진 영문 Key 만 허용 (config.FACE_LABELS / BODY_LABELS 의 키와 같음).
 - warnings 에는 코드 문자열만 넣음. 메시지·심각도(RETAKE/INFO)는 백엔드가 붙임.
 - FACE_BORDERLINE / BODY_BORDERLINE 은 백엔드가 borderline=true 를 보고 직접 추가하므로 여기서는 넣지 않음.
@@ -189,15 +189,22 @@ def body_response(out, height_cm):
             "quality": quality, "model_version": BODY_MODEL_VERSION,
         }
 
-    return body_result(out["features"], out["body_shape_key"], height_cm, codes, quality)
+    return body_result(out["features"], 1, height_cm, codes, quality)
 
 
-def body_result(f, key, height_cm, codes, quality, extra=None):
-    """측정값 dict(body_shape.measure 의 f) + 판정 Key → usable=true 체형 응답."""
-    # confidence·borderline·candidates 는 체형 판정에 확률 계산이 아직 없어서 보내지 않음 (A.4: 체형은 선택 필드)
+def body_result(f, n_photos, height_cm, codes, quality, extra=None):
+    """측정값 dict(body_shape.measure 의 f) → usable=true 체형 응답.
+    n_photos = 중앙값에 쓴 측정 횟수 (사진 1장=1, 실시간 2회차=2). 최종 체형 = 확률 1위 (얼굴과 같음)."""
+    probs = dict(B.probabilities(f, n_photos=n_photos))
+    candidates = sorted(({"key": k, "prob": round(probs.get(k, 0.0), 3)} for k in config.BODY_LABELS),
+                        key=lambda c: -c["prob"])
+    confidence = candidates[0]["prob"]
     return {
         "usable": True,
-        "body_type": key,
+        "body_type": candidates[0]["key"],
+        "confidence": confidence,
+        "borderline": confidence < config.BODY_MIN_CONFIDENCE,   # true 면 백엔드가 BODY_BORDERLINE 안내를 붙임
+        "candidates": candidates,
         "warnings": codes,
         "features": {
             "shoulder_dev": round(f["shoulder_dev"], 3),

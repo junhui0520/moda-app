@@ -219,7 +219,7 @@ def combine_rounds(rounds):
     for k in FEATURE_KEYS:
         vals = [r["features"][k] for r in rounds if r["features"].get(k) is not None]
         med[k] = float(np.median(vals)) if vals else None
-    final = B.summarize_body(med)
+    final = B.summarize_body(med, n_photos=len(rounds))   # 최종 = 확률 1위 (몇 회 측정했는지 반영)
     final["features"] = {k: (None if v is None else round(v, 3)) for k, v in med.items()}
     final["n_rounds"] = len(rounds)
     final["round_results"] = [config.BODY_LABELS[r["key"]] for r in rounds]

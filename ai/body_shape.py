@@ -132,11 +132,34 @@ def body_population():
         if os.path.exists(path):
             with open(path, encoding="utf-8") as fp:
                 d = json.load(fp)
-            _BODY_POP = {"median": d["median"], "spread": d["spread"], "rules": d["rules"], "source": path}
+            _BODY_POP = {"median": d["median"], "spread": d["spread"], "rules": d["rules"], "source": path,
+                         "noise": d.get("noise") or dict(config.BODY_FEATURE_NOISE)}
         else:
             _BODY_POP = {"median": config.BODY_POP_MEDIAN, "spread": config.BODY_POP_SPREAD,
-                         "rules": config.BODY_REL_RULES, "source": "config.py (임시값)"}
+                         "rules": config.BODY_REL_RULES, "source": "config.py (임시값)",
+                         "noise": dict(config.BODY_FEATURE_NOISE)}
     return _BODY_POP
+
+
+def noise_scale(n_rounds):
+    """n회 측정의 중앙값을 쓰면 흔들림이 줄어드는 비율 (face_shape.noise_scale 과 같음)."""
+    return 1.0 if n_rounds <= 1 else 1.2533 / math.sqrt(n_rounds)
+
+
+def probabilities(f, n=400, seed=0, n_photos=1):
+    """측정 오차만큼 어깨·몸통 편차를 흔들어 n번 판정 → 체형별 확률 (얼굴형 probabilities 와 같은 방식).
+    확률이 한 체형에 몰리지 않으면 '두 체형의 경계'라는 뜻. n_photos: 몇 회 측정의 중앙값인지."""
+    rng = np.random.default_rng(seed)
+    pop = body_population()
+    noise = pop.get("noise") or config.BODY_FEATURE_NOISE
+    s = noise_scale(n_photos)
+    counts = {}
+    for _ in range(n):
+        g = {"shoulder_dev": f["shoulder_dev"] + rng.normal(0, noise["shoulder_dev"] * s),
+             "trunk_dev": f["trunk_dev"] + rng.normal(0, noise["trunk_dev"] * s)}
+        key = classify(g)
+        counts[key] = counts.get(key, 0) + 1
+    return sorted(((k, v / n) for k, v in counts.items()), key=lambda x: -x[1])
 
 
 def _relative_reason(z):
@@ -189,9 +212,19 @@ ISSUES = {
 }
 
 
-def summarize_body(f):
-    """특징값 → 판정 결과 (사진·실시간·여러 프레임 종합 공용)."""
-    key = classify(f)
+def summarize_body(f, n_photos=1):
+    """특징값 → 판정 결과 (사진·실시간·여러 프레임 종합 공용).
+    최종 체형 = 확률 1위 (얼굴형과 같음) → 화면의 체형과 확률이 항상 일치.
+    n_photos: 몇 회 측정의 중앙값인지 (사진 1장 = 1, 실시간 2회차 = 2)."""
+    probs = probabilities(f, n_photos=n_photos)
+    key = probs[0][0]
+    prob_out = {
+        "confidence": round(probs[0][1], 2),
+        "candidates": [{"key": k, "body_shape": config.BODY_LABELS[k], "prob": round(p, 2)} for k, p in probs[:3]],
+    }
+    if probs[0][1] < config.BODY_MIN_CONFIDENCE and len(probs) > 1:
+        prob_out["borderline"] = (f"{config.BODY_LABELS[key]}과 {config.BODY_LABELS[probs[1][0]]}의 경계에 가까운 체형 "
+                                  f"(확률 {probs[0][1]:.0%} vs {probs[1][1]:.0%})")
     limb = f.get("limb_dev")
     extra = {}
     if config.BODY_CLASSIFIER != "rules" and relative_ready():
@@ -205,6 +238,7 @@ def summarize_body(f):
         **extra,
         "body_shape_key": key,
         "body_shape": config.BODY_LABELS[key],
+        **prob_out,
         "compare_to_size_korea": [
             _describe(f["shoulder_dev"], "어깨 폭"),
             _describe(f["trunk_dev"], "몸통 굵기"),
