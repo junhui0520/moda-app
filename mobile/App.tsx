@@ -44,7 +44,14 @@ export default function App() {
           />
           <Stack.Screen name="FaceCapture" component={FaceCaptureScreen} />
           <Stack.Screen name="BodyCapture" component={BodyCaptureScreen} />
-          <Stack.Screen name="Result" component={ResultScreen} />
+          <Stack.Screen
+            name="Result"
+            component={ResultScreen}
+            options={{
+              gestureEnabled: false, // 결과 화면에서 좌→우 엣지 스와이프로 카메라 복귀 방지
+              headerBackVisible: false,
+            }}
+          />
           <Stack.Screen name="Chat" component={ChatScreen} />
           <Stack.Screen name="ModaMain" component={ModaMainScreen} />
         </Stack.Navigator>

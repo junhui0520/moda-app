@@ -101,7 +101,7 @@ export function BodyCaptureScreen({ navigation }: Props) {
       setBodyAnalysis(data);
 
       const infoWarnings = data.warnings.filter((w) => w.severity === 'INFO');
-      const goResult = () => navigation.navigate('Result');
+      const goResult = () => navigation.reset({ index: 0, routes: [{ name: 'Result' }] });
 
       if (infoWarnings.length > 0) {
         Alert.alert('안내', infoWarnings.map((w) => w.message).join('\n'), [
@@ -222,7 +222,7 @@ export function BodyCaptureScreen({ navigation }: Props) {
         result: patched.result,
       });
       setManualModalVisible(false);
-      navigation.navigate('Result');
+      navigation.reset({ index: 0, routes: [{ name: 'Result' }] });
     } catch (err) {
       if (isModaApiError(err) && err.isSessionExpired()) {
         setManualModalVisible(false);

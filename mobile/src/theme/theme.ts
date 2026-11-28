@@ -1,24 +1,24 @@
-// src/theme/theme.ts — A안 매거진 에디토리얼 디자인 토큰 (29CM / 무신사 블랙 감성)
+// src/theme/theme.ts — iOS 미니멀 뉴트럴 디자인 토큰 (오프화이트 · 딥 차콜 · 쿨 그레이 · 슬레이트 블루 포인트)
 
 export const colors = {
-  bg: '#FFFFFF',
-  surface: '#FFFFFF',
-  surfaceMuted: '#F4F4F5',
-  surfaceDark: '#09090B',
-  primary: '#09090B',
-  primarySoft: '#18181B',
-  accent: '#09090B',
-  accentLight: '#F4F4F5',
-  accentBorder: '#D4D4D8',
-  text: '#09090B',
+  bg: '#F8F9FA', // 오프화이트 배경
+  surface: '#FFFFFF', // 순백색 카드
+  surfaceMuted: '#E5E7EB', // 쿨 그레이 보조 트랙·배지
+  surfaceDark: '#1A1A1A', // 딥 차콜 다크 컨테이너
+  primary: '#1A1A1A', // 딥 차콜 — 메인 텍스트 & 핵심 버튼
+  primarySoft: '#2E2E2E',
+  accent: '#3B82F6', // 슬레이트 블루 — 얼굴형·체형 진단 수치 및 강조 배지 전용
+  accentLight: '#EFF6FF', // 연한 슬레이트 블루 배지 배경
+  accentBorder: '#BFDBFE',
+  text: '#1A1A1A',
   textSecondary: '#52525B',
-  textMuted: '#71717A',
+  textMuted: '#8E929B',
   textOnDark: '#FFFFFF',
-  border: '#E4E4E7',
-  borderStrong: '#D4D4D8',
-  success: '#15803D',
+  border: '#E5E7EB', // 쿨 그레이 구분선
+  borderStrong: '#D1D5DB',
+  success: '#16A34A',
   successBg: '#F0FDF4',
-  warning: '#92400E',
+  warning: '#D97706',
   warningBg: '#FFFBEB',
   warningBorder: '#FDE68A',
   danger: '#DC2626',
@@ -28,11 +28,11 @@ export const colors = {
 
 export const radius = {
   none: 0,
-  xs: 2,
-  sm: 4,
-  md: 6,
-  lg: 8,
-  xl: 10,
+  xs: 8,
+  sm: 12,
+  md: 16,
+  lg: 20,
+  xl: 24,
   full: 999,
 };
 

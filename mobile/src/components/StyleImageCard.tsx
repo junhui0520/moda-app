@@ -37,7 +37,7 @@ export function StyleImageCard({
       ) : (
         <View style={styles.editorialPlaceholder}>
           <View style={styles.hairline} />
-          <Ionicons name={placeholder.icon} size={28} color="#A1A1AA" />
+          <Ionicons name={placeholder.icon} size={28} color="#8E8E93" />
           <Text style={styles.placeholderEyebrow}>{placeholder.badge}</Text>
           <Text style={styles.placeholderLabel} numberOfLines={1}>
             {label}
@@ -88,14 +88,14 @@ export function StyleThumb({ imageKey, label }: { imageKey: string; label: strin
 }
 
 const styles = StyleSheet.create({
-  items: { flexDirection: 'row', gap: 6, paddingHorizontal: 12, paddingVertical: 10, backgroundColor: '#18181B' },
+  items: { flexDirection: 'row', gap: 8, paddingHorizontal: 12, paddingVertical: 10, backgroundColor: '#F2F2F7' },
   item: { flex: 1, maxWidth: 76 },
-  itemImage: { width: '100%', aspectRatio: 1, backgroundColor: '#27272A' },
-  itemLabel: { fontSize: 10, color: '#A1A1AA', textAlign: 'center', marginTop: 3 },
-  thumb: { width: 84, height: 112, backgroundColor: '#27272A' },
+  itemImage: { width: '100%', aspectRatio: 1, borderRadius: radius.xs, backgroundColor: '#E5E5EA' },
+  itemLabel: { fontSize: 11, color: '#6E6E73', textAlign: 'center', marginTop: 4, fontWeight: '500' },
+  thumb: { width: 84, height: 112, borderRadius: radius.sm, backgroundColor: '#E5E5EA' },
   wrapper: {
     width: '100%',
-    backgroundColor: '#18181B',
+    backgroundColor: '#1C1C1E',
     overflow: 'hidden',
     position: 'relative',
     justifyContent: 'center',
@@ -111,50 +111,46 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: 20,
-    backgroundColor: '#18181B',
+    backgroundColor: '#1C1C1E',
   },
   hairline: {
     width: 24,
     height: 1,
-    backgroundColor: '#52525B',
+    backgroundColor: '#48484A',
     marginBottom: 14,
   },
   placeholderEyebrow: {
     marginTop: 10,
     fontSize: 11,
-    fontWeight: '700',
-    letterSpacing: 2.4,
-    color: '#A1A1AA',
+    fontWeight: '600',
+    letterSpacing: 1.6,
+    color: '#AEAEB2',
   },
   placeholderLabel: {
     marginTop: 4,
     fontSize: 18,
-    fontWeight: '800',
+    fontWeight: '700',
     color: '#FFFFFF',
     letterSpacing: -0.3,
   },
   placeholderSub: {
-    marginTop: 8,
-    fontSize: 10,
-    fontWeight: '600',
-    letterSpacing: 1.8,
-    color: '#71717A',
+    marginTop: 6,
+    fontSize: 11,
+    fontWeight: '500',
+    color: '#8E8E93',
   },
   rankBadge: {
     position: 'absolute',
     top: 12,
     left: 12,
-    backgroundColor: colors.primary,
-    borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.18)',
+    backgroundColor: 'rgba(28, 28, 30, 0.78)',
     paddingHorizontal: 10,
     paddingVertical: 5,
-    borderRadius: radius.xs,
+    borderRadius: radius.full,
   },
   rankText: {
     color: '#FFFFFF',
-    fontSize: 11,
-    fontWeight: '800',
-    letterSpacing: 1,
+    fontSize: 11.5,
+    fontWeight: '700',
   },
 });

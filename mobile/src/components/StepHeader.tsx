@@ -43,27 +43,27 @@ const styles = StyleSheet.create({
   },
   bar: {
     flex: 1,
-    height: 2,
+    height: 4,
+    borderRadius: 999,
   },
   barActive: {
     backgroundColor: colors.primary,
   },
   barInactive: {
-    backgroundColor: colors.border,
+    backgroundColor: colors.borderStrong,
   },
   stepText: {
-    fontSize: 11,
-    fontWeight: '700',
-    letterSpacing: 1,
+    fontSize: 12,
+    fontWeight: '600',
     color: colors.textMuted,
     marginLeft: 6,
   },
   title: {
-    fontSize: 24,
-    fontWeight: '900',
+    fontSize: 28,
+    fontWeight: '700',
     color: colors.text,
-    letterSpacing: -0.6,
-    lineHeight: 31,
+    letterSpacing: -0.5,
+    lineHeight: 34,
   },
   subtitle: {
     marginTop: 6,

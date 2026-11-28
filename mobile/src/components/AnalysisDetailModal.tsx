@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import {
   ActivityIndicator,
   Alert,
+  Image,
   Modal,
   Pressable,
   ScrollView,
@@ -24,6 +25,7 @@ import type {
   SizeKoreaItem,
 } from '../api/types';
 import { useSessionStore } from '../store/useSessionStore';
+import { SlidingSegmentControl } from './SlidingSegmentControl';
 import { colors, radius } from '../theme/theme';
 
 interface AnalysisDetailModalProps {
@@ -61,6 +63,24 @@ function formatFeatureValue(value: number, unit: 'ratio' | 'deg' | 'percent'): s
   return value.toFixed(2);
 }
 
+function labelHairThickness(v: HairThickness): string {
+  return HAIR_THICKNESS_OPTIONS.find((o) => o.value === v)?.label ?? v;
+}
+
+function labelHairCurl(v: HairCurl): string {
+  return HAIR_CURL_OPTIONS.find((o) => o.value === v)?.label ?? v;
+}
+
+function labelHairDensity(v: HairDensity): string {
+  return HAIR_DENSITY_OPTIONS.find((o) => o.value === v)?.label ?? v;
+}
+
+/** 중앙(평균 0%) 기준 ±15% 스케일로 편차 막대 너비(0~50%) 산출 */
+function getDivergingBarWidthPercent(deviationPercent: number): number {
+  const clamped = Math.min(15, Math.abs(deviationPercent));
+  return Math.max(4, Math.round((clamped / 15) * 50));
+}
+
 export function AnalysisDetailModal({
   visible,
   onClose,
@@ -69,6 +89,8 @@ export function AnalysisDetailModal({
   const {
     sessionId,
     baseUrl,
+    localFaceUri,
+    localBodyUri,
     analysisDetail,
     setAnalysisDetail,
     syncAfterPatch,
@@ -214,27 +236,90 @@ export function AnalysisDetailModal({
           </View>
         ) : analysisDetail ? (
           <ScrollView contentContainerStyle={styles.content}>
-            <View style={styles.tabRow}>
-              <Pressable
-                style={[styles.tabBtn, !editMode && styles.tabBtnActive]}
-                onPress={() => setEditMode(false)}
-              >
-                <Text style={[styles.tabText, !editMode && styles.tabTextActive]}>
-                  분석 상세
-                </Text>
-              </Pressable>
-              <Pressable
-                style={[styles.tabBtn, editMode && styles.tabBtnActive]}
-                onPress={() => setEditMode(true)}
-              >
-                <Text style={[styles.tabText, editMode && styles.tabTextActive]}>
-                  결과 수정
-                </Text>
-              </Pressable>
-            </View>
+            <SlidingSegmentControl
+              options={[
+                { value: 'detail', label: '분석 상세' },
+                { value: 'edit', label: '결과 수정' },
+              ]}
+              value={editMode ? 'edit' : 'detail'}
+              onChange={(v) => setEditMode(v === 'edit')}
+            />
 
             {!editMode ? (
               <>
+                {/* 0-1. 로컬 촬영 사진 썸네일 (R-01: 서버 미저장, 기기 로컬 URI만 표시) */}
+                {localFaceUri || localBodyUri ? (
+                  <View style={styles.card}>
+                    <Text style={styles.cardEyebrow}>CAPTURED PHOTOS</Text>
+                    <View style={styles.photoRow}>
+                      {localFaceUri ? (
+                        <View style={styles.photoSlot}>
+                          <Image
+                            source={{ uri: localFaceUri }}
+                            style={styles.photoThumb}
+                            resizeMode="cover"
+                          />
+                          <Text style={styles.photoCaption}>얼굴 사진</Text>
+                        </View>
+                      ) : null}
+                      {localBodyUri ? (
+                        <View style={styles.photoSlot}>
+                          <Image
+                            source={{ uri: localBodyUri }}
+                            style={styles.photoThumb}
+                            resizeMode="cover"
+                          />
+                          <Text style={styles.photoCaption}>전신 사진</Text>
+                        </View>
+                      ) : null}
+                    </View>
+                    <Text style={styles.privacyNote}>
+                      촬영 사진은 기기에서만 임시 표시되며 서버에 저장되지 않아요.
+                    </Text>
+                  </View>
+                ) : null}
+
+                {/* 0-2. 입력 기본정보 · 모질 요약 (R-11: 몸무게·BMI는 절대 비노출) */}
+                {analysisDetail.profileInput ? (
+                  <View style={styles.card}>
+                    <Text style={styles.cardEyebrow}>MY PROFILE</Text>
+                    <View style={styles.profileGrid}>
+                      <View style={styles.profileStat}>
+                        <Text style={styles.profileStatLabel}>나이</Text>
+                        <Text style={styles.profileStatVal}>
+                          {analysisDetail.profileInput.age}세
+                        </Text>
+                      </View>
+                      <View style={styles.profileStat}>
+                        <Text style={styles.profileStatLabel}>키</Text>
+                        <Text style={styles.profileStatVal}>
+                          {analysisDetail.profileInput.heightCm}cm
+                        </Text>
+                      </View>
+                    </View>
+                    <View style={styles.hairSummaryRow}>
+                      <View style={styles.hairTag}>
+                        <Text style={styles.hairTagKey}>굵기</Text>
+                        <Text style={styles.hairTagVal}>
+                          {labelHairThickness(analysisDetail.profileInput.hairThickness)}
+                        </Text>
+                      </View>
+                      <View style={styles.hairTag}>
+                        <Text style={styles.hairTagKey}>곱슬</Text>
+                        <Text style={styles.hairTagVal}>
+                          {labelHairCurl(analysisDetail.profileInput.hairCurl)}
+                        </Text>
+                      </View>
+                      <View style={styles.hairTag}>
+                        <Text style={styles.hairTagKey}>머리숱</Text>
+                        <Text style={styles.hairTagVal}>
+                          {labelHairDensity(analysisDetail.profileInput.hairDensity)}
+                        </Text>
+                      </View>
+                    </View>
+                  </View>
+                ) : null}
+
                 {/* 1. 얼굴형 */}
                 <View style={styles.card}>
                   <View style={styles.cardHeaderRow}>
@@ -260,7 +345,8 @@ export function AnalysisDetailModal({
                     <Text style={styles.descText}>{analysisDetail.face.description}</Text>
                   ) : null}
 
-                  {analysisDetail.face.aiReason ? (
+                  {/* v1.2 규칙: aiReason은 aiResult 기준 문장이므로 status=ANALYZED일 때만 표시 */}
+                  {analysisDetail.face.status === 'ANALYZED' && analysisDetail.face.aiReason ? (
                     <View style={styles.aiReasonBox}>
                       <Text style={styles.aiReasonTitle}>AI 특징 요약</Text>
                       <Text style={styles.aiReasonText}>{analysisDetail.face.aiReason}</Text>
@@ -452,12 +538,51 @@ export function AnalysisDetailModal({
                         {analysisDetail.body.compareToSizeKorea.referenceLabel} 비교 (
                         {analysisDetail.body.compareToSizeKorea.heightCm}cm 기준)
                       </Text>
-                      {analysisDetail.body.compareToSizeKorea.items.map((item) => (
-                        <View key={item.key} style={styles.sizeRow}>
-                          <Text style={styles.sizeLabel}>{item.label}</Text>
-                          <Text style={styles.sizeDir}>{formatSizeKoreaDirection(item)}</Text>
-                        </View>
-                      ))}
+                      <View style={styles.axisLegendRow}>
+                        <Text style={styles.axisLegendText}>평균보다 작음</Text>
+                        <Text style={styles.axisLegendCenter}>평균</Text>
+                        <Text style={styles.axisLegendText}>평균보다 큼</Text>
+                      </View>
+                      {analysisDetail.body.compareToSizeKorea.items.map((item) => {
+                        const barWidth = getDivergingBarWidthPercent(item.deviationPercent);
+                        return (
+                          <View key={item.key} style={styles.sizeChartItem}>
+                            <View style={styles.sizeChartHeader}>
+                              <Text style={styles.sizeLabel}>{item.label}</Text>
+                              <Text style={styles.sizeDir}>{formatSizeKoreaDirection(item)}</Text>
+                            </View>
+                            <View style={styles.divergingTrack}>
+                              <View style={styles.divergingHalfLeft}>
+                                {item.direction === 'BELOW' ? (
+                                  <View
+                                    style={[
+                                      styles.divergingBarLeft,
+                                      { width: `${barWidth * 2}%` },
+                                    ]}
+                                  />
+                                ) : null}
+                              </View>
+                              <View style={styles.divergingCenterLine} />
+                              <View style={styles.divergingHalfRight}>
+                                {item.direction === 'ABOVE' ? (
+                                  <View
+                                    style={[
+                                      styles.divergingBarRight,
+                                      { width: `${barWidth * 2}%` },
+                                    ]}
+                                  />
+                                ) : null}
+                              </View>
+                              {item.direction === 'SIMILAR' ? (
+                                <View style={styles.divergingCenterDot} />
+                              ) : null}
+                            </View>
+                            <Text style={styles.sizeMmSub}>
+                              추정 {item.userMm}mm · 평균 {item.refMm}mm
+                            </Text>
+                          </View>
+                        );
+                      })}
                     </View>
                   ) : null}
                 </View>
@@ -635,34 +760,119 @@ const styles = StyleSheet.create({
   },
   tabRow: {
     flexDirection: 'row',
-    borderWidth: 1,
-    borderColor: colors.border,
-    borderRadius: radius.sm,
-    overflow: 'hidden',
+    backgroundColor: colors.surfaceMuted,
+    borderRadius: 10,
+    padding: 3,
+    gap: 2,
   },
   tabBtn: {
     flex: 1,
-    paddingVertical: 11,
+    paddingVertical: 8,
+    borderRadius: 8,
     alignItems: 'center',
-    backgroundColor: colors.surface,
   },
   tabBtnActive: {
-    backgroundColor: colors.primary,
+    backgroundColor: colors.surface,
+    shadowColor: '#000000',
+    shadowOpacity: 0.08,
+    shadowRadius: 3,
+    shadowOffset: { width: 0, height: 1 },
+    elevation: 1,
   },
   tabText: {
     fontSize: 13.5,
-    fontWeight: '800',
+    fontWeight: '500',
     color: colors.textSecondary,
   },
   tabTextActive: {
-    color: '#FFFFFF',
+    fontWeight: '600',
+    color: colors.text,
   },
   card: {
     backgroundColor: colors.surface,
-    borderRadius: radius.sm,
-    padding: 18,
     borderWidth: 1,
     borderColor: colors.border,
+    borderRadius: radius.md,
+    padding: 18,
+  },
+  photoRow: {
+    marginTop: 12,
+    flexDirection: 'row',
+    gap: 10,
+  },
+  photoSlot: {
+    flex: 1,
+    gap: 6,
+  },
+  photoThumb: {
+    width: '100%',
+    aspectRatio: 3 / 4,
+    borderRadius: radius.xs,
+    backgroundColor: colors.surfaceMuted,
+    borderWidth: 1,
+    borderColor: colors.border,
+  },
+  photoCaption: {
+    fontSize: 12,
+    fontWeight: '700',
+    color: colors.textSecondary,
+    textAlign: 'center',
+  },
+  privacyNote: {
+    marginTop: 10,
+    fontSize: 11.5,
+    color: colors.textMuted,
+    lineHeight: 16,
+  },
+  profileGrid: {
+    marginTop: 12,
+    flexDirection: 'row',
+    gap: 10,
+  },
+  profileStat: {
+    flex: 1,
+    backgroundColor: colors.surfaceMuted,
+    borderRadius: radius.xs,
+    paddingVertical: 11,
+    paddingHorizontal: 14,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  profileStatLabel: {
+    fontSize: 12.5,
+    fontWeight: '600',
+    color: colors.textSecondary,
+  },
+  profileStatVal: {
+    fontSize: 15,
+    fontWeight: '900',
+    color: colors.text,
+  },
+  hairSummaryRow: {
+    marginTop: 10,
+    flexDirection: 'row',
+    gap: 8,
+  },
+  hairTag: {
+    flex: 1,
+    borderWidth: 1,
+    borderColor: colors.border,
+    borderRadius: radius.xs,
+    paddingVertical: 9,
+    paddingHorizontal: 8,
+    alignItems: 'center',
+    gap: 3,
+  },
+  hairTagKey: {
+    fontSize: 11,
+    fontWeight: '600',
+    color: colors.textMuted,
+  },
+  hairTagVal: {
+    fontSize: 13,
+    fontWeight: '800',
+    color: colors.text,
   },
   cardHeaderRow: {
     flexDirection: 'row',
@@ -703,15 +913,14 @@ const styles = StyleSheet.create({
   },
   aiReasonBox: {
     marginTop: 14,
-    backgroundColor: colors.surfaceMuted,
-    borderLeftWidth: 2.5,
-    borderLeftColor: colors.primary,
-    padding: 12,
+    backgroundColor: colors.accentLight,
+    borderRadius: radius.sm,
+    padding: 13,
   },
   aiReasonTitle: {
-    fontSize: 11.5,
-    fontWeight: '800',
-    color: colors.text,
+    fontSize: 12,
+    fontWeight: '700',
+    color: colors.accent, // 진단 요약 포인트 (#3B82F6)
     marginBottom: 4,
   },
   aiReasonText: {
@@ -735,16 +944,18 @@ const styles = StyleSheet.create({
   metricValue: {
     fontSize: 12.5,
     fontWeight: '800',
-    color: colors.text,
+    color: colors.accent, // 진단 수치 강조 (#3B82F6)
   },
   progressTrack: {
-    height: 4,
+    height: 5,
+    borderRadius: 999,
     backgroundColor: colors.surfaceMuted,
     overflow: 'hidden',
   },
   progressFill: {
     height: '100%',
-    backgroundColor: colors.primary,
+    borderRadius: 999,
+    backgroundColor: colors.accent, // 진단 바 강조 (#3B82F6)
   },
   infoBanner: {
     marginTop: 12,
@@ -797,7 +1008,8 @@ const styles = StyleSheet.create({
   },
   candFill: {
     height: '100%',
-    backgroundColor: colors.primary,
+    borderRadius: 999,
+    backgroundColor: colors.accent, // 후보 분포 강조 (#3B82F6)
   },
   candPct: {
     width: 36,
@@ -828,23 +1040,88 @@ const styles = StyleSheet.create({
     fontWeight: '800',
     color: colors.text,
   },
-  sizeRow: {
+  axisLegendRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 10,
+  },
+  axisLegendText: {
+    fontSize: 10.5,
+    fontWeight: '600',
+    color: colors.textMuted,
+  },
+  axisLegendCenter: {
+    fontSize: 10.5,
+    fontWeight: '800',
+    color: colors.textSecondary,
+  },
+  sizeChartItem: {
+    paddingVertical: 9,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.surfaceMuted,
+    gap: 6,
+  },
+  sizeChartHeader: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingVertical: 7,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.surfaceMuted,
   },
   sizeLabel: {
     fontSize: 13,
-    fontWeight: '600',
+    fontWeight: '700',
     color: colors.text,
   },
   sizeDir: {
-    fontSize: 13,
+    fontSize: 12.5,
     fontWeight: '800',
     color: colors.text,
+  },
+  divergingTrack: {
+    height: 10,
+    backgroundColor: colors.surfaceMuted,
+    borderRadius: radius.xs,
+    flexDirection: 'row',
+    alignItems: 'center',
+    position: 'relative',
+    overflow: 'hidden',
+  },
+  divergingHalfLeft: {
+    flex: 1,
+    height: '100%',
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+  },
+  divergingHalfRight: {
+    flex: 1,
+    height: '100%',
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+  },
+  divergingCenterLine: {
+    width: 1.5,
+    height: '100%',
+    backgroundColor: colors.borderStrong,
+  },
+  divergingBarLeft: {
+    height: '100%',
+    backgroundColor: colors.textMuted,
+  },
+  divergingBarRight: {
+    height: '100%',
+    backgroundColor: colors.accent, // Size Korea 편차 강조 (#3B82F6)
+  },
+  divergingCenterDot: {
+    position: 'absolute',
+    left: '50%',
+    marginLeft: -4,
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: colors.accent,
+  },
+  sizeMmSub: {
+    fontSize: 11,
+    color: colors.textMuted,
   },
   editCtaBtn: {
     paddingVertical: 15,
@@ -869,29 +1146,27 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   chip: {
-    paddingHorizontal: 13,
+    paddingHorizontal: 14,
     paddingVertical: 9,
-    borderRadius: radius.xs,
-    borderWidth: 1,
-    borderColor: colors.borderStrong,
-    backgroundColor: colors.surface,
+    borderRadius: radius.full,
+    backgroundColor: colors.bg,
   },
   chipActive: {
-    borderColor: colors.primary,
     backgroundColor: colors.primary,
   },
   chipText: {
-    fontSize: 13,
-    fontWeight: '700',
-    color: colors.textSecondary,
+    fontSize: 13.5,
+    fontWeight: '500',
+    color: colors.text,
   },
   chipTextActive: {
+    fontWeight: '600',
     color: '#FFFFFF',
   },
   applyBtn: {
     marginTop: 28,
     paddingVertical: 15,
-    borderRadius: radius.sm,
+    borderRadius: 14,
     backgroundColor: colors.primary,
     alignItems: 'center',
   },

@@ -218,7 +218,7 @@ export function ChatScreen({ navigation }: Props) {
     <SafeAreaView style={styles.safe} edges={['top', 'bottom']}>
       <View style={styles.header}>
         <Pressable onPress={() => navigation.goBack()} style={styles.backBtn}>
-          <Ionicons name="chevron-back" size={24} color={colors.text} />
+          <Ionicons name="chevron-back" size={26} color={colors.primary} />
         </Pressable>
         <View style={{ flex: 1 }}>
           <Text style={styles.headerTitle}>MODA 챗봇</Text>
@@ -226,7 +226,7 @@ export function ChatScreen({ navigation }: Props) {
         </View>
         <View style={styles.turnBadge}>
           <Text style={styles.turnBadgeText}>
-            {remainingTurns} / {maxTurns}
+            남은 대화 {remainingTurns}/{maxTurns}
           </Text>
         </View>
       </View>
@@ -378,24 +378,24 @@ export function ChatScreen({ navigation }: Props) {
 const styles = StyleSheet.create({
   safe: {
     flex: 1,
-    backgroundColor: colors.bg,
+    backgroundColor: colors.surface,
   },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
-    paddingHorizontal: 14,
-    paddingVertical: 12,
-    borderBottomWidth: 1,
+    gap: 6,
+    paddingHorizontal: 12,
+    paddingVertical: 11,
+    backgroundColor: colors.surface,
+    borderBottomWidth: StyleSheet.hairlineWidth,
     borderBottomColor: colors.border,
   },
   backBtn: {
     padding: 4,
   },
   headerTitle: {
-    fontSize: 15.5,
-    fontWeight: '900',
-    letterSpacing: 0.5,
+    fontSize: 16,
+    fontWeight: '700',
     color: colors.text,
   },
   headerSub: {
@@ -404,16 +404,15 @@ const styles = StyleSheet.create({
     marginTop: 1,
   },
   turnBadge: {
-    borderWidth: 1,
-    borderColor: colors.borderStrong,
-    paddingHorizontal: 9,
-    paddingVertical: 4,
-    borderRadius: radius.xs,
+    backgroundColor: colors.bg,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: radius.full,
   },
   turnBadgeText: {
-    fontSize: 11,
-    fontWeight: '800',
-    color: colors.text,
+    fontSize: 11.5,
+    fontWeight: '600',
+    color: colors.textSecondary,
   },
   centerBox: {
     flex: 1,
@@ -454,29 +453,29 @@ const styles = StyleSheet.create({
     maxWidth: '90%',
   },
   botBadge: {
-    width: 26,
-    height: 26,
-    borderRadius: radius.xs,
-    backgroundColor: colors.primary,
+    width: 28,
+    height: 28,
+    borderRadius: radius.full,
+    backgroundColor: colors.surfaceMuted,
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: 2,
   },
   botBadgeText: {
-    color: '#FFFFFF',
+    color: colors.text,
     fontSize: 12,
-    fontWeight: '900',
+    fontWeight: '700',
   },
   assistantBubble: {
     flexShrink: 1,
-    backgroundColor: colors.surfaceMuted,
-    borderRadius: radius.md,
-    borderTopLeftRadius: 2,
+    backgroundColor: '#F1F3F5',
+    borderRadius: 18,
+    borderBottomLeftRadius: 5,
     paddingHorizontal: 14,
-    paddingVertical: 11,
+    paddingVertical: 10,
   },
   assistantText: {
-    fontSize: 14,
+    fontSize: 15,
     color: colors.text,
     lineHeight: 21,
   },
@@ -486,7 +485,7 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   typingText: {
-    fontSize: 13,
+    fontSize: 13.5,
     color: colors.textSecondary,
   },
   userRow: {
@@ -494,19 +493,19 @@ const styles = StyleSheet.create({
   },
   userBubble: {
     maxWidth: '82%',
-    backgroundColor: colors.primary,
-    borderRadius: radius.md,
-    borderTopRightRadius: 2,
+    backgroundColor: colors.primary, // Apple iMessage 발신 블루 말풍선
+    borderRadius: 18,
+    borderBottomRightRadius: 5,
     paddingHorizontal: 14,
-    paddingVertical: 11,
+    paddingVertical: 10,
   },
   userBubbleFailed: {
-    backgroundColor: '#7F1D1D',
+    backgroundColor: colors.danger,
   },
   userText: {
-    fontSize: 14,
+    fontSize: 15,
     color: '#FFFFFF',
-    lineHeight: 20,
+    lineHeight: 21,
   },
   failedBar: {
     marginTop: 6,
@@ -545,8 +544,8 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   promptsScroll: {
-    maxHeight: 46,
-    backgroundColor: colors.bg,
+    maxHeight: 48,
+    backgroundColor: colors.surface,
   },
   promptsBar: {
     paddingHorizontal: 14,
@@ -555,16 +554,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   promptChip: {
-    backgroundColor: colors.surface,
+    backgroundColor: colors.bg,
     borderWidth: 1,
-    borderColor: colors.borderStrong,
-    paddingHorizontal: 11,
-    paddingVertical: 6,
-    borderRadius: radius.xs,
+    borderColor: colors.border,
+    paddingHorizontal: 13,
+    paddingVertical: 7,
+    borderRadius: radius.full,
   },
   promptChipText: {
-    fontSize: 12,
-    fontWeight: '700',
+    fontSize: 13,
+    fontWeight: '600',
     color: colors.text,
   },
   inputBar: {
@@ -574,31 +573,30 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     paddingVertical: 10,
     backgroundColor: colors.surface,
-    borderTopWidth: 1,
+    borderTopWidth: StyleSheet.hairlineWidth,
     borderTopColor: colors.border,
   },
   textInput: {
     flex: 1,
     maxHeight: 96,
-    backgroundColor: colors.surfaceMuted,
-    borderWidth: 1,
-    borderColor: colors.border,
-    borderRadius: radius.sm,
-    paddingHorizontal: 13,
+    backgroundColor: colors.bg,
+    borderRadius: 20,
+    paddingHorizontal: 16,
     paddingVertical: 10,
-    fontSize: 14,
+    fontSize: 15,
     color: colors.text,
   },
   textInputDisabled: {
     opacity: 0.5,
   },
   sendBtn: {
-    width: 40,
-    height: 40,
-    borderRadius: radius.sm,
+    width: 36,
+    height: 36,
+    borderRadius: 18,
     backgroundColor: colors.primary,
     alignItems: 'center',
     justifyContent: 'center',
+    marginBottom: 2,
   },
   sendBtnDisabled: {
     opacity: 0.3,
