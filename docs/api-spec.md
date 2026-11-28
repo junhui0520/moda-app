@@ -2,11 +2,11 @@
 
 | 항목 | 내용 |
 |---|---|
-| 문서 버전 | v1.2 (API `v1`, 추천 규칙 `ruleVersion: "v1.1-draft"`, AI 얼굴 분석 `v8` 대응) |
+| 문서 버전 | v1.3 (API `v1`, 추천 규칙 `ruleVersion: "v1.1-draft"`, AI 얼굴 분석 `v8` · 실시간 분석 대응) |
 | 작성 | 백엔드 박준희 |
 | 대상 | 프론트엔드 이상현(Expo), AI 김민건·최기완 |
 | 관련 문서 | `docs/style-rules.md` (Enum·규칙·문구 정의), `docs/recommendation-dataset.csv` |
-| 범위 | 대회 MVP — 비로그인 게스트 세션 기반 API 10종(분석·결과 8종 + 챗봇 2종) + 부록(백엔드↔AI 내부 연동 스펙, TypeScript 타입) |
+| 범위 | 대회 MVP — 비로그인 게스트 세션 기반 API 12종(분석·결과 8종 + 실시간 분석 2종 + 챗봇 2종) + 부가 API(스타일 이미지·헬스체크) + 부록(백엔드↔AI 내부 연동 스펙, TypeScript 타입) |
 
 ---
 
@@ -17,6 +17,7 @@
 | v1.0 | 2026-11-19 | 최초 작성 (API 8종, 공통 에러 포맷, 화면 매핑, Mock 헤더, AI 연동 스펙) |
 | v1.1 | 2026-11-20 | 맞춤 유형 24종(`TYPE-01`~`TYPE-24`) 반영 및 얼굴형 그룹 필드 삭제(`basis`, TS 타입), 유형명 확정 여부 필드명을 `nameConfirmed`로 통일, 분석 불가 사진은 재촬영만 허용(“직접 선택하기”는 AI 장애 503/504 시에만), 체형 AI 응답의 부가 필드 선택화(`null`/`[]` 허용), `X-Mock-Body-Minimal` 헤더 추가, 사진 메모리 처리 원칙 명시 |
 | v1.2 | 2026-11-25 | 결과 화면 이후 **[챗봇 이용하기]** 기능 반영: 챗봇 API 2종(⑨ 대화 진입 조회, ⑩ 메시지 전송) 추가, 에러 코드 3종(`CHAT_TURN_LIMIT_EXCEEDED`, `CHAT_SERVER_UNAVAILABLE`, `CHAT_TIMEOUT`) 추가, 세션 삭제·만료 시 챗봇 대화 내역(`chat_message`) 즉시 삭제, `moda.chat.mode` Mock 설정 추가, 화면↔API 매핑 갱신. AI `v8` 대응: 얼굴 분석 응답 `reason`(선택) 필드 및 `FaceDetail.aiReason` 추가. 기존 API ①~⑧의 요청·응답 구조는 변경 없음(`FaceDetail`에 `aiReason` 필드 추가만 해당) |
+| v1.3 | 2026-11-28 | 실시간 분석(`ai/LIVE_INTEGRATION.md`) 반영: ③-L `POST .../analyze/face/live`, ④-L `POST .../analyze/body/live` 추가(요청 = 측정 페이지 JSON, 응답 = ③·④와 동일), 부록 A.7 AI `/v1/live/face`·`/v1/live/body` 추가, 경고 코드 2종(`LIVE_NOT_ENOUGH_FRAMES`, `BODY_LEGS_CLOSED`) 추가. 부가 API `GET /api/v1/style-images`·`GET /api/v1/health` 요약 추가. 기존 API ①~⑩의 요청·응답 구조는 변경 없음 |
 
 ---
 
@@ -87,7 +88,7 @@
 
 ### 1.5 Mock 모드 테스트 헤더 (프론트엔드 테스트용)
 
-서버가 `moda.ai.mode=mock`일 때만 동작하고, `external` 모드에서는 무시됩니다. `POST .../analyze/face`, `POST .../analyze/body`에 붙입니다. (단, `X-Mock-Delay-Ms`는 `moda.chat.mode=mock`일 때 ⑩ 챗봇 메시지 전송에도 적용 — 아래 챗봇 Mock 참고)
+서버가 `moda.ai.mode=mock`일 때만 동작하고, `external` 모드에서는 무시됩니다. `POST .../analyze/face`, `POST .../analyze/body`와 실시간 분석 `POST .../analyze/face/live`, `POST .../analyze/body/live`에 붙입니다(Mock은 측정값을 보지 않고 사진 분석과 같은 결과). (단, `X-Mock-Delay-Ms`는 `moda.chat.mode=mock`일 때 ⑩ 챗봇 메시지 전송에도 적용 — 아래 챗봇 Mock 참고)
 
 | 헤더 | 값 | 효과 | 기본값(헤더 없음) |
 |---|---|---|---|
@@ -331,18 +332,18 @@
 | 400 | `PHOTO_CONSENT_REQUIRED` | ① guest | 사진 분석 동의가 필요해요. | 동의 체크 유도 |
 | 400 | `IMAGE_REQUIRED` | ③ face, ④ body | 사진을 첨부해 주세요. | 촬영 화면 유지 |
 | 404 | `SESSION_NOT_FOUND` | ②~⑦, ⑨·⑩ chat | 체험 세션을 찾을 수 없어요. 처음부터 다시 시작해 주세요. | 로컬 `sessionId` 삭제 → 시작 화면 |
-| 409 | `PROFILE_INPUT_REQUIRED` | ④ body, ⑦ patch(모질 수정 시), ⑨·⑩ chat | 기본 정보를 먼저 입력해 주세요. | 기본 정보 화면으로 이동 |
+| 409 | `PROFILE_INPUT_REQUIRED` | ④·④-L body, ⑦ patch(모질 수정 시), ⑨·⑩ chat | 기본 정보를 먼저 입력해 주세요. | 기본 정보 화면으로 이동 |
 | 409 | `ANALYSIS_INCOMPLETE` | ⑤ result, ⑨·⑩ chat | 얼굴과 전신 분석이 모두 필요해요. | `meta.nextStep` 화면으로 이동 |
-| 409 | `ANALYSIS_IN_PROGRESS` | ③ face, ④ body | 분석이 진행 중이에요. 잠시만 기다려 주세요. | 버튼 연타 방지, 무시 |
+| 409 | `ANALYSIS_IN_PROGRESS` | ③·③-L face, ④·④-L body | 분석이 진행 중이에요. 잠시만 기다려 주세요. | 버튼 연타 방지, 무시 |
 | 410 | `SESSION_EXPIRED` | ②~⑦, ⑨·⑩ chat | 체험 시간이 지나 세션이 종료되었어요. 처음부터 다시 시작해 주세요. | 로컬 `sessionId` 삭제 → 시작 화면 |
 | 413 | `IMAGE_TOO_LARGE` | ③ face, ④ body | 사진 용량은 10MB 이하만 가능해요. | 압축 후 재전송 (`quality: 0.7` 권장) |
 | 415 | `UNSUPPORTED_IMAGE_TYPE` | ③ face, ④ body | JPG 또는 PNG 사진만 분석할 수 있어요. | 카메라 포맷 `jpeg` 지정 |
 | 429 | `CHAT_TURN_LIMIT_EXCEEDED` | ⑩ chat | 이번 체험에서 대화할 수 있는 횟수(20회)를 모두 사용했어요. | 입력창·추천 질문 칩 비활성화 + 안내 문구 표시 (`meta.maxTurns`, `meta.usedTurns`) |
 | 500 | `INTERNAL_ERROR` | 전체 | 일시적인 오류가 발생했어요. 잠시 후 다시 시도해 주세요. | 재시도 버튼 |
-| 502 | `AI_BAD_RESPONSE` | ③ face, ④ body | 분석 결과를 처리하지 못했어요. 다시 촬영해 주세요. | 재촬영 |
-| 503 | `AI_SERVER_UNAVAILABLE` | ③ face, ④ body | 분석 서버에 연결할 수 없어요. 잠시 후 다시 시도해 주세요. | 재시도 + “직접 선택하기” 노출 |
+| 502 | `AI_BAD_RESPONSE` | ③·③-L face, ④·④-L body | 분석 결과를 처리하지 못했어요. 다시 촬영해 주세요. | 재촬영 (실시간: 재측정) |
+| 503 | `AI_SERVER_UNAVAILABLE` | ③·③-L face, ④·④-L body | 분석 서버에 연결할 수 없어요. 잠시 후 다시 시도해 주세요. | 재시도 + “직접 선택하기” 노출 |
 | 503 | `CHAT_SERVER_UNAVAILABLE` | ⑩ chat | 챗봇 서버에 연결할 수 없어요. 잠시 후 다시 시도해 주세요. | 입력한 문장 유지 + [다시 보내기] (턴 차감 없음) |
-| 504 | `AI_TIMEOUT` | ③ face, ④ body | 분석 시간이 초과되었어요. 다시 시도해 주세요. | 재시도 + “직접 선택하기” 노출 |
+| 504 | `AI_TIMEOUT` | ③·③-L face, ④·④-L body | 분석 시간이 초과되었어요. 다시 시도해 주세요. | 재시도 + “직접 선택하기” 노출 |
 | 504 | `CHAT_TIMEOUT` | ⑩ chat | 답변 생성 시간이 초과되었어요. 다시 시도해 주세요. | 입력한 문장 유지 + [다시 보내기] (턴 차감 없음) |
 
 > 사진이 분석 불가(얼굴 미검출, 고개 돌림 등)인 경우는 **에러가 아닙니다.** HTTP 200 + `usable: false` + `warnings`로 응답합니다(API ③·④ 참고).
@@ -359,12 +360,16 @@
 | ② | `POST` | `/api/v1/sessions/{sessionId}/profile-input` | 나이·키·몸무게·모질 3항목 저장 |
 | ③ | `POST` | `/api/v1/sessions/{sessionId}/analyze/face` | 얼굴 사진 분석 (얼굴형 6종) |
 | ④ | `POST` | `/api/v1/sessions/{sessionId}/analyze/body` | 전신 사진 분석 (체형 4종, 세션 `heightCm` 사용) |
+| ③-L | `POST` | `/api/v1/sessions/{sessionId}/analyze/face/live` | 얼굴 **실시간** 분석: 휴대폰 측정 페이지가 잰 값(JSON)만 전송, 사진 없음 (응답 = ③) |
+| ④-L | `POST` | `/api/v1/sessions/{sessionId}/analyze/body/live` | 체형 **실시간** 분석: 측정값(JSON) + 세션 `heightCm` (응답 = ④) |
 | ⑤ | `GET` | `/api/v1/sessions/{sessionId}/result` | 결과 화면: 맞춤 유형 + 추천 헤어 2 + 추천 패션 3 |
 | ⑥ | `GET` | `/api/v1/sessions/{sessionId}/analysis-detail` | [분석 상세보기] 팝업: 얼굴형·체형 상세 |
 | ⑦ | `PATCH` | `/api/v1/sessions/{sessionId}/profile` | 얼굴형·체형·모질 수동 보정 + 결과 재산출 |
 | ⑧ | `DELETE` | `/api/v1/sessions/{sessionId}` | 세션·임시 사진 즉시 초기화 (부스 시연용) |
 | ⑨ | `GET` | `/api/v1/sessions/{sessionId}/chat/messages` | 챗봇 화면 진입: 대화 내역 + 맞춤 첫 인사 + 추천 질문 + 남은 턴 |
 | ⑩ | `POST` | `/api/v1/sessions/{sessionId}/chat/messages` | 챗봇 메시지 전송: 세션 분석 결과 기반 LLM 답변 생성 |
+
+부가 API (세션 불필요, 아래 [부가 API] 참고): `GET /api/v1/style-images` (스타일 이미지 경로), `GET /api/v1/health` (헬스체크)
 
 아래 예시는 모두 같은 체험자 기준입니다: `age=21, heightCm=174, weightKg=63, hairThickness=THIN, hairCurl=SEMI_CURLY, hairDensity=MEDIUM`, 얼굴형 `heart`(faceIndex 1), 체형 `small_inv_triangle`(bodyIndex 1) → `1 × 6 + 1 + 1 = 8` → `TYPE-08` (`recommendation-dataset.csv`의 S006과 동일).
 
@@ -659,6 +664,48 @@
 > `usable: false` 처리는 ③과 동일합니다(재촬영 안내만, 다음 단계 이동 불가).
 
 **에러**: `409 PROFILE_INPUT_REQUIRED` + ③의 에러 전체
+
+---
+
+### ③-L · ④-L 실시간 분석 (사진 없이 측정값만)
+
+`POST /api/v1/sessions/{sessionId}/analyze/face/live` · `POST /api/v1/sessions/{sessionId}/analyze/body/live`
+
+- 앱 WebView가 AI 서버의 측정 페이지 `{AI}/live/live.html?mode=face|body`를 띄우고, 측정이 끝나면 페이지가 보낸 `moda-live-result` 메시지의 **`payload`를 가공하지 않고 그대로** 전송합니다 (`ai/LIVE_INTEGRATION.md` 1.2·3장). 사진은 휴대폰 밖으로 나가지 않습니다 (R-01).
+- **응답·결과 반영·TTL 연장·분석 잠금·Mock 헤더는 ③·④와 완전히 같습니다.** 결과 화면·상세보기·수동 보정·추천은 그대로 사용합니다.
+- 백엔드는 `payload`에서 `rounds`·`quality`만 골라 AI로 전달합니다(다른 필드는 버림). ④-L은 **세션의 `heightCm`을 서버가 붙이며**, 요청에 `height_cm`이 있어도 무시합니다.
+- 측정값이 부족하면 HTTP 200 + `usable: false` + `LIVE_NOT_ENOUGH_FRAMES`(RETAKE) → 재측정 안내 (③의 분석 불가 처리와 동일).
+
+**Request Body** (`application/json`)
+
+```json
+{
+  "rounds": [
+    [{ "length_ratio": 1.18, "forehead_ratio": 0.93, "jaw_ratio": 0.69, "chin_ratio": 0.62, "jaw_angle_deg": 141.5 }, { "...": "..." }],
+    [{ "...": "..." }]
+  ],
+  "quality": { "yaw": 1.2, "pitch": 3.4 }
+}
+```
+
+| 필드 | 타입 | 필수 | 검증 (실패 시 `400 INVALID_REQUEST`, `details[].field = "rounds"` / `"rounds[i]"`) |
+|---|---|---|---|
+| `rounds` | 프레임 객체 배열의 배열 | 필수 | 비어 있지 않은 배열, 회차 최대 5개, 각 회차는 배열(프레임 최대 60개), 각 프레임은 객체. 프레임 안 값은 AI가 판정 |
+| `quality` | object | 선택 | 촬영 품질 원시값 (객체일 때만 AI로 전달) |
+
+**Response `200 OK`**: ③ `FaceAnalysisData` / ④ `BodyAnalysisData`와 동일.
+
+**에러**: ③·④와 같음. 단 사진 관련 에러(`IMAGE_REQUIRED`·`IMAGE_TOO_LARGE`·`UNSUPPORTED_IMAGE_TYPE`) 대신 `400 INVALID_REQUEST`(rounds 형식). ④-L은 `409 PROFILE_INPUT_REQUIRED`를 rounds 검사보다 먼저 확인합니다. JSON이 아닌 `Content-Type`은 `415`(`code: INVALID_REQUEST`).
+
+---
+
+### [부가 API] 스타일 이미지 · 헬스체크
+
+| Method | URL | 응답 `data` | 비고 |
+|---|---|---|---|
+| `GET` | `/api/v1/style-images` | `{ [imageKey]: [{ "url": string, "items": [{ "label": string, "url": string }] }] }` | 추천·챗봇의 `imageKey` → 이미지 경로. 스타일당 여러 장(앱이 랜덤 선택). 헤어는 대표 사진(`items: []`), 패션은 코디 전신 + 아이템 사진. 이미지가 없는 스타일은 키가 없음(앱은 텍스트로 대체), DB 미적재 시 `{}` |
+| `GET` | `/images/hair/**`, `/images/style/**` | 이미지 파일 | 위 `url`을 `BASE_URL + url`로 표시. 원본은 저장소 `hair_images/`, `style/`, 경로 데이터는 `sql/` (H2 기동 시 자동 적재) |
+| `GET` | `/api/v1/health` | `{ "status": "ok", "aiMode": "mock" \| "external", "chatMode": "mock" \| "external" }` | 인증·세션 없음, 클라우드 헬스체크용 |
 
 ---
 
@@ -1462,7 +1509,9 @@
 [다음]          POST   /api/v1/sessions/{sessionId}/profile-input     → nextStep=FACE_ANALYSIS
 [촬영]          POST   /api/v1/sessions/{sessionId}/analyze/face      → usable=false면 재촬영 반복 (usable=true일 때만 다음 화면)
 [촬영/선택]     POST   /api/v1/sessions/{sessionId}/analyze/body      → usable=true일 때만 nextStep=RESULT_READY
+  └ 실시간 측정 사용 시 위 두 줄 대신: POST .../analyze/face/live, POST .../analyze/body/live (측정 페이지 payload 그대로)
 (결과 진입)     GET    /api/v1/sessions/{sessionId}/result
+(이미지)        GET    /api/v1/style-images                           → imageKey별 이미지 경로 (앱 시작 시 1회)
 [분석 상세보기] GET    /api/v1/sessions/{sessionId}/analysis-detail
 [적용]          PATCH  /api/v1/sessions/{sessionId}/profile           → data.result로 화면 갱신
 [챗봇 이용하기] GET    /api/v1/sessions/{sessionId}/chat/messages     → welcomeMessage + messages + suggestedPrompts
@@ -1668,6 +1717,8 @@
 | `BODY_LOW_VISIBILITY` | 전신 | `RETAKE` | 어깨·골반·무릎·발목 신뢰도 < `BODY_MIN_VISIBILITY`(0.6) | 어깨·골반·무릎·발목이 잘 보이도록 촬영해 주세요. |
 | `SHOULDER_TILT` | 전신 | `RETAKE` | 어깨 기울기 > `BODY_MAX_SHOULDER_TILT_DEG`(6°) | 어깨가 수평이 되도록 똑바로 서 주세요. |
 | `BODY_BORDERLINE` | 전신 | `INFO` | `borderline=true` (백엔드가 자동 추가 가능) | 두 체형의 경계에 가까워요. [분석 상세보기]에서 확인하고 수정할 수 있어요. |
+| `BODY_LEGS_CLOSED` | 전신 | `INFO` | 실시간 체형 측정(④-L)에서 다리를 모으고 서서 다리 비율 측정이 제한됨 | 다리를 살짝 벌리면 다리 비율까지 더 정확하게 볼 수 있어요. |
+| `LIVE_NOT_ENOUGH_FRAMES` | 공통 | `RETAKE` | 실시간 측정(③-L·④-L)의 유효 프레임·회차 부족 (AI `/v1/live/*`가 `usable=false`와 함께 반환) | 측정이 충분히 되지 않았어요. 안내에 맞춰 다시 측정해 주세요. |
 | `ANALYSIS_UNUSABLE` | 공통 | `RETAKE` | `usable=false`인데 `RETAKE` 코드가 하나도 없을 때 **백엔드가 자동 추가** | 사진을 분석할 수 없어요. 가이드에 맞춰 다시 촬영해 주세요. |
 | (정의되지 않은 코드) | 공통 | `INFO` | — | 촬영 상태를 한 번 더 확인해 주세요. |
 
@@ -1685,6 +1736,18 @@
 | 체형 선택 필드 누락·`null`·형식 오류 | 에러 없음, 해당 필드만 `null`/`[]` (A.4 처리 규칙) |
 | 얼굴 `reason` 누락·`null`·형식 오류 (`v8`) | 에러 없음, `aiReason = null` (A.4 규칙 5) |
 | `200` + `usable=false` | `200` + `usable=false` (에러 아님) |
+
+### A.7 실시간 분석 엔드포인트 (AI 서버, `ai/LIVE_INTEGRATION.md` 1.3)
+
+| Method | URL | Content-Type | 요청 | 응답 |
+|---|---|---|---|---|
+| `GET` | `{AI_BASE_URL}/live/live.html?mode=face\|body` | — | 선택: `&camera=environment`(후면), `&rounds=1~3` | 측정 페이지 (앱 WebView, **https 필수**) |
+| `POST` | `{AI_BASE_URL}/v1/live/face` | `application/json` | `rounds`, `quality`(선택), `request_id`(선택) | A.2와 같음 (+ `n_rounds`, `n_frames`, `round_results` — 백엔드는 무시) |
+| `POST` | `{AI_BASE_URL}/v1/live/body` | `application/json` | 위 + **`height_cm`(int, 필수)** — 세션 값을 백엔드가 붙임 | A.3과 같음 (+ 같은 추가 필드) |
+
+- 응답 검증·정규화·경고 처리는 A.4·A.5와 같습니다(같은 파서 사용). 측정 부족은 `200` + `usable=false` + `warnings: ["LIVE_NOT_ENOUGH_FRAMES"]`.
+- 오류 변환은 A.6과 같습니다. AI의 요청 검증 오류 `422`(예: `height_cm` 누락)는 4xx이므로 `502 AI_BAD_RESPONSE`.
+- 타임아웃은 사진 분석과 같은 설정(연결 3초, 읽기 얼굴 15초·전신 20초)을 씁니다. 판정만 하므로 보통 50ms 이내입니다.
 
 ---
 
@@ -1932,6 +1995,18 @@ export interface SessionDeleteData {
   deletedPhotoCount: number;
   deletedAt: string;
 }
+
+// ③-L · ④-L 실시간 분석 요청 (응답은 FaceAnalysisData / BodyAnalysisData)
+/** AI 측정 페이지가 보내는 실시간 측정값 — 앱은 가공하지 않고 그대로 백엔드에 전달 */
+export interface LiveMeasurement {
+  rounds: Array<Array<Record<string, number | null>>>;
+  quality?: Record<string, number>;
+}
+
+// GET /style-images
+export interface StyleImageItem { label: string; url: string; }
+export interface StyleImages { url: string; items: StyleImageItem[]; }   // 헤어는 items: []
+export type StyleImagesData = Record<string, StyleImages[]>;               // imageKey → 여러 장 (랜덤 선택)
 
 // ⑨·⑩ 챗봇 공통
 export interface ChatImage { imageKey: string; label: string; }

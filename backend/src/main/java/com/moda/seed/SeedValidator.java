@@ -69,11 +69,12 @@ public class SeedValidator {
     public static final List<String> SIZE_KOREA_ITEM_KEYS = List.of(
             "bideltoid_width", "waist_width", "hip_width", "shoulder_height", "crotch_height", "arm_length");
 
-    /** api-spec.md 부록 A.5 경고 코드 14종 (필수). */
+    /** api-spec.md 부록 A.5 경고 코드 16종 (필수). v1.3: 실시간 분석 {@code BODY_LEGS_CLOSED}, {@code LIVE_NOT_ENOUGH_FRAMES} 추가. */
     public static final List<String> REQUIRED_WARNING_CODES = List.of(
             "FACE_NOT_DETECTED", "MULTIPLE_FACES", "FACE_YAW_EXCEEDED", "FACE_PITCH_EXCEEDED", "FACE_TOO_SMALL",
             "MOUTH_OPEN", "SMILING", "FACE_BORDERLINE",
             "BODY_NOT_DETECTED", "MULTIPLE_PEOPLE", "BODY_LOW_VISIBILITY", "SHOULDER_TILT", "BODY_BORDERLINE",
+            "BODY_LEGS_CLOSED", "LIVE_NOT_ENOUGH_FRAMES",
             "ANALYSIS_UNUSABLE");
 
     private static final Map<String, String> HAIR_FACTOR_TOKENS = Map.of(

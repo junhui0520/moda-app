@@ -203,6 +203,20 @@
       "message": "두 체형의 경계에 가까워요. [분석 상세보기]에서 확인하고 수정할 수 있어요."
     },
     {
+      "code": "BODY_LEGS_CLOSED",
+      "target": "BODY",
+      "severity": "INFO",
+      "criteria": "실시간 체형 측정(④-L)에서 다리를 모으고 서서 다리 비율 측정이 제한됨",
+      "message": "다리를 살짝 벌리면 다리 비율까지 더 정확하게 볼 수 있어요."
+    },
+    {
+      "code": "LIVE_NOT_ENOUGH_FRAMES",
+      "target": "COMMON",
+      "severity": "RETAKE",
+      "criteria": "실시간 측정(③-L·④-L)의 유효 프레임·회차 부족 (AI /v1/live/* 가 usable=false와 함께 반환)",
+      "message": "측정이 충분히 되지 않았어요. 안내에 맞춰 다시 측정해 주세요."
+    },
+    {
       "code": "ANALYSIS_UNUSABLE",
       "target": "COMMON",
       "severity": "RETAKE",

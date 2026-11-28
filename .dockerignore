@@ -1,0 +1,38 @@
+# =====================================================================
+# 저장소 루트 빌드 컨텍스트용 — backend/Dockerfile 전용
+#   (docker build -f backend/Dockerfile .   /  Railway: Root Directory 비움 + RAILWAY_DOCKERFILE_PATH=backend/Dockerfile)
+#
+# 화이트리스트 방식: 전부 제외한 뒤 백엔드 이미지에 필요한 것만 다시 포함합니다.
+#   → mobile/ · ai/ · docs/ · .git/ · start.* · README.md 등은 자동으로 컨텍스트에서 빠집니다.
+#
+# AI 서버 영향 없음: AI 서버는 Railway에서 Root Directory = ai 로 배포되어 빌드 컨텍스트가 ai/ 이고,
+#   그때는 ai/.dockerignore 만 사용됩니다 (이 파일은 컨텍스트 루트에 있을 때만 적용).
+# =====================================================================
+
+# 1) 전부 제외
+*
+
+# 2) 백엔드 이미지에 필요한 것만 포함
+!backend/
+!hair_images/
+!style/
+!sql/
+
+# 3) 포함한 폴더 안에서도 불필요한 것은 다시 제외
+backend/build/
+backend/.gradle/
+backend/out/
+backend/bin/
+backend/src/test/
+backend/.idea/
+backend/*.iml
+backend/.dockerignore
+**/*.log
+**/.DS_Store
+**/Thumbs.db
+
+# 비밀값 (이미지에 절대 포함하지 않음 — 플랫폼 환경변수로 주입)
+**/.env
+**/.env.*
+**/application-local.yml
+**/application-secret.yml

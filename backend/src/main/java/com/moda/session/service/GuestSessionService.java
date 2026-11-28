@@ -1,5 +1,6 @@
 package com.moda.session.service;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.moda.ai.AnalysisClient;
 import com.moda.ai.AnalysisImage;
 import com.moda.ai.AnalysisOptions;
@@ -186,6 +187,75 @@ public class GuestSessionService {
                 r.usable() ? r.borderline() : null,
                 heightCmUsed, mapper.warnings(warnings), mapper.progress(session), mapper.nextStep(session),
                 KstTime.toOffset(now), KstTime.toOffset(session.getExpiresAt()));
+    }
+
+    // ------------------------------------------------------------------ ③-L · ④-L 실시간 분석 (ai/LIVE_INTEGRATION.md)
+
+    /**
+     * ③-L 얼굴 실시간 분석: 휴대폰 측정 페이지가 잰 값(JSON)만 받습니다 (사진 없음, R-01에 더 유리).
+     * 응답·결과 반영·TTL 연장·분석 잠금은 ③과 같습니다.
+     */
+    public FaceAnalysisData analyzeFaceLive(String sessionId, JsonNode measurement, AnalysisOptions options) {
+        requireActiveSnapshot(sessionId);
+        requireMeasurement(measurement);
+        AnalysisInProgressRegistry.InFlight token = inProgressRegistry.acquire(sessionId, new byte[0]);   // 사진 없음
+        try {
+            FaceAnalysisResult result = analysisClient.analyzeFaceLive(measurement, UUID.randomUUID().toString(), options);
+            return tx.execute(status -> applyFace(sessionId, result));
+        } finally {
+            inProgressRegistry.release(token);
+        }
+    }
+
+    /** ④-L 체형 실시간 분석: 세션의 {@code heightCm}을 서버가 붙여 전달합니다. 응답은 ④와 같습니다. */
+    public BodyAnalysisData analyzeBodyLive(String sessionId, JsonNode measurement, AnalysisOptions options) {
+        GuestSession snapshot = requireActiveSnapshot(sessionId);
+        if (!snapshot.hasProfile()) {
+            throw new BusinessException(ErrorCode.PROFILE_INPUT_REQUIRED);
+        }
+        requireMeasurement(measurement);
+        int heightCm = snapshot.getHeightCm();
+        AnalysisInProgressRegistry.InFlight token = inProgressRegistry.acquire(sessionId, new byte[0]);
+        try {
+            BodyAnalysisResult result = analysisClient.analyzeBodyLive(measurement, heightCm, UUID.randomUUID().toString(), options);
+            return tx.execute(status -> applyBody(sessionId, heightCm, result));
+        } finally {
+            inProgressRegistry.release(token);
+        }
+    }
+
+    /** 측정 페이지는 회차 1~3, 회차당 좋은 프레임 5~6장을 보냄. 비정상적으로 큰 요청은 AI로 넘기지 않음. */
+    static final int MAX_LIVE_ROUNDS = 5;
+    static final int MAX_LIVE_FRAMES_PER_ROUND = 60;
+    static final String MEASUREMENT_REQUIRED = "측정값(rounds)이 필요해요.";
+
+    /**
+     * {@code rounds}: 비어 있지 않은 배열, 각 회차는 프레임(객체) 배열. 형식이 틀리면 AI 422(→ 502) 대신 {@code 400 INVALID_REQUEST}.
+     * 프레임 안의 측정값 판정(부족·이상치)은 AI가 하며, 부족하면 200 + {@code usable:false} + {@code LIVE_NOT_ENOUGH_FRAMES}.
+     */
+    static void requireMeasurement(JsonNode m) {
+        JsonNode rounds = m == null ? null : m.path("rounds");
+        if (rounds == null || !rounds.isArray() || rounds.isEmpty()) {
+            throw BusinessException.invalidField("rounds", MEASUREMENT_REQUIRED, null);
+        }
+        if (rounds.size() > MAX_LIVE_ROUNDS) {
+            throw BusinessException.invalidField("rounds", "회차는 최대 " + MAX_LIVE_ROUNDS + "개까지 보낼 수 있어요.", rounds.size());
+        }
+        for (int i = 0; i < rounds.size(); i++) {
+            JsonNode round = rounds.get(i);
+            if (!round.isArray()) {
+                throw BusinessException.invalidField("rounds[" + i + "]", "회차는 프레임 측정값 배열이어야 해요.", null);
+            }
+            if (round.size() > MAX_LIVE_FRAMES_PER_ROUND) {
+                throw BusinessException.invalidField("rounds[" + i + "]",
+                        "회차당 프레임은 최대 " + MAX_LIVE_FRAMES_PER_ROUND + "개까지 보낼 수 있어요.", round.size());
+            }
+            for (JsonNode frame : round) {
+                if (!frame.isObject()) {
+                    throw BusinessException.invalidField("rounds[" + i + "]", "프레임 측정값은 객체여야 해요.", null);
+                }
+            }
+        }
     }
 
     // ------------------------------------------------------------------ ⑤ 최종 결과

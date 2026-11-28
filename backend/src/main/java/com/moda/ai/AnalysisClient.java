@@ -1,5 +1,6 @@
 package com.moda.ai;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.moda.ai.model.BodyAnalysisResult;
 import com.moda.ai.model.FaceAnalysisResult;
 
@@ -18,4 +19,14 @@ public interface AnalysisClient {
     FaceAnalysisResult analyzeFace(AnalysisImage image, AnalysisOptions options);
 
     BodyAnalysisResult analyzeBody(AnalysisImage image, int heightCm, AnalysisOptions options);
+
+    /**
+     * ③-L 얼굴 실시간 분석 (ai/LIVE_INTEGRATION.md). 휴대폰 측정 페이지가 잰 값만 받으며 사진은 없습니다.
+     *
+     * @param measurement 측정 페이지 {@code payload} ({@code rounds}, {@code quality}) — 그 외 필드는 AI로 전달하지 않음
+     */
+    FaceAnalysisResult analyzeFaceLive(JsonNode measurement, String requestId, AnalysisOptions options);
+
+    /** ④-L 체형 실시간 분석. {@code heightCm}은 세션 값을 서버가 붙입니다 (기존 ④와 같음). */
+    BodyAnalysisResult analyzeBodyLive(JsonNode measurement, int heightCm, String requestId, AnalysisOptions options);
 }
