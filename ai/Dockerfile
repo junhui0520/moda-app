@@ -11,11 +11,12 @@ FROM python:3.13-slim
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     GLOG_minloglevel=2 \
+    MPLCONFIGDIR=/tmp/matplotlib \
     PORT=8000
 
-# MediaPipe 가 같이 설치하는 OpenCV 가 쓰는 시스템 라이브러리
+# MediaPipe(libEGL·GLES 런타임) · OpenCV 가 쓰는 시스템 라이브러리
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends libgl1 libglib2.0-0 \
+    && apt-get install -y --no-install-recommends libegl1 libgles2 libgl1 libglib2.0-0 \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
